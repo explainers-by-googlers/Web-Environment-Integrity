@@ -8,7 +8,7 @@
 - Sergey Kataev (Google)
 
 ## Participate
-- [TODO: Issue tracker link]
+- [Issue tracker](https://github.com/RupertBenWiser/Web-Environment-Integrity/issues)
 
 ## Table of Contents
 
