@@ -341,8 +341,8 @@ against the principles we aspire to for the open web.
 
 Attesters will be required to offer their service under the same conditions to any browser who
 wishes to use it and meets certain baseline requirements. This leads to any browser running on the
-given OS platform having the same access to the technology, but we still have the risks that
-1) some websites might exclude some operating systems, and 2) if the platform identity of the
+given OS platform having the same access to the technology, but we still have the risks that 1) some
+websites might exclude some operating systems, and 2) if the platform identity of the
 application that requested the attestation is included, some websites might exclude some browsers.
 
 #### Holdback
