@@ -89,7 +89,7 @@ and the [Play Integrity API](https://developer.android.com/google/play/integrity
 There is a tension between utility for anti-fraud use cases requiring deterministic verdicts and
 high coverage, and the risk of websites using this functionality to exclude specific attesters or
 non-attestable browsers. We look forward to discussion on this topic, and acknowledge the
-significantvalue-add even in the case where verdicts are not deterministically available
+significant value-add even in the case where verdicts are not deterministically available
 (e.g. holdouts). 
 
 ## Goals
