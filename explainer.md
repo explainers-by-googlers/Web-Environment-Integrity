@@ -183,7 +183,7 @@ an environment integrity attestation on the web page and send it to the web serv
 // getEnvironmentIntegrity expects a “content binding” of the request you are
 // about to make. The content binding protects against this information being
 // used for a different request.
-// The contentBinding will be concatenated with top-level domain name and hashed
+// The contentBinding will be concatenated with eTLD+1 and hashed
 // before it is sent to the attester.
 const contentBinding = `/someRequestPath?requestID=xxxx` +
     "Any other data needed for a request-specific contentBinding...";
