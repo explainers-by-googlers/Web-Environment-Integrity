@@ -1488,7 +1488,7 @@ Possible extra rowspan handling
 	}
 </style>
   <meta content="Bikeshed version bf22245b8, updated Tue Apr 18 15:53:37 2023 -0700" name="generator">
-  <meta content="d275a98cfd9d4735e4e84b5a4de7ae25fe332425" name="document-revision">
+  <meta content="aa6c72daa75ad6e69329691aaca8fd2ce5c63916" name="document-revision">
 <style>/* style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
@@ -2085,7 +2085,7 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Web Environment Integrity</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">A Collection of Interesting Ideas, <time class="dt-updated" datetime="2023-05-09">9 May 2023</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">A Collection of Interesting Ideas, <time class="dt-updated" datetime="2023-05-15">15 May 2023</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>Issue Tracking:
@@ -2097,7 +2097,7 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
    <div data-fill-with="warning"></div>
    <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" height="15" src="https://licensebuttons.net/p/zero/1.0/80x15.png" width="80"></a> To the extent possible under law, the editors have waived all copyright
 and related or neighboring rights to this work.
-In addition, as of 9 May 2023,
+In addition, as of 15 May 2023,
 the editors have made this specification available under the <a href="http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
 which is available at http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
 Parts of this work may be from another specification document.  If so, those parts are instead covered by the license of that specification document. </p>
@@ -2119,27 +2119,29 @@ by trusted attesters.</p>
       <li><a href="#motivations"><span class="secno">1.1</span> <span class="content">Motivations</span></a>
       <li><a href="#examples"><span class="secno">1.2</span> <span class="content">Examples</span></a>
      </ol>
-    <li>
-     <a href="#api"><span class="secno">2</span> <span class="content">Web Environment Integrity API</span></a>
-     <ol class="toc">
-      <li>
-       <a href="#extensions-to-navigator"><span class="secno">2.1</span> <span class="content">Extensions to <code class="idl"><span>Navigator</span></code></span></a>
-       <ol class="toc">
-        <li><a href="#navigator-getenvironmentintegrity"><span class="secno">2.1.1</span> <span class="content"><code class="idl"><span>getEnvironmentIntegrity()</span></code></span></a>
-       </ol>
-      <li><a href="#environment-integrity"><span class="secno">2.2</span> <span class="content"><code class="idl"><span>EnvironmentIntegrity</span></code></span></a>
-     </ol>
+    <li><a href="#key-terms"><span class="secno">2</span> <span class="content">Key terms</span></a>
     <li>
      <a href="#attester"><span class="secno">3</span> <span class="content">Attesters</span></a>
      <ol class="toc">
       <li><a href="#attester-tokens"><span class="secno">3.1</span> <span class="content">Token Format</span></a>
       <li><a href="#attester-browser-requirements"><span class="secno">3.2</span> <span class="content">Browser Acceptance Requirements</span></a>
+      <li><a href="#attester-connection"><span class="secno">3.3</span> <span class="content"><code class="idl"><span>AttesterConnection</span></code></span></a>
      </ol>
     <li>
-     <a href="#security-and-privacy"><span class="secno">4</span> <span class="content">Security and privacy considerations</span></a>
+     <a href="#api"><span class="secno">4</span> <span class="content">Web Environment Integrity API</span></a>
      <ol class="toc">
-      <li><a href="#security"><span class="secno">4.1</span> <span class="content">Security considerations</span></a>
-      <li><a href="#privacy"><span class="secno">4.2</span> <span class="content">Privacy considerations</span></a>
+      <li>
+       <a href="#extensions-to-navigator"><span class="secno">4.1</span> <span class="content">Extensions to <code class="idl"><span>Navigator</span></code></span></a>
+       <ol class="toc">
+        <li><a href="#navigator-getenvironmentintegrity"><span class="secno">4.1.1</span> <span class="content"><code class="idl"><span>getEnvironmentIntegrity()</span></code></span></a>
+       </ol>
+      <li><a href="#environment-integrity"><span class="secno">4.2</span> <span class="content"><code class="idl"><span>EnvironmentIntegrity</span></code></span></a>
+     </ol>
+    <li>
+     <a href="#security-and-privacy"><span class="secno">5</span> <span class="content">Security and privacy considerations</span></a>
+     <ol class="toc">
+      <li><a href="#security"><span class="secno">5.1</span> <span class="content">Security considerations</span></a>
+      <li><a href="#privacy"><span class="secno">5.2</span> <span class="content">Privacy considerations</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
@@ -2183,23 +2185,67 @@ console<c- p>.</c->log<c- p>(</c->attestation<c- p>.</c->encode<c- p>());</c->
 <c- c1>// Do something with this ...</c->
 </pre>
    </div>
-   <h2 class="heading settled" data-level="2" id="api"><span class="secno">2. </span><span class="content">Web Environment Integrity API</span><a class="self-link" href="#api"></a></h2>
-   <h3 class="heading settled" data-level="2.1" id="extensions-to-navigator"><span class="secno">2.1. </span><span class="content">Extensions to <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/system-state.html#navigator" id="ref-for-navigator">Navigator</a></code></span><a class="self-link" href="#extensions-to-navigator"></a></h3>
-<pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed"><c- g>Exposed</c-></a>=<c- n>Window</c->]
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/system-state.html#navigator" id="ref-for-navigator①"><c- g>Navigator</c-></a> {
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#environmentintegrity" id="ref-for-environmentintegrity"><c- n>EnvironmentIntegrity</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-navigator-getenvironmentintegrity" id="ref-for-dom-navigator-getenvironmentintegrity"><c- g>getEnvironmentIntegrity</c-></a>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="Navigator/getEnvironmentIntegrity(contentBinding)" data-dfn-type="argument" data-export id="dom-navigator-getenvironmentintegrity-contentbinding-contentbinding"><code><c- g>contentBinding</c-></code><a class="self-link" href="#dom-navigator-getenvironmentintegrity-contentbinding-contentbinding"></a></dfn>);
+   <h2 class="heading settled" data-level="2" id="key-terms"><span class="secno">2. </span><span class="content">Key terms</span><a class="self-link" href="#key-terms"></a></h2>
+   <p>The <dfn class="dfn-paneled" data-dfn-for="web environment" data-dfn-type="dfn" data-noexport id="web-environment-web-environment">web environment</dfn> is defined as <i>TODO</i></p>
+   <h2 class="heading settled" data-level="3" id="attester"><span class="secno">3. </span><span class="content">Attesters</span><a class="self-link" href="#attester"></a></h2>
+   <p>The term <dfn class="dfn-paneled" data-dfn-for="attester" data-dfn-type="dfn" data-noexport id="attester-attester">attester</dfn> refers to a third party capable of returning an <a data-link-type="dfn" href="#integrity-verdict-integrity-verdict" id="ref-for-integrity-verdict-integrity-verdict">Integrity verdict</a>. A <dfn class="dfn-paneled" data-dfn-for="Integrity verdict" data-dfn-type="dfn" data-noexport id="integrity-verdict-integrity-verdict">Integrity verdict</dfn> refers
+to an response that confirms if the <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester">attester</a> trusts the <a data-link-type="dfn" href="#web-environment-web-environment" id="ref-for-web-environment-web-environment">web environment</a> the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent">user agent</a> is
+executing in.</p>
+   <p>The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent①">user agent</a> connects to the <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester①">attester</a> through an <code class="idl"><a data-link-type="idl" href="#attesterconnection" id="ref-for-attesterconnection">AttesterConnection</a></code>.</p>
+   <p>The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent②">user agent</a> SHOULD use separate <code class="idl"><a data-link-type="idl" href="#attesterconnection" id="ref-for-attesterconnection①">AttesterConnection</a></code>s if the <code class="idl"><a data-link-type="idl" href="#attesterconnection" id="ref-for-attesterconnection②">AttesterConnection</a></code> stores state in the <a data-link-type="dfn" href="#integrity-verdict-integrity-verdict" id="ref-for-integrity-verdict-integrity-verdict①">Integrity verdict</a> that can be used for cross site tracking.</p>
+   <h3 class="heading settled" data-level="3.1" id="attester-tokens"><span class="secno">3.1. </span><span class="content">Token Format</span><a class="self-link" href="#attester-tokens"></a></h3>
+   <p><i>Todo</i></p>
+   <h3 class="heading settled" data-level="3.2" id="attester-browser-requirements"><span class="secno">3.2. </span><span class="content">Browser Acceptance Requirements</span><a class="self-link" href="#attester-browser-requirements"></a></h3>
+   <p><i>Todo</i></p>
+   <h3 class="heading settled" data-level="3.3" id="attester-connection"><span class="secno">3.3. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#attesterconnection" id="ref-for-attesterconnection③">AttesterConnection</a></code></span><a class="self-link" href="#attester-connection"></a></h3>
+<pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="attesterconnection"><code><c- g>AttesterConnection</c-></code></dfn> {
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer"><c- b>ArrayBuffer</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="AttesterConnection" data-dfn-type="method" data-export data-lt="getAttestation(contentBinding)" id="dom-attesterconnection-getattestation"><code><c- g>getAttestation</c-></code></dfn>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="AttesterConnection/getAttestation(contentBinding)" data-dfn-type="argument" data-export id="dom-attesterconnection-getattestation-contentbinding-contentbinding"><code><c- g>contentBinding</c-></code><a class="self-link" href="#dom-attesterconnection-getattestation-contentbinding-contentbinding"></a></dfn>);
 };
 </pre>
-   <h4 class="heading settled" data-level="2.1.1" id="navigator-getenvironmentintegrity"><span class="secno">2.1.1. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#dom-navigator-getenvironmentintegrity" id="ref-for-dom-navigator-getenvironmentintegrity①">getEnvironmentIntegrity()</a></code></span><a class="self-link" href="#navigator-getenvironmentintegrity"></a></h4>
+   <dl>
+    <dt data-md>getAttestation
+    <dd data-md>
+     <p>Returns a COSE signed CBOR object as an ArrayBuffer from the <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester②">attester</a> that contains the <a data-link-type="dfn" href="#integrity-verdict-integrity-verdict" id="ref-for-integrity-verdict-integrity-verdict②">Integrity verdict</a>.</p>
+   </dl>
+   <h2 class="heading settled" data-level="4" id="api"><span class="secno">4. </span><span class="content">Web Environment Integrity API</span><a class="self-link" href="#api"></a></h2>
+   <h3 class="heading settled" data-level="4.1" id="extensions-to-navigator"><span class="secno">4.1. </span><span class="content">Extensions to <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/system-state.html#navigator" id="ref-for-navigator">Navigator</a></code></span><a class="self-link" href="#extensions-to-navigator"></a></h3>
+<pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed"><c- g>Exposed</c-></a>=<c- n>Window</c->]
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/system-state.html#navigator" id="ref-for-navigator①"><c- g>Navigator</c-></a> {
+  [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#environmentintegrity" id="ref-for-environmentintegrity"><c- n>EnvironmentIntegrity</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-navigator-getenvironmentintegrity" id="ref-for-dom-navigator-getenvironmentintegrity"><c- g>getEnvironmentIntegrity</c-></a>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="Navigator/getEnvironmentIntegrity(contentBinding)" data-dfn-type="argument" data-export id="dom-navigator-getenvironmentintegrity-contentbinding-contentbinding"><code><c- g>contentBinding</c-></code><a class="self-link" href="#dom-navigator-getenvironmentintegrity-contentbinding-contentbinding"></a></dfn>);
+};
+</pre>
+   <h4 class="heading settled" data-level="4.1.1" id="navigator-getenvironmentintegrity"><span class="secno">4.1.1. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#dom-navigator-getenvironmentintegrity" id="ref-for-dom-navigator-getenvironmentintegrity①">getEnvironmentIntegrity()</a></code></span><a class="self-link" href="#navigator-getenvironmentintegrity"></a></h4>
    <div class="algorithm" data-algorithm="navigator-getenvironmentintegrity-alg">
-     The <dfn class="dfn-paneled idl-code" data-dfn-for="Navigator" data-dfn-type="method" data-export id="dom-navigator-getenvironmentintegrity"><code>getEnvironmentIntegrity(<var>contentBinding</var>)</code></dfn> method, when invoked, runs these steps: 
-    <p><i>Todo</i></p>
+     The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent③">user agent</a> has the global <dfn class="dfn-paneled" data-dfn-for="attesterConnection" data-dfn-type="dfn" data-noexport id="attesterconnection-attesterconnection">attesterConnection</dfn>, which is
+    an <code class="idl"><a data-link-type="idl" href="#attesterconnection" id="ref-for-attesterconnection④">AttesterConnection</a></code> with the <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester③">attester</a>. 
+    <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="Navigator" data-dfn-type="method" data-export id="dom-navigator-getenvironmentintegrity"><code>getEnvironmentIntegrity(<var>contentBinding</var>)</code></dfn> method, when invoked, runs these steps:</p>
+    <ol>
+     <li data-md>
+      <p>Let <var>promise</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#a-new-promise" id="ref-for-a-new-promise">a new promise</a></p>
+     <li data-md>
+      <p>Run the following steps <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel" id="ref-for-in-parallel">in parallel</a>:</p>
+      <ol>
+       <li data-md>
+        <p>Let <var>environmentIntegrity</var> be a new <code class="idl"><a data-link-type="idl" href="#environmentintegrity" id="ref-for-environmentintegrity①">EnvironmentIntegrity</a></code></p>
+       <li data-md>
+        <p>Set <var>environmentIntegrity</var>.<code class="idl"><a data-link-type="idl" href="#dom-environmentintegrity-attestationtoken" id="ref-for-dom-environmentintegrity-attestationtoken">attestationToken</a></code> to <a data-link-type="dfn" href="#attesterconnection-attesterconnection" id="ref-for-attesterconnection-attesterconnection">attesterConnection</a>.<a class="idl-code" data-link-type="method" href="#dom-attesterconnection-getattestation" id="ref-for-dom-attesterconnection-getattestation">getAttestation(<var>contentBinding</var>)</a>. If this fails then:</p>
+        <ol>
+         <li data-md>
+          <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#reject" id="ref-for-reject">Reject</a> <var>promise</var> with a <i>TODO</i> <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#dfn-exception" id="ref-for-dfn-exception">Exception</a></p>
+         <li data-md>
+          <p>Abort these steps</p>
+        </ol>
+       <li data-md>
+        <p><a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#resolve" id="ref-for-resolve">Resolve</a> <var>promise</var> with <var>environmentIntegrity</var></p>
+      </ol>
+     <li data-md>
+      <p>Return <var>promise</var></p>
+    </ol>
    </div>
-   <h3 class="heading settled" data-level="2.2" id="environment-integrity"><span class="secno">2.2. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#environmentintegrity" id="ref-for-environmentintegrity①">EnvironmentIntegrity</a></code></span><a class="self-link" href="#environment-integrity"></a></h3>
+   <h3 class="heading settled" data-level="4.2" id="environment-integrity"><span class="secno">4.2. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#environmentintegrity" id="ref-for-environmentintegrity②">EnvironmentIntegrity</a></code></span><a class="self-link" href="#environment-integrity"></a></h3>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="environmentintegrity"><code><c- g>EnvironmentIntegrity</c-></code></dfn> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer"><c- b>ArrayBuffer</c-></a> <dfn class="idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="attribute" data-export data-readonly data-type="ArrayBuffer" id="dom-environmentintegrity-attestationtoken"><code><c- g>attestationToken</c-></code><a class="self-link" href="#dom-environmentintegrity-attestationtoken"></a></dfn>;
-  // Return a base64 encoded string of the attestationToken
-  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="method" data-export data-lt="encode()" id="dom-environmentintegrity-encode"><code><c- g>encode</c-></code><a class="self-link" href="#dom-environmentintegrity-encode"></a></dfn>();
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer①"><c- b>ArrayBuffer</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="attribute" data-export data-readonly data-type="ArrayBuffer" id="dom-environmentintegrity-attestationtoken"><code><c- g>attestationToken</c-></code></dfn>;
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="method" data-export data-lt="encode()" id="dom-environmentintegrity-encode"><code><c- g>encode</c-></code><a class="self-link" href="#dom-environmentintegrity-encode"></a></dfn>();
   [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Default" id="ref-for-Default"><c- g>Default</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-object" id="ref-for-idl-object"><c- b>object</c-></a> <dfn class="idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="method" data-export data-lt="toJSON()" id="dom-environmentintegrity-tojson"><code><c- g>toJSON</c-></code><a class="self-link" href="#dom-environmentintegrity-tojson"></a></dfn>();
 };
 </pre>
@@ -2214,15 +2260,10 @@ console<c- p>.</c->log<c- p>(</c->attestation<c- p>.</c->encode<c- p>());</c->
     <dd data-md>
      <p>The toJSON method returns a JSON representation of the attestation token. Useful for local debugging.</p>
    </dl>
-   <h2 class="heading settled" data-level="3" id="attester"><span class="secno">3. </span><span class="content">Attesters</span><a class="self-link" href="#attester"></a></h2>
-   <h3 class="heading settled" data-level="3.1" id="attester-tokens"><span class="secno">3.1. </span><span class="content">Token Format</span><a class="self-link" href="#attester-tokens"></a></h3>
+   <h2 class="heading settled" data-level="5" id="security-and-privacy"><span class="secno">5. </span><span class="content">Security and privacy considerations</span><a class="self-link" href="#security-and-privacy"></a></h2>
+   <h3 class="heading settled" data-level="5.1" id="security"><span class="secno">5.1. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h3>
    <p><i>Todo</i></p>
-   <h3 class="heading settled" data-level="3.2" id="attester-browser-requirements"><span class="secno">3.2. </span><span class="content">Browser Acceptance Requirements</span><a class="self-link" href="#attester-browser-requirements"></a></h3>
-   <p><i>Todo</i></p>
-   <h2 class="heading settled" data-level="4" id="security-and-privacy"><span class="secno">4. </span><span class="content">Security and privacy considerations</span><a class="self-link" href="#security-and-privacy"></a></h2>
-   <h3 class="heading settled" data-level="4.1" id="security"><span class="secno">4.1. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h3>
-   <p><i>Todo</i></p>
-   <h3 class="heading settled" data-level="4.2" id="privacy"><span class="secno">4.2. </span><span class="content">Privacy considerations</span><a class="self-link" href="#privacy"></a></h3>
+   <h3 class="heading settled" data-level="5.2" id="privacy"><span class="secno">5.2. </span><span class="content">Privacy considerations</span><a class="self-link" href="#privacy"></a></h3>
    <p><i>Todo</i></p>
   </main>
   <div data-fill-with="conformance">
@@ -2374,11 +2415,17 @@ console<c- p>.</c->log<c- p>(</c->attestation<c- p>.</c->encode<c- p>());</c->
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#dom-environmentintegrity-attestationtoken">attestationToken</a><span>, in § 2.2</span>
-   <li><a href="#dom-environmentintegrity-encode">encode()</a><span>, in § 2.2</span>
-   <li><a href="#environmentintegrity">EnvironmentIntegrity</a><span>, in § 2.2</span>
-   <li><a href="#dom-navigator-getenvironmentintegrity">getEnvironmentIntegrity(contentBinding)</a><span>, in § 2.1.1</span>
-   <li><a href="#dom-environmentintegrity-tojson">toJSON()</a><span>, in § 2.2</span>
+   <li><a href="#dom-environmentintegrity-attestationtoken">attestationToken</a><span>, in § 4.2</span>
+   <li><a href="#attester-attester">attester</a><span>, in § 3</span>
+   <li><a href="#attesterconnection">AttesterConnection</a><span>, in § 3.3</span>
+   <li><a href="#attesterconnection-attesterconnection">attesterConnection</a><span>, in § 4.1.1</span>
+   <li><a href="#dom-environmentintegrity-encode">encode()</a><span>, in § 4.2</span>
+   <li><a href="#environmentintegrity">EnvironmentIntegrity</a><span>, in § 4.2</span>
+   <li><a href="#dom-attesterconnection-getattestation">getAttestation(contentBinding)</a><span>, in § 3.3</span>
+   <li><a href="#dom-navigator-getenvironmentintegrity">getEnvironmentIntegrity(contentBinding)</a><span>, in § 4.1.1</span>
+   <li><a href="#integrity-verdict-integrity-verdict">Integrity verdict</a><span>, in § 3</span>
+   <li><a href="#dom-environmentintegrity-tojson">toJSON()</a><span>, in § 4.2</span>
+   <li><a href="#web-environment-web-environment">web environment</a><span>, in § 2</span>
   </ul>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
@@ -2386,6 +2433,12 @@ console<c- p>.</c->log<c- p>(</c->attestation<c- p>.</c->encode<c- p>());</c->
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="be0c27b2">Navigator</span>
+     <li><span class="dfn-paneled" id="a72449dd">in parallel</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[INFRA]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="6d19ac93">user agent</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
@@ -2396,7 +2449,11 @@ console<c- p>.</c->log<c- p>(</c->attestation<c- p>.</c->encode<c- p>());</c->
      <li><span class="dfn-paneled" id="889e932f">Exposed</span>
      <li><span class="dfn-paneled" id="bdbd19d1">Promise</span>
      <li><span class="dfn-paneled" id="b75bb3bd">SecureContext</span>
+     <li><span class="dfn-paneled" id="dacde8b5">a new promise</span>
+     <li><span class="dfn-paneled" id="cd787c3f">exception</span>
      <li><span class="dfn-paneled" id="efd1ec5d">object</span>
+     <li><span class="dfn-paneled" id="b262501e">reject</span>
+     <li><span class="dfn-paneled" id="3b90bdcd">resolve</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -2404,20 +2461,25 @@ console<c- p>.</c->log<c- p>(</c->attestation<c- p>.</c->encode<c- p>());</c->
   <dl>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML Standard</cite></a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+   <dt id="biblio-infra">[INFRA]
+   <dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/"><cite>Infra Standard</cite></a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
    <dt id="biblio-rfc2119">[RFC2119]
    <dd>S. Bradner. <a href="https://datatracker.ietf.org/doc/html/rfc2119"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="https://datatracker.ietf.org/doc/html/rfc2119">https://datatracker.ietf.org/doc/html/rfc2119</a>
    <dt id="biblio-webidl">[WEBIDL]
    <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. Living Standard. URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
-<pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=<c- n>Window</c->]
+<pre class="idl highlight def"><c- b>interface</c-> <a href="#attesterconnection"><code><c- g>AttesterConnection</c-></code></a> {
+  <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer"><c- b>ArrayBuffer</c-></a> <a href="#dom-attesterconnection-getattestation"><code><c- g>getAttestation</c-></code></a>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a href="#dom-attesterconnection-getattestation-contentbinding-contentbinding"><code><c- g>contentBinding</c-></code></a>);
+};
+
+[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/system-state.html#navigator"><c- g>Navigator</c-></a> {
   [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext"><c- g>SecureContext</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#environmentintegrity"><c- n>EnvironmentIntegrity</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-navigator-getenvironmentintegrity"><c- g>getEnvironmentIntegrity</c-></a>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a href="#dom-navigator-getenvironmentintegrity-contentbinding-contentbinding"><code><c- g>contentBinding</c-></code></a>);
 };
 
 <c- b>interface</c-> <a href="#environmentintegrity"><code><c- g>EnvironmentIntegrity</c-></code></a> {
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer"><c- b>ArrayBuffer</c-></a> <a data-readonly data-type="ArrayBuffer" href="#dom-environmentintegrity-attestationtoken"><code><c- g>attestationToken</c-></code></a>;
-  // Return a base64 encoded string of the attestationToken
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a href="#dom-environmentintegrity-encode"><code><c- g>encode</c-></code></a>();
   [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Default"><c- g>Default</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-object"><c- b>object</c-></a> <a href="#dom-environmentintegrity-tojson"><code><c- g>toJSON</c-></code></a>();
 };
@@ -2578,16 +2640,29 @@ console<c- p>.</c->log<c- p>(</c->attestation<c- p>.</c->encode<c- p>());</c->
 </script>
 <script>/* script-dfn-panel-json */
 window.dfnpanelData = {};
-window.dfnpanelData['be0c27b2'] = {"dfnID": "be0c27b2", "url": "https://html.spec.whatwg.org/multipage/system-state.html#navigator", "dfnText": "Navigator", "refSections": [{"refs": [{"id": "ref-for-navigator"}, {"id": "ref-for-navigator\u2460"}], "title": "2.1. Extensions to Navigator"}], "external": true};
-window.dfnpanelData['2f8afbfe'] = {"dfnID": "2f8afbfe", "url": "https://webidl.spec.whatwg.org/#idl-ArrayBuffer", "dfnText": "ArrayBuffer", "refSections": [{"refs": [{"id": "ref-for-idl-ArrayBuffer"}], "title": "2.2. EnvironmentIntegrity"}], "external": true};
-window.dfnpanelData['8855a9aa'] = {"dfnID": "8855a9aa", "url": "https://webidl.spec.whatwg.org/#idl-DOMString", "dfnText": "DOMString", "refSections": [{"refs": [{"id": "ref-for-idl-DOMString"}], "title": "2.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-idl-DOMString\u2460"}], "title": "2.2. EnvironmentIntegrity"}], "external": true};
-window.dfnpanelData['f4531911'] = {"dfnID": "f4531911", "url": "https://webidl.spec.whatwg.org/#Default", "dfnText": "Default", "refSections": [{"refs": [{"id": "ref-for-Default"}], "title": "2.2. EnvironmentIntegrity"}], "external": true};
-window.dfnpanelData['889e932f'] = {"dfnID": "889e932f", "url": "https://webidl.spec.whatwg.org/#Exposed", "dfnText": "Exposed", "refSections": [{"refs": [{"id": "ref-for-Exposed"}], "title": "2.1. Extensions to Navigator"}], "external": true};
-window.dfnpanelData['bdbd19d1'] = {"dfnID": "bdbd19d1", "url": "https://webidl.spec.whatwg.org/#idl-promise", "dfnText": "Promise", "refSections": [{"refs": [{"id": "ref-for-idl-promise"}], "title": "2.1. Extensions to Navigator"}], "external": true};
-window.dfnpanelData['b75bb3bd'] = {"dfnID": "b75bb3bd", "url": "https://webidl.spec.whatwg.org/#SecureContext", "dfnText": "SecureContext", "refSections": [{"refs": [{"id": "ref-for-SecureContext"}], "title": "2.1. Extensions to Navigator"}], "external": true};
-window.dfnpanelData['efd1ec5d'] = {"dfnID": "efd1ec5d", "url": "https://webidl.spec.whatwg.org/#idl-object", "dfnText": "object", "refSections": [{"refs": [{"id": "ref-for-idl-object"}], "title": "2.2. EnvironmentIntegrity"}], "external": true};
-window.dfnpanelData['dom-navigator-getenvironmentintegrity'] = {"dfnID": "dom-navigator-getenvironmentintegrity", "url": "#dom-navigator-getenvironmentintegrity", "dfnText": "getEnvironmentIntegrity(contentBinding)", "refSections": [{"refs": [{"id": "ref-for-dom-navigator-getenvironmentintegrity"}], "title": "2.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-dom-navigator-getenvironmentintegrity\u2460"}], "title": "2.1.1. getEnvironmentIntegrity()"}], "external": false};
-window.dfnpanelData['environmentintegrity'] = {"dfnID": "environmentintegrity", "url": "#environmentintegrity", "dfnText": "EnvironmentIntegrity", "refSections": [{"refs": [{"id": "ref-for-environmentintegrity"}], "title": "2.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-environmentintegrity\u2460"}], "title": "2.2. EnvironmentIntegrity"}], "external": false};</script>
+window.dfnpanelData['be0c27b2'] = {"dfnID": "be0c27b2", "url": "https://html.spec.whatwg.org/multipage/system-state.html#navigator", "dfnText": "Navigator", "refSections": [{"refs": [{"id": "ref-for-navigator"}, {"id": "ref-for-navigator\u2460"}], "title": "4.1. Extensions to Navigator"}], "external": true};
+window.dfnpanelData['a72449dd'] = {"dfnID": "a72449dd", "url": "https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel", "dfnText": "in parallel", "refSections": [{"refs": [{"id": "ref-for-in-parallel"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['6d19ac93'] = {"dfnID": "6d19ac93", "url": "https://infra.spec.whatwg.org/#user-agent", "dfnText": "user agent", "refSections": [{"refs": [{"id": "ref-for-user-agent"}, {"id": "ref-for-user-agent\u2460"}, {"id": "ref-for-user-agent\u2461"}], "title": "3. Attesters"}, {"refs": [{"id": "ref-for-user-agent\u2462"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['2f8afbfe'] = {"dfnID": "2f8afbfe", "url": "https://webidl.spec.whatwg.org/#idl-ArrayBuffer", "dfnText": "ArrayBuffer", "refSections": [{"refs": [{"id": "ref-for-idl-ArrayBuffer"}], "title": "3.3. AttesterConnection"}, {"refs": [{"id": "ref-for-idl-ArrayBuffer\u2460"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['8855a9aa'] = {"dfnID": "8855a9aa", "url": "https://webidl.spec.whatwg.org/#idl-DOMString", "dfnText": "DOMString", "refSections": [{"refs": [{"id": "ref-for-idl-DOMString"}], "title": "3.3. AttesterConnection"}, {"refs": [{"id": "ref-for-idl-DOMString\u2460"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-idl-DOMString\u2461"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['f4531911'] = {"dfnID": "f4531911", "url": "https://webidl.spec.whatwg.org/#Default", "dfnText": "Default", "refSections": [{"refs": [{"id": "ref-for-Default"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['889e932f'] = {"dfnID": "889e932f", "url": "https://webidl.spec.whatwg.org/#Exposed", "dfnText": "Exposed", "refSections": [{"refs": [{"id": "ref-for-Exposed"}], "title": "4.1. Extensions to Navigator"}], "external": true};
+window.dfnpanelData['bdbd19d1'] = {"dfnID": "bdbd19d1", "url": "https://webidl.spec.whatwg.org/#idl-promise", "dfnText": "Promise", "refSections": [{"refs": [{"id": "ref-for-idl-promise"}], "title": "4.1. Extensions to Navigator"}], "external": true};
+window.dfnpanelData['b75bb3bd'] = {"dfnID": "b75bb3bd", "url": "https://webidl.spec.whatwg.org/#SecureContext", "dfnText": "SecureContext", "refSections": [{"refs": [{"id": "ref-for-SecureContext"}], "title": "4.1. Extensions to Navigator"}], "external": true};
+window.dfnpanelData['dacde8b5'] = {"dfnID": "dacde8b5", "url": "https://webidl.spec.whatwg.org/#a-new-promise", "dfnText": "a new promise", "refSections": [{"refs": [{"id": "ref-for-a-new-promise"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['cd787c3f'] = {"dfnID": "cd787c3f", "url": "https://webidl.spec.whatwg.org/#dfn-exception", "dfnText": "exception", "refSections": [{"refs": [{"id": "ref-for-dfn-exception"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['efd1ec5d'] = {"dfnID": "efd1ec5d", "url": "https://webidl.spec.whatwg.org/#idl-object", "dfnText": "object", "refSections": [{"refs": [{"id": "ref-for-idl-object"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['b262501e'] = {"dfnID": "b262501e", "url": "https://webidl.spec.whatwg.org/#reject", "dfnText": "reject", "refSections": [{"refs": [{"id": "ref-for-reject"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['3b90bdcd'] = {"dfnID": "3b90bdcd", "url": "https://webidl.spec.whatwg.org/#resolve", "dfnText": "resolve", "refSections": [{"refs": [{"id": "ref-for-resolve"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['web-environment-web-environment'] = {"dfnID": "web-environment-web-environment", "url": "#web-environment-web-environment", "dfnText": "web environment", "refSections": [{"refs": [{"id": "ref-for-web-environment-web-environment"}], "title": "3. Attesters"}], "external": false};
+window.dfnpanelData['attester-attester'] = {"dfnID": "attester-attester", "url": "#attester-attester", "dfnText": "attester", "refSections": [{"refs": [{"id": "ref-for-attester-attester"}, {"id": "ref-for-attester-attester\u2460"}], "title": "3. Attesters"}, {"refs": [{"id": "ref-for-attester-attester\u2461"}], "title": "3.3. AttesterConnection"}, {"refs": [{"id": "ref-for-attester-attester\u2462"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['integrity-verdict-integrity-verdict'] = {"dfnID": "integrity-verdict-integrity-verdict", "url": "#integrity-verdict-integrity-verdict", "dfnText": "Integrity verdict", "refSections": [{"refs": [{"id": "ref-for-integrity-verdict-integrity-verdict"}, {"id": "ref-for-integrity-verdict-integrity-verdict\u2460"}], "title": "3. Attesters"}, {"refs": [{"id": "ref-for-integrity-verdict-integrity-verdict\u2461"}], "title": "3.3. AttesterConnection"}], "external": false};
+window.dfnpanelData['attesterconnection'] = {"dfnID": "attesterconnection", "url": "#attesterconnection", "dfnText": "AttesterConnection", "refSections": [{"refs": [{"id": "ref-for-attesterconnection"}, {"id": "ref-for-attesterconnection\u2460"}, {"id": "ref-for-attesterconnection\u2461"}], "title": "3. Attesters"}, {"refs": [{"id": "ref-for-attesterconnection\u2462"}], "title": "3.3. AttesterConnection"}, {"refs": [{"id": "ref-for-attesterconnection\u2463"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['dom-attesterconnection-getattestation'] = {"dfnID": "dom-attesterconnection-getattestation", "url": "#dom-attesterconnection-getattestation", "dfnText": "getAttestation", "refSections": [{"refs": [{"id": "ref-for-dom-attesterconnection-getattestation"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['attesterconnection-attesterconnection'] = {"dfnID": "attesterconnection-attesterconnection", "url": "#attesterconnection-attesterconnection", "dfnText": "attesterConnection", "refSections": [{"refs": [{"id": "ref-for-attesterconnection-attesterconnection"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['dom-navigator-getenvironmentintegrity'] = {"dfnID": "dom-navigator-getenvironmentintegrity", "url": "#dom-navigator-getenvironmentintegrity", "dfnText": "getEnvironmentIntegrity(contentBinding)", "refSections": [{"refs": [{"id": "ref-for-dom-navigator-getenvironmentintegrity"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-dom-navigator-getenvironmentintegrity\u2460"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['environmentintegrity'] = {"dfnID": "environmentintegrity", "url": "#environmentintegrity", "dfnText": "EnvironmentIntegrity", "refSections": [{"refs": [{"id": "ref-for-environmentintegrity"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-environmentintegrity\u2460"}], "title": "4.1.1. getEnvironmentIntegrity()"}, {"refs": [{"id": "ref-for-environmentintegrity\u2461"}], "title": "4.2. EnvironmentIntegrity"}], "external": false};
+window.dfnpanelData['dom-environmentintegrity-attestationtoken'] = {"dfnID": "dom-environmentintegrity-attestationtoken", "url": "#dom-environmentintegrity-attestationtoken", "dfnText": "attestationToken", "refSections": [{"refs": [{"id": "ref-for-dom-environmentintegrity-attestationtoken"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};</script>
 <script>/* script-dom-helper */
 function query(sel) { return document.querySelector(sel); }
 
