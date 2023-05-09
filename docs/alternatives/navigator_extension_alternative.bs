@@ -45,6 +45,40 @@ Markup Shorthands: markdown yes, css no
 
 </div>
 
+# Key terms # {#key-terms}
+
+The <dfn for="web environment">web environment</dfn> is defined as <i>TODO</i>
+
+# Attesters # {#attester}
+
+The term <dfn for="attester">attester</dfn> refers to a third party capable of returning an [=Integrity verdict=]. A <dfn for="Integrity verdict">Integrity verdict</dfn> refers
+to an response that confirms if the [=attester=] trusts the [=web environment=] the [=user agent=] is
+executing in.
+
+The [=user agent=] connects to the [=attester=] through an {{AttesterConnection}}.
+
+The [=user agent=] SHOULD use separate {{AttesterConnection}}s if the {{AttesterConnection}}
+stores state in the [=Integrity verdict=] that can be used for cross site tracking.
+
+## Token Format ## {#attester-tokens}
+
+<i>Todo</i>
+
+## Browser Acceptance Requirements ## {#attester-browser-requirements}
+
+<i>Todo</i>
+
+## {{AttesterConnection}} ## {#attester-connection}
+
+<xmp class="idl">
+  interface AttesterConnection {
+    ArrayBuffer getAttestation(DOMString contentBinding);
+  };
+</xmp>
+
+: getAttestation
+:: Returns a COSE signed CBOR object as an ArrayBuffer from the [=attester=] that contains the [=Integrity verdict=].
+
 # Web Environment Integrity API # {#api}
 
 ## Extensions to {{Navigator}} ## {#extensions-to-navigator}
@@ -58,10 +92,20 @@ Markup Shorthands: markdown yes, css no
 
 ### {{Navigator/getEnvironmentIntegrity()}} ### {#navigator-getenvironmentintegrity}
 
-<div class="algorithm" data-algorithm="navigator-getenvironmentintegrity-alg">
+<div algorithm="navigator-getenvironmentintegrity-alg">
+    The [=user agent=] has the global <dfn for="attesterConnection">attesterConnection</dfn>, which is
+    an {{AttesterConnection}} with the [=attester=].
+
     The <dfn method for="Navigator"><code>getEnvironmentIntegrity(|contentBinding|)</code></dfn> method, when invoked, runs these steps:
 
-    <i>Todo</i>
+    1. Let |promise| be [=a new promise=]
+    1. Run the following steps [=in parallel=]:
+        1. Let |environmentIntegrity| be a new {{EnvironmentIntegrity}}
+        1. Set |environmentIntegrity|.{{EnvironmentIntegrity/attestationToken}} to [=attesterConnection=].<a method for=AttesterConnection>getAttestation(|contentBinding|)</a>. If this fails then:
+            1. [=Reject=] |promise| with a <i>TODO</i> [=Exception=]
+            1. Abort these steps
+        1. [=Resolve=] |promise| with |environmentIntegrity|
+    1. Return |promise|
 </div>
 
 ## {{EnvironmentIntegrity}} ## {#environment-integrity}
@@ -69,7 +113,6 @@ Markup Shorthands: markdown yes, css no
 <xmp class="idl">
   interface EnvironmentIntegrity {
     readonly attribute ArrayBuffer attestationToken;
-    // Return a base64 encoded string of the attestationToken
     DOMString encode();
     [Default] object toJSON();
   };
@@ -81,16 +124,6 @@ Markup Shorthands: markdown yes, css no
 :: The encode method will return a Base64 string representation of the attestation token.
 : toJSON()
 :: The toJSON method returns a JSON representation of the attestation token. Useful for local debugging.
-
-# Attesters # {#attester}
-
-## Token Format ## {#attester-tokens}
-
-<i>Todo</i>
-
-## Browser Acceptance Requirements ## {#attester-browser-requirements}
-
-<i>Todo</i>
 
 # Security and privacy considerations # {#security-and-privacy}
 
