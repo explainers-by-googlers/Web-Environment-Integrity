@@ -1,0 +1,71 @@
+<pre class='metadata'>
+Title: Web Environment Integrity
+Shortname: web-environment-integrity
+Level: 1
+Status: DREAM
+Editor: Ben Wiser, Google, bewise@chromium.org
+Abstract: An API used to integrity check the environment a web page runs on. This check is performed
+Abstract: by trusted attesters.
+Markup Shorthands: markdown yes, css no
+</pre>
+
+
+# Introduction # {#introduction}
+
+<i>Todo</i>
+
+## Motivations ## {#motivations}
+
+<i>Todo</i>
+
+## Examples ## {#examples}
+
+<div class="example" id="client-integrity-request">
+  Requesting environment integrity attestation.
+
+  <pre class="lang-js">
+    // getEnvironmentIntegrity expects a "content binding" of the request you are
+    // about to make. The content binding protects against this information being
+    // used for a different request.
+    // The contentBinding will be concatenated with top-level domain name and hashed
+    // before it is sent to the attester.
+
+    const contentBinding = "/someRequestPath?requestID=xxxx" +
+        "Any other data needed for a request-specific contentBinding...";
+
+    const attestation = await navigator.getEnvironmentIntegrity(contentBinding);
+
+    console.log(attestation.encode());
+    "base-64 encoding of the attestation payload and signature approx 500 bytes; see below for details"
+
+    // More on attestation validation below
+    const response = await fetch(\`/someRequest?requestID=xxxx&attested=${attestation.encode()}\`);
+    // Do something with this ...
+  </pre>
+
+</div>
+
+# Web Environment Integrity API # {#api}
+
+<i>Todo</i>
+
+# Attesters # {#attester}
+
+## Token Format ## {#attester-tokens}
+
+<i>Todo</i>
+
+## Browser Acceptance Requirements ## {#attester-browser-requirements}
+
+<i>Todo</i>
+
+# Security and privacy considerations # {#security-and-privacy}
+
+## Security considerations ## {#security}
+
+<i>Todo</i>
+
+## Privacy considerations ## {#privacy}
+
+<i>Todo</i>
+
