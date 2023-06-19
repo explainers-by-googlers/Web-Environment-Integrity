@@ -131,6 +131,11 @@ stores state in the [=Integrity verdict=] that can be used for cross site tracki
 
 ## Security considerations ## {#security}
 
+### Secure context only ### {#security-secure-context}
+
+Web environment integrity MUST only be enabled in a [=secure context=]. This is to ensure that the
+website is not spoofed.
+
 <i>Todo</i>
 
 ## Privacy considerations ## {#privacy}
