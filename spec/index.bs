@@ -71,6 +71,7 @@ stores state in the [=Integrity verdict=] that can be used for cross site tracki
 ## {{AttesterConnection}} ## {#attester-connection}
 
 <xmp class="idl">
+  [Exposed=Window]
   interface AttesterConnection {
     ArrayBuffer getAttestation(DOMString contentBinding);
   };
