@@ -111,6 +111,7 @@ stores state in the [=Integrity verdict=] that can be used for cross site tracki
 ## {{EnvironmentIntegrity}} ## {#environment-integrity}
 
 <xmp class="idl">
+  [Exposed=Window]
   interface EnvironmentIntegrity {
     readonly attribute ArrayBuffer attestationToken;
     DOMString encode();
