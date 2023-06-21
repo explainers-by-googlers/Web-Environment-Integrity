@@ -1489,7 +1489,7 @@ Possible extra rowspan handling
 	}
 </style>
   <meta content="Bikeshed version 516eaf3cf, updated Tue Jun 20 13:48:28 2023 -0700" name="generator">
-  <meta content="b8a049e76e04de712993a821a7482a85e281adbc" name="document-revision">
+  <meta content="25aaa6524c355c594ddf0b9d158484117d4dbc02" name="document-revision">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
@@ -2206,7 +2206,11 @@ by trusted attesters.</p>
     <li>
      <a href="#security-and-privacy"><span class="secno">5</span> <span class="content">Security and privacy considerations</span></a>
      <ol class="toc">
-      <li><a href="#security"><span class="secno">5.1</span> <span class="content">Security considerations</span></a>
+      <li>
+       <a href="#security"><span class="secno">5.1</span> <span class="content">Security considerations</span></a>
+       <ol class="toc">
+        <li><a href="#security-secure-context"><span class="secno">5.1.1</span> <span class="content">Secure context only</span></a>
+       </ol>
       <li><a href="#privacy"><span class="secno">5.2</span> <span class="content">Privacy considerations</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
@@ -2330,6 +2334,9 @@ executing in.</p>
    </dl>
    <h2 class="heading settled" data-level="5" id="security-and-privacy"><span class="secno">5. </span><span class="content">Security and privacy considerations</span><a class="self-link" href="#security-and-privacy"></a></h2>
    <h3 class="heading settled" data-level="5.1" id="security"><span class="secno">5.1. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h3>
+   <h4 class="heading settled" data-level="5.1.1" id="security-secure-context"><span class="secno">5.1.1. </span><span class="content">Secure context only</span><a class="self-link" href="#security-secure-context"></a></h4>
+   <p>Web environment integrity MUST only be enabled in a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context" id="ref-for-secure-context">secure context</a>. This is to ensure that the
+website is not spoofed.</p>
    <p><i>Todo</i></p>
    <h3 class="heading settled" data-level="5.2" id="privacy"><span class="secno">5.2. </span><span class="content">Privacy considerations</span><a class="self-link" href="#privacy"></a></h3>
    <p><i>Todo</i></p>
@@ -2502,6 +2509,7 @@ executing in.</p>
     <ul>
      <li><span class="dfn-paneled" id="be0c27b2">Navigator</span>
      <li><span class="dfn-paneled" id="a72449dd">in parallel</span>
+     <li><span class="dfn-paneled" id="65181da8">secure context</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
@@ -2864,6 +2872,7 @@ executing in.</p>
 window.dfnpanelData = {};
 window.dfnpanelData['be0c27b2'] = {"dfnID": "be0c27b2", "url": "https://html.spec.whatwg.org/multipage/system-state.html#navigator", "dfnText": "Navigator", "refSections": [{"refs": [{"id": "ref-for-navigator"}, {"id": "ref-for-navigator\u2460"}], "title": "4.1. Extensions to Navigator"}], "external": true};
 window.dfnpanelData['a72449dd'] = {"dfnID": "a72449dd", "url": "https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel", "dfnText": "in parallel", "refSections": [{"refs": [{"id": "ref-for-in-parallel"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['65181da8'] = {"dfnID": "65181da8", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#secure-context", "dfnText": "secure context", "refSections": [{"refs": [{"id": "ref-for-secure-context"}], "title": "5.1.1. Secure context only"}], "external": true};
 window.dfnpanelData['6d19ac93'] = {"dfnID": "6d19ac93", "url": "https://infra.spec.whatwg.org/#user-agent", "dfnText": "user agent", "refSections": [{"refs": [{"id": "ref-for-user-agent"}, {"id": "ref-for-user-agent\u2460"}, {"id": "ref-for-user-agent\u2461"}], "title": "3. Attesters"}, {"refs": [{"id": "ref-for-user-agent\u2462"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
 window.dfnpanelData['2f8afbfe'] = {"dfnID": "2f8afbfe", "url": "https://webidl.spec.whatwg.org/#idl-ArrayBuffer", "dfnText": "ArrayBuffer", "refSections": [{"refs": [{"id": "ref-for-idl-ArrayBuffer"}], "title": "3.3. AttesterConnection"}, {"refs": [{"id": "ref-for-idl-ArrayBuffer\u2460"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
 window.dfnpanelData['8855a9aa'] = {"dfnID": "8855a9aa", "url": "https://webidl.spec.whatwg.org/#idl-DOMString", "dfnText": "DOMString", "refSections": [{"refs": [{"id": "ref-for-idl-DOMString"}], "title": "3.3. AttesterConnection"}, {"refs": [{"id": "ref-for-idl-DOMString\u2460"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-idl-DOMString\u2461"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
