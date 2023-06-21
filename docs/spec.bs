@@ -25,7 +25,20 @@ Web Environment Integrity is best suited for detecting deceptive [=web environme
 
 ## Motivations ## {#motivations}
 
-<i>Todo</i>
+<i>This section is non-normative.</i>
+
+Users often depend on websites being able to establish the trustworthiness of the
+[=web environment=]. When users are playing online games for instance, they are trusting that other
+users are not cheating. Or when they are browsing social media websites, they are trusting that
+other users are not faking engagement to make posts popular.
+
+Websites currently need to establish this trust relationship without any support from
+[=user agents=]. This can result in websites collecting signals that can be used to fingerprint
+users.
+
+<dfn for="Web Environment Integrity">Web Environment Integrity</dfn> is being proposed as a privacy
+preserving API to provide low [=entropy=] trust signals for the [=web environment=]. This API relies
+on [=user agents=] having access to an [=attester=].
 
 ## Examples ## {#examples}
 
@@ -59,6 +72,11 @@ Web Environment Integrity is best suited for detecting deceptive [=web environme
 The <dfn for="web environment">web environment</dfn> is defined as <i>TODO</i>
 
 The <dfn for="content binding">content binding</dfn> is defined as <i>TODO</i>
+
+<dfn for="entropy">Entropy</dfn> in this specification refers to Shannon entropy. This is the amount
+information conveyed.
+
+# Attesters # {#attester}
 
 The <dfn for="relying party">relying party</dfn> is defined as any party that relies on the Web Environment Integrity API
 outside of the [=user agent=].
