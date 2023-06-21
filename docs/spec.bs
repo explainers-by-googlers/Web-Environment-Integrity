@@ -9,6 +9,9 @@ Abstract: by trusted attesters.
 Markup Shorthands: markdown yes, css no
 </pre>
 
+<pre class=link-defaults>
+spec:infra; type:dfn; text:user agent
+</pre>
 
 # Introduction # {#introduction}
 
@@ -49,36 +52,45 @@ Markup Shorthands: markdown yes, css no
 
 The <dfn for="web environment">web environment</dfn> is defined as <i>TODO</i>
 
-# Attesters # {#attester}
+The <dfn for="content binding">content binding</dfn> is defined as <i>TODO</i>
 
-The term <dfn for="attester">attester</dfn> refers to a third party capable of returning an [=Integrity verdict=]. A <dfn for="Integrity verdict">Integrity verdict</dfn> refers
-to a response that confirms if the [=attester=] trusts the [=web environment=] the [=user agent=] is
-executing in.
+# Infrastructure # {#infrastructure}
 
-The [=user agent=] connects to the [=attester=] through an {{AttesterConnection}}.
+## Attesters ## {#infrastructure-attester}
 
-The [=user agent=] SHOULD use separate {{AttesterConnection}}s if the {{AttesterConnection}}
-stores state in the [=Integrity verdict=] that can be used for cross site tracking.
+The term <dfn for="attester">attester</dfn> refers to a third party capable of returning an
+[=attester verdict=].
 
-## Token Format ## {#attester-tokens}
+[=User agents=] MUST have an [=attester connection=] to an [=attester=] in order to use Web
+Environment Integrity.
+
+The [=user agent=] SHOULD use separate [=attester connections=] if the [=attester connection=]
+stores state in the [=attester verdict=] that can be used for cross site tracking.
+
+### [=Attester Connection=] ### {#attester-connection}
+
+The <dfn for="Attester Connection">attester connection</dfn> is an abstract concept representing the
+channel through which the [=user agent=] can communicate to an [=attester=].
+The [=user agent=] uses the [=attester connection=] to request new [=attester verdicts=].
+
+The [=attester connection=] MUST use a [=content binding=] to create a new [=attester verdict=].
+
+### [=Attester Verdict=] ### {#attester-verdict}
+
+The <dfn for="attester verdict">attester verdict</dfn> is an abstract concept that refers
+to the response from [=attester=]. It reports how much an [=attester=] trusts the [=web environment=]
+the [=user agent=] is executing in.
+
+The [=attester verdict=] consists of:
+
+<div dfn-for="attester verdict">
+* A <dfn>raw response</dfn> (a COSE [[rfc9053]] signed CBOR [[RFC8949]] stored in an ArrayBuffer)
+
+</div>
+
+## Browser Acceptance Criteria ## {#infrastructure-browser-acceptance-criteria}
 
 <i>Todo</i>
-
-## Browser Acceptance Requirements ## {#attester-browser-requirements}
-
-<i>Todo</i>
-
-## {{AttesterConnection}} ## {#attester-connection}
-
-<xmp class="idl">
-  [Exposed=Window]
-  interface AttesterConnection {
-    ArrayBuffer getAttestation(DOMString contentBinding);
-  };
-</xmp>
-
-: getAttestation
-:: Returns a COSE signed CBOR object as an ArrayBuffer from the [=attester=] that contains the [=Integrity verdict=].
 
 # Web Environment Integrity API # {#api}
 
@@ -94,17 +106,18 @@ stores state in the [=Integrity verdict=] that can be used for cross site tracki
 ### {{Navigator/getEnvironmentIntegrity()}} ### {#navigator-getenvironmentintegrity}
 
 <div algorithm="navigator-getenvironmentintegrity-alg">
-    The [=user agent=] has the global <dfn for="attesterConnection">attesterConnection</dfn>, which is
-    an {{AttesterConnection}} with the [=attester=].
+    The [=user agent=] has the global |attesterConnection|, which is
+    an [=Attester Connection=] with the [=attester=].
 
     The <dfn method for="Navigator"><code>getEnvironmentIntegrity(|contentBinding|)</code></dfn> method, when invoked, runs these steps:
 
     1. Let |promise| be [=a new promise=]
     1. Run the following steps [=in parallel=]:
-        1. Let |environmentIntegrity| be a new {{EnvironmentIntegrity}}
-        1. Set |environmentIntegrity|.{{EnvironmentIntegrity/attestationToken}} to [=attesterConnection=].<a method for=AttesterConnection>getAttestation(|contentBinding|)</a>. If this fails then:
+        1. Set |attesterVerdict| to a new [=attester verdict=] from the |attesterConnection| using the |contentBinding|. If this fails then:
             1. [=Reject=] |promise| with a <i>TODO</i> [=Exception=]
             1. Abort these steps
+        1. Let |environmentIntegrity| be a new {{EnvironmentIntegrity}} with:
+            - {{EnvironmentIntegrity/attestationToken}} set to the [=attester verdict/raw response=] in the |attesterVerdict|
         1. [=Resolve=] |promise| with |environmentIntegrity|
     1. Return |promise|
 </div>
@@ -121,7 +134,7 @@ stores state in the [=Integrity verdict=] that can be used for cross site tracki
 </xmp>
 
 : attestationToken
-:: The attestation token is a COSE signed CBOR object as an ArrayBuffer from the attester.
+:: The attestation token is a COSE [[rfc9053]] signed CBOR [[RFC8949]] object as an ArrayBuffer from the attester.
 : encode()
 :: The encode method will return a Base64 string representation of the attestation token.
 : toJSON()
