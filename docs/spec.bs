@@ -17,7 +17,7 @@ spec:infra; type:dfn; text:user agent
 
 <i>This section is non-normative.</i>
 
-The Web Environment Integrity API allows [=user agents=] to request [=Integrity verdicts=]
+The Web Environment Integrity API allows [=user agents=] to request [=attester verdicts=]
 from an [=attester=] that can be used to verify the integrity of the [=web environment=].
 These verdicts are piped to a [=relying party=] where they are validated for authenticity.
 
