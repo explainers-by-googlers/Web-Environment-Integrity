@@ -84,7 +84,7 @@ the [=user agent=] is executing in.
 The [=attester verdict=] consists of:
 
 <div dfn-for="attester verdict">
-* A <dfn>raw response</dfn> (a COSE [[RFC9053]] signed CBOR [[RFC8949]] stored in an ArrayBuffer)
+* A <dfn>raw response</dfn> (a COSE [[RFC9053]] signed CBOR [[RFC8949]] stored in an {{ArrayBuffer}})
 
 </div>
 
@@ -134,7 +134,7 @@ The [=attester verdict=] consists of:
 </xmp>
 
 : attestationToken
-:: The attestation token is a COSE [[RFC9053]] signed CBOR [[RFC8949]] object as an ArrayBuffer from the attester.
+:: The attestation token is a COSE [[RFC9053]] signed CBOR [[RFC8949]] object as an {{ArrayBuffer}} from the attester.
 : encode()
 :: The encode method will return a Base64 string representation of the attestation token.
 : toJSON()
