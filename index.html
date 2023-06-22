@@ -1489,7 +1489,7 @@ Possible extra rowspan handling
 	}
 </style>
   <meta content="Bikeshed version 516eaf3cf, updated Tue Jun 20 13:48:28 2023 -0700" name="generator">
-  <meta content="70b1f147869fd2246247d541fd8fda65edf810af" name="document-revision">
+  <meta content="b14298fd03066046f1d9b6c87bad8c8ca9c825ab" name="document-revision">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
@@ -2281,7 +2281,7 @@ to the response from <a data-link-type="dfn" href="#attester-attester" id="ref-f
    <div>
     <ul>
      <li data-md>
-      <p>A <dfn class="dfn-paneled" data-dfn-for="attester verdict" data-dfn-type="dfn" data-noexport id="attester-verdict-raw-response">raw response</dfn> (a COSE <a data-link-type="biblio" href="#biblio-rfc9053" title="CBOR Object Signing and Encryption (COSE): Initial Algorithms">[RFC9053]</a> signed CBOR <a data-link-type="biblio" href="#biblio-rfc8949" title="Concise Binary Object Representation (CBOR)">[RFC8949]</a> stored in an ArrayBuffer)</p>
+      <p>A <dfn class="dfn-paneled" data-dfn-for="attester verdict" data-dfn-type="dfn" data-noexport id="attester-verdict-raw-response">raw response</dfn> (a COSE <a data-link-type="biblio" href="#biblio-rfc9053" title="CBOR Object Signing and Encryption (COSE): Initial Algorithms">[RFC9053]</a> signed CBOR <a data-link-type="biblio" href="#biblio-rfc8949" title="Concise Binary Object Representation (CBOR)">[RFC8949]</a> stored in an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer">ArrayBuffer</a></code>)</p>
     </ul>
    </div>
    <h3 class="heading settled" data-level="3.2" id="infrastructure-browser-acceptance-criteria"><span class="secno">3.2. </span><span class="content">Browser Acceptance Criteria</span><a class="self-link" href="#infrastructure-browser-acceptance-criteria"></a></h3>
@@ -2328,7 +2328,7 @@ to the response from <a data-link-type="dfn" href="#attester-attester" id="ref-f
    <h3 class="heading settled" data-level="4.2" id="environment-integrity"><span class="secno">4.2. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#environmentintegrity" id="ref-for-environmentintegrity②">EnvironmentIntegrity</a></code></span><a class="self-link" href="#environment-integrity"></a></h3>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="environmentintegrity"><code><c- g>EnvironmentIntegrity</c-></code></dfn> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer"><c- b>ArrayBuffer</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="attribute" data-export data-readonly data-type="ArrayBuffer" id="dom-environmentintegrity-attestationtoken"><code><c- g>attestationToken</c-></code></dfn>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer①"><c- b>ArrayBuffer</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="attribute" data-export data-readonly data-type="ArrayBuffer" id="dom-environmentintegrity-attestationtoken"><code><c- g>attestationToken</c-></code></dfn>;
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="method" data-export data-lt="encode()" id="dom-environmentintegrity-encode"><code><c- g>encode</c-></code><a class="self-link" href="#dom-environmentintegrity-encode"></a></dfn>();
   <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-object" id="ref-for-idl-object"><c- b>object</c-></a> <dfn class="idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="method" data-export data-lt="toJSON()" id="dom-environmentintegrity-tojson"><code><c- g>toJSON</c-></code><a class="self-link" href="#dom-environmentintegrity-tojson"></a></dfn>();
 };
@@ -2336,7 +2336,7 @@ to the response from <a data-link-type="dfn" href="#attester-attester" id="ref-f
    <dl>
     <dt data-md>attestationToken
     <dd data-md>
-     <p>The attestation token is a COSE <a data-link-type="biblio" href="#biblio-rfc9053" title="CBOR Object Signing and Encryption (COSE): Initial Algorithms">[RFC9053]</a> signed CBOR <a data-link-type="biblio" href="#biblio-rfc8949" title="Concise Binary Object Representation (CBOR)">[RFC8949]</a> object as an ArrayBuffer from the attester.</p>
+     <p>The attestation token is a COSE <a data-link-type="biblio" href="#biblio-rfc9053" title="CBOR Object Signing and Encryption (COSE): Initial Algorithms">[RFC9053]</a> signed CBOR <a data-link-type="biblio" href="#biblio-rfc8949" title="Concise Binary Object Representation (CBOR)">[RFC8949]</a> object as an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer②">ArrayBuffer</a></code> from the attester.</p>
     <dt data-md>encode()
     <dd data-md>
      <p>The encode method will return a Base64 string representation of the attestation token.</p>
@@ -2888,7 +2888,7 @@ window.dfnpanelData['be0c27b2'] = {"dfnID": "be0c27b2", "url": "https://html.spe
 window.dfnpanelData['a72449dd'] = {"dfnID": "a72449dd", "url": "https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel", "dfnText": "in parallel", "refSections": [{"refs": [{"id": "ref-for-in-parallel"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
 window.dfnpanelData['65181da8'] = {"dfnID": "65181da8", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#secure-context", "dfnText": "secure context", "refSections": [{"refs": [{"id": "ref-for-secure-context"}], "title": "5.1.1. Secure context only"}], "external": true};
 window.dfnpanelData['6d19ac93'] = {"dfnID": "6d19ac93", "url": "https://infra.spec.whatwg.org/#user-agent", "dfnText": "user agent", "refSections": [{"refs": [{"id": "ref-for-user-agent"}, {"id": "ref-for-user-agent\u2460"}], "title": "3.1. Attesters"}, {"refs": [{"id": "ref-for-user-agent\u2461"}, {"id": "ref-for-user-agent\u2462"}], "title": "3.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-user-agent\u2463"}], "title": "3.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-user-agent\u2464"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
-window.dfnpanelData['2f8afbfe'] = {"dfnID": "2f8afbfe", "url": "https://webidl.spec.whatwg.org/#idl-ArrayBuffer", "dfnText": "ArrayBuffer", "refSections": [{"refs": [{"id": "ref-for-idl-ArrayBuffer"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['2f8afbfe'] = {"dfnID": "2f8afbfe", "url": "https://webidl.spec.whatwg.org/#idl-ArrayBuffer", "dfnText": "ArrayBuffer", "refSections": [{"refs": [{"id": "ref-for-idl-ArrayBuffer"}], "title": "3.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-idl-ArrayBuffer\u2460"}, {"id": "ref-for-idl-ArrayBuffer\u2461"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
 window.dfnpanelData['8855a9aa'] = {"dfnID": "8855a9aa", "url": "https://webidl.spec.whatwg.org/#idl-DOMString", "dfnText": "DOMString", "refSections": [{"refs": [{"id": "ref-for-idl-DOMString"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-idl-DOMString\u2460"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
 window.dfnpanelData['889e932f'] = {"dfnID": "889e932f", "url": "https://webidl.spec.whatwg.org/#Exposed", "dfnText": "Exposed", "refSections": [{"refs": [{"id": "ref-for-Exposed"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-Exposed\u2460"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
 window.dfnpanelData['bdbd19d1'] = {"dfnID": "bdbd19d1", "url": "https://webidl.spec.whatwg.org/#idl-promise", "dfnText": "Promise", "refSections": [{"refs": [{"id": "ref-for-idl-promise"}], "title": "4.1. Extensions to Navigator"}], "external": true};
