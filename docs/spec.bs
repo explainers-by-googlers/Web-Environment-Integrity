@@ -63,7 +63,6 @@ The <dfn for="content binding">content binding</dfn> is defined as <i>TODO</i>
 The <dfn for="relying party">relying party</dfn> is defined as any party that relies on the Web Environment Integrity API
 outside of the [=user agent=].
 
-=======
 # Infrastructure # {#infrastructure}
 
 ## Attesters ## {#infrastructure-attester}
