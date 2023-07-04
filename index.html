@@ -1488,8 +1488,8 @@ Possible extra rowspan handling
 		}
 	}
 </style>
-  <meta content="Bikeshed version 516eaf3cf, updated Tue Jun 20 13:48:28 2023 -0700" name="generator">
-  <meta content="97d7a8e20ad9dcb353af608da6953ff8ae43bee5" name="document-revision">
+  <meta content="Bikeshed version 5edf5e459, updated Thu Jun 22 11:28:01 2023 -0700" name="generator">
+  <meta content="315ecaa79f1975b7dcf6de12b1e4f1bc602b2aea" name="document-revision">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
@@ -1996,33 +1996,12 @@ a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
 dfn > a.self-link::before      { content: "#"; }
 </style>
-<style>/* Boilerplate: style-style-syntax-highlighting */
+<style>/* Boilerplate: style-syntax-highlighting */
 
             pre.idl.highlight {
                 background: var(--borderedblock-bg, var(--def-bg));
             }
             
-</style>
-<style>/* Boilerplate: style-style-var-click-highlighting */
-/*
-Colors were chosen in Lab using https://nixsensor.com/free-color-converter/
-D50 2deg illuminant, L in [0,100], a and b in [-128, 128]
-0 = lab(85,0,85)
-1 = lab(85,80,30)
-2 = lab(85,-40,40)
-3 = lab(85,-50,0)
-4 = lab(85,5,15)
-5 = lab(85,-10,-50)
-6 = lab(85,35,-15)
-*/
-var { cursor: pointer; }
-var.selected0 { background-color: #F4D200; box-shadow: 0 0 0 2px #F4D200; }
-var.selected1 { background-color: #FF87A2; box-shadow: 0 0 0 2px #FF87A2; }
-var.selected2 { background-color: #96E885; box-shadow: 0 0 0 2px #96E885; }
-var.selected3 { background-color: #3EEED2; box-shadow: 0 0 0 2px #3EEED2; }
-var.selected4 { background-color: #EACFB6; box-shadow: 0 0 0 2px #EACFB6; }
-var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
-var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
 </style>
 <style>/* Boilerplate: style-syntax-highlighting */
 
@@ -2147,11 +2126,32 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
 }
 </style>
+<style>/* Boilerplate: style-var-click-highlighting */
+/*
+Colors were chosen in Lab using https://nixsensor.com/free-color-converter/
+D50 2deg illuminant, L in [0,100], a and b in [-128, 128]
+0 = lab(85,0,85)
+1 = lab(85,80,30)
+2 = lab(85,-40,40)
+3 = lab(85,-50,0)
+4 = lab(85,5,15)
+5 = lab(85,-10,-50)
+6 = lab(85,35,-15)
+*/
+var { cursor: pointer; }
+var.selected0 { background-color: #F4D200; box-shadow: 0 0 0 2px #F4D200; }
+var.selected1 { background-color: #FF87A2; box-shadow: 0 0 0 2px #FF87A2; }
+var.selected2 { background-color: #96E885; box-shadow: 0 0 0 2px #96E885; }
+var.selected3 { background-color: #3EEED2; box-shadow: 0 0 0 2px #3EEED2; }
+var.selected4 { background-color: #EACFB6; box-shadow: 0 0 0 2px #EACFB6; }
+var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
+var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
+</style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Web Environment Integrity</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">A Collection of Interesting Ideas, <time class="dt-updated" datetime="2023-06-22">22 June 2023</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">A Collection of Interesting Ideas, <time class="dt-updated" datetime="2023-07-04">4 July 2023</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>Issue Tracking:
@@ -2163,7 +2163,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <div data-fill-with="warning"></div>
    <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" height="15" src="https://licensebuttons.net/p/zero/1.0/80x15.png" width="80"></a> To the extent possible under law, the editors have waived all copyright
 and related or neighboring rights to this work.
-In addition, as of 22 June 2023,
+In addition, as of 4 July 2023,
 the editors have made this specification available under the <a href="http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
 which is available at http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
 Parts of this work may be from another specification document.  If so, those parts are instead covered by the license of that specification document. </p>
@@ -2186,36 +2186,37 @@ by trusted attesters.</p>
       <li><a href="#examples"><span class="secno">1.2</span> <span class="content">Examples</span></a>
      </ol>
     <li><a href="#key-terms"><span class="secno">2</span> <span class="content">Key terms</span></a>
+    <li><a href="#attester"><span class="secno">3</span> <span class="content">Attesters</span></a>
     <li>
-     <a href="#infrastructure"><span class="secno">3</span> <span class="content">Infrastructure</span></a>
+     <a href="#infrastructure"><span class="secno">4</span> <span class="content">Infrastructure</span></a>
      <ol class="toc">
       <li>
-       <a href="#infrastructure-attester"><span class="secno">3.1</span> <span class="content">Attesters</span></a>
+       <a href="#infrastructure-attester"><span class="secno">4.1</span> <span class="content">Attesters</span></a>
        <ol class="toc">
-        <li><a href="#attester-connection"><span class="secno">3.1.1</span> <span class="content"><span>Attester Connection</span></span></a>
-        <li><a href="#attester-verdict"><span class="secno">3.1.2</span> <span class="content"><span>Attester Verdict</span></span></a>
+        <li><a href="#attester-connection"><span class="secno">4.1.1</span> <span class="content"><span>Attester Connection</span></span></a>
+        <li><a href="#attester-verdict"><span class="secno">4.1.2</span> <span class="content"><span>Attester Verdict</span></span></a>
        </ol>
-      <li><a href="#infrastructure-browser-acceptance-criteria"><span class="secno">3.2</span> <span class="content">Browser Acceptance Criteria</span></a>
+      <li><a href="#infrastructure-browser-acceptance-criteria"><span class="secno">4.2</span> <span class="content">Browser Acceptance Criteria</span></a>
      </ol>
     <li>
-     <a href="#api"><span class="secno">4</span> <span class="content">Web Environment Integrity API</span></a>
+     <a href="#api"><span class="secno">5</span> <span class="content">Web Environment Integrity API</span></a>
      <ol class="toc">
       <li>
-       <a href="#extensions-to-navigator"><span class="secno">4.1</span> <span class="content">Extensions to <code class="idl"><span>Navigator</span></code></span></a>
+       <a href="#extensions-to-navigator"><span class="secno">5.1</span> <span class="content">Extensions to <code class="idl"><span>Navigator</span></code></span></a>
        <ol class="toc">
-        <li><a href="#navigator-getenvironmentintegrity"><span class="secno">4.1.1</span> <span class="content"><code class="idl"><span>getEnvironmentIntegrity()</span></code></span></a>
+        <li><a href="#navigator-getenvironmentintegrity"><span class="secno">5.1.1</span> <span class="content"><code class="idl"><span>getEnvironmentIntegrity()</span></code></span></a>
        </ol>
-      <li><a href="#environment-integrity"><span class="secno">4.2</span> <span class="content"><code class="idl"><span>EnvironmentIntegrity</span></code></span></a>
+      <li><a href="#environment-integrity"><span class="secno">5.2</span> <span class="content"><code class="idl"><span>EnvironmentIntegrity</span></code></span></a>
      </ol>
     <li>
-     <a href="#security-and-privacy"><span class="secno">5</span> <span class="content">Security and privacy considerations</span></a>
+     <a href="#security-and-privacy"><span class="secno">6</span> <span class="content">Security and privacy considerations</span></a>
      <ol class="toc">
       <li>
-       <a href="#security"><span class="secno">5.1</span> <span class="content">Security considerations</span></a>
+       <a href="#security"><span class="secno">6.1</span> <span class="content">Security considerations</span></a>
        <ol class="toc">
-        <li><a href="#security-secure-context"><span class="secno">5.1.1</span> <span class="content">Secure context only</span></a>
+        <li><a href="#security-secure-context"><span class="secno">6.1.1</span> <span class="content">Secure context only</span></a>
        </ol>
-      <li><a href="#privacy"><span class="secno">5.2</span> <span class="content">Privacy considerations</span></a>
+      <li><a href="#privacy"><span class="secno">6.2</span> <span class="content">Privacy considerations</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
@@ -2240,7 +2241,15 @@ by trusted attesters.</p>
 These verdicts are piped to a <a data-link-type="dfn" href="#relying-party-relying-party" id="ref-for-relying-party-relying-party">relying party</a> where they are validated for authenticity.</p>
    <p>Web Environment Integrity is best suited for detecting deceptive <a data-link-type="dfn" href="#web-environment-web-environment" id="ref-for-web-environment-web-environment①">web environments</a>.</p>
    <h3 class="heading settled" data-level="1.1" id="motivations"><span class="secno">1.1. </span><span class="content">Motivations</span><a class="self-link" href="#motivations"></a></h3>
-   <p><i>Todo</i></p>
+   <p><i>This section is non-normative.</i></p>
+   <p>Users often depend on websites being able to establish the trustworthiness of the <a data-link-type="dfn" href="#web-environment-web-environment" id="ref-for-web-environment-web-environment②">web environment</a>. When users are playing online games for instance, they are trusting that other
+users are not cheating. Or when they are browsing social media websites, they are trusting that
+other users are not faking engagement to make posts popular.</p>
+   <p>Websites currently need to establish this trust relationship without any support from <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent①">user agents</a>. This can result in websites collecting signals that can be used to fingerprint
+users.</p>
+   <p><dfn data-dfn-for="Web Environment Integrity" data-dfn-type="dfn" data-noexport id="web-environment-integrity-web-environment-integrity">Web Environment Integrity<a class="self-link" href="#web-environment-integrity-web-environment-integrity"></a></dfn> is being proposed as a privacy
+preserving API to provide low <a data-link-type="dfn" href="#entropy-entropy" id="ref-for-entropy-entropy">entropy</a> trust signals for the <a data-link-type="dfn" href="#web-environment-web-environment" id="ref-for-web-environment-web-environment③">web environment</a>. This API relies
+on <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent②">user agents</a> having access to an <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester①">attester</a>.</p>
    <h3 class="heading settled" data-level="1.2" id="examples"><span class="secno">1.2. </span><span class="content">Examples</span><a class="self-link" href="#examples"></a></h3>
    <div class="example" id="client-integrity-request">
     <a class="self-link" href="#client-integrity-request"></a> Requesting environment integrity attestation. 
@@ -2266,22 +2275,25 @@ console<c- p>.</c->log<c- p>(</c->attestation<c- p>.</c->encode<c- p>());</c->
    <h2 class="heading settled" data-level="2" id="key-terms"><span class="secno">2. </span><span class="content">Key terms</span><a class="self-link" href="#key-terms"></a></h2>
    <p>The <dfn class="dfn-paneled" data-dfn-for="web environment" data-dfn-type="dfn" data-noexport id="web-environment-web-environment">web environment</dfn> is defined as <i>TODO</i></p>
    <p>The <dfn class="dfn-paneled" data-dfn-for="content binding" data-dfn-type="dfn" data-noexport id="content-binding-content-binding">content binding</dfn> is defined as <i>TODO</i></p>
+   <p><dfn class="dfn-paneled" data-dfn-for="entropy" data-dfn-type="dfn" data-noexport id="entropy-entropy">Entropy</dfn> in this specification refers to Shannon entropy. This is the amount
+information conveyed.</p>
+   <h2 class="heading settled" data-level="3" id="attester"><span class="secno">3. </span><span class="content">Attesters</span><a class="self-link" href="#attester"></a></h2>
    <p>The <dfn class="dfn-paneled" data-dfn-for="relying party" data-dfn-type="dfn" data-noexport id="relying-party-relying-party">relying party</dfn> is defined as any party that relies on the Web Environment Integrity API
-outside of the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent①">user agent</a>.</p>
-   <h2 class="heading settled" data-level="3" id="infrastructure"><span class="secno">3. </span><span class="content">Infrastructure</span><a class="self-link" href="#infrastructure"></a></h2>
-   <h3 class="heading settled" data-level="3.1" id="infrastructure-attester"><span class="secno">3.1. </span><span class="content">Attesters</span><a class="self-link" href="#infrastructure-attester"></a></h3>
+outside of the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent③">user agent</a>.</p>
+   <h2 class="heading settled" data-level="4" id="infrastructure"><span class="secno">4. </span><span class="content">Infrastructure</span><a class="self-link" href="#infrastructure"></a></h2>
+   <h3 class="heading settled" data-level="4.1" id="infrastructure-attester"><span class="secno">4.1. </span><span class="content">Attesters</span><a class="self-link" href="#infrastructure-attester"></a></h3>
    <p>The term <dfn class="dfn-paneled" data-dfn-for="attester" data-dfn-type="dfn" data-noexport id="attester-attester">attester</dfn> refers to a third party capable of returning an <a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict①">attester verdict</a>.</p>
-   <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent②">User agents</a> MUST have an <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection">attester connection</a> to an <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester①">attester</a> in order to use Web
+   <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent④">User agents</a> MUST have an <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection">attester connection</a> to an <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester②">attester</a> in order to use Web
 Environment Integrity.</p>
-   <p>The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent③">user agent</a> SHOULD use separate <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection①">attester connections</a> if the <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection②">attester connection</a> stores state in the <a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict②">attester verdict</a> that can be used for cross site tracking.</p>
-   <h4 class="heading settled" data-level="3.1.1" id="attester-connection"><span class="secno">3.1.1. </span><span class="content"><a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection③">Attester Connection</a></span><a class="self-link" href="#attester-connection"></a></h4>
+   <p>The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent⑤">user agent</a> SHOULD use separate <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection①">attester connections</a> if the <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection②">attester connection</a> stores state in the <a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict②">attester verdict</a> that can be used for cross site tracking.</p>
+   <h4 class="heading settled" data-level="4.1.1" id="attester-connection"><span class="secno">4.1.1. </span><span class="content"><a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection③">Attester Connection</a></span><a class="self-link" href="#attester-connection"></a></h4>
    <p>The <dfn class="dfn-paneled" data-dfn-for="Attester Connection" data-dfn-type="dfn" data-noexport id="attester-connection-attester-connection">attester connection</dfn> is an abstract concept representing the
-channel through which the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent④">user agent</a> can communicate to an <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester②">attester</a>.
-The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent⑤">user agent</a> uses the <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection④">attester connection</a> to request new <a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict③">attester verdicts</a>.</p>
+channel through which the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent⑥">user agent</a> can communicate to an <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester③">attester</a>.
+The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent⑦">user agent</a> uses the <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection④">attester connection</a> to request new <a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict③">attester verdicts</a>.</p>
    <p>The <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection⑤">attester connection</a> MUST use a <a data-link-type="dfn" href="#content-binding-content-binding" id="ref-for-content-binding-content-binding">content binding</a> to create a new <a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict④">attester verdict</a>.</p>
-   <h4 class="heading settled" data-level="3.1.2" id="attester-verdict"><span class="secno">3.1.2. </span><span class="content"><a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict⑤">Attester Verdict</a></span><a class="self-link" href="#attester-verdict"></a></h4>
+   <h4 class="heading settled" data-level="4.1.2" id="attester-verdict"><span class="secno">4.1.2. </span><span class="content"><a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict⑤">Attester Verdict</a></span><a class="self-link" href="#attester-verdict"></a></h4>
    <p>The <dfn class="dfn-paneled" data-dfn-for="attester verdict" data-dfn-type="dfn" data-noexport id="attester-verdict-attester-verdict">attester verdict</dfn> is an abstract concept that refers
-to the response from <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester③">attester</a>. It reports how much an <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester④">attester</a> trusts the <a data-link-type="dfn" href="#web-environment-web-environment" id="ref-for-web-environment-web-environment②">web environment</a> the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent⑥">user agent</a> is executing in.</p>
+to the response from <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester④">attester</a>. It reports how much an <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester⑤">attester</a> trusts the <a data-link-type="dfn" href="#web-environment-web-environment" id="ref-for-web-environment-web-environment④">web environment</a> the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent⑧">user agent</a> is executing in.</p>
    <p>The <a data-link-type="dfn" href="#attester-verdict-attester-verdict" id="ref-for-attester-verdict-attester-verdict⑥">attester verdict</a> consists of:</p>
    <div>
     <ul>
@@ -2289,19 +2301,19 @@ to the response from <a data-link-type="dfn" href="#attester-attester" id="ref-f
       <p>A <dfn class="dfn-paneled" data-dfn-for="attester verdict" data-dfn-type="dfn" data-noexport id="attester-verdict-raw-response">raw response</dfn> (a COSE <a data-link-type="biblio" href="#biblio-rfc9053" title="CBOR Object Signing and Encryption (COSE): Initial Algorithms">[RFC9053]</a> signed CBOR <a data-link-type="biblio" href="#biblio-rfc8949" title="Concise Binary Object Representation (CBOR)">[RFC8949]</a> stored in an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer">ArrayBuffer</a></code>)</p>
     </ul>
    </div>
-   <h3 class="heading settled" data-level="3.2" id="infrastructure-browser-acceptance-criteria"><span class="secno">3.2. </span><span class="content">Browser Acceptance Criteria</span><a class="self-link" href="#infrastructure-browser-acceptance-criteria"></a></h3>
+   <h3 class="heading settled" data-level="4.2" id="infrastructure-browser-acceptance-criteria"><span class="secno">4.2. </span><span class="content">Browser Acceptance Criteria</span><a class="self-link" href="#infrastructure-browser-acceptance-criteria"></a></h3>
    <p><i>Todo</i></p>
-   <h2 class="heading settled" data-level="4" id="api"><span class="secno">4. </span><span class="content">Web Environment Integrity API</span><a class="self-link" href="#api"></a></h2>
-   <h3 class="heading settled" data-level="4.1" id="extensions-to-navigator"><span class="secno">4.1. </span><span class="content">Extensions to <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/system-state.html#navigator" id="ref-for-navigator">Navigator</a></code></span><a class="self-link" href="#extensions-to-navigator"></a></h3>
+   <h2 class="heading settled" data-level="5" id="api"><span class="secno">5. </span><span class="content">Web Environment Integrity API</span><a class="self-link" href="#api"></a></h2>
+   <h3 class="heading settled" data-level="5.1" id="extensions-to-navigator"><span class="secno">5.1. </span><span class="content">Extensions to <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/system-state.html#navigator" id="ref-for-navigator">Navigator</a></code></span><a class="self-link" href="#extensions-to-navigator"></a></h3>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/system-state.html#navigator" id="ref-for-navigator①"><c- g>Navigator</c-></a> {
   [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#SecureContext" id="ref-for-SecureContext"><c- g>SecureContext</c-></a>] <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-promise" id="ref-for-idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#environmentintegrity" id="ref-for-environmentintegrity"><c- n>EnvironmentIntegrity</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-navigator-getenvironmentintegrity" id="ref-for-dom-navigator-getenvironmentintegrity"><c- g>getEnvironmentIntegrity</c-></a>(<a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="Navigator/getEnvironmentIntegrity(contentBinding)" data-dfn-type="argument" data-export id="dom-navigator-getenvironmentintegrity-contentbinding-contentbinding"><code><c- g>contentBinding</c-></code><a class="self-link" href="#dom-navigator-getenvironmentintegrity-contentbinding-contentbinding"></a></dfn>);
 };
 </pre>
-   <h4 class="heading settled" data-level="4.1.1" id="navigator-getenvironmentintegrity"><span class="secno">4.1.1. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#dom-navigator-getenvironmentintegrity" id="ref-for-dom-navigator-getenvironmentintegrity①">getEnvironmentIntegrity()</a></code></span><a class="self-link" href="#navigator-getenvironmentintegrity"></a></h4>
+   <h4 class="heading settled" data-level="5.1.1" id="navigator-getenvironmentintegrity"><span class="secno">5.1.1. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#dom-navigator-getenvironmentintegrity" id="ref-for-dom-navigator-getenvironmentintegrity①">getEnvironmentIntegrity()</a></code></span><a class="self-link" href="#navigator-getenvironmentintegrity"></a></h4>
    <div class="algorithm" data-algorithm="navigator-getenvironmentintegrity-alg">
-     The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent⑦">user agent</a> has the global <var>attesterConnection</var>, which is
-    an <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection⑥">Attester Connection</a> with the <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester⑤">attester</a>. 
+     The <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#user-agent" id="ref-for-user-agent⑨">user agent</a> has the global <var>attesterConnection</var>, which is
+    an <a data-link-type="dfn" href="#attester-connection-attester-connection" id="ref-for-attester-connection-attester-connection⑥">Attester Connection</a> with the <a data-link-type="dfn" href="#attester-attester" id="ref-for-attester-attester⑥">attester</a>. 
     <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="Navigator" data-dfn-type="method" data-export id="dom-navigator-getenvironmentintegrity"><code>getEnvironmentIntegrity(<var>contentBinding</var>)</code></dfn> method, when invoked, runs these steps:</p>
     <ol>
      <li data-md>
@@ -2330,7 +2342,7 @@ to the response from <a data-link-type="dfn" href="#attester-attester" id="ref-f
       <p>Return <var>promise</var></p>
     </ol>
    </div>
-   <h3 class="heading settled" data-level="4.2" id="environment-integrity"><span class="secno">4.2. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#environmentintegrity" id="ref-for-environmentintegrity②">EnvironmentIntegrity</a></code></span><a class="self-link" href="#environment-integrity"></a></h3>
+   <h3 class="heading settled" data-level="5.2" id="environment-integrity"><span class="secno">5.2. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#environmentintegrity" id="ref-for-environmentintegrity②">EnvironmentIntegrity</a></code></span><a class="self-link" href="#environment-integrity"></a></h3>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="environmentintegrity"><code><c- g>EnvironmentIntegrity</c-></code></dfn> {
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer①"><c- b>ArrayBuffer</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="EnvironmentIntegrity" data-dfn-type="attribute" data-export data-readonly data-type="ArrayBuffer" id="dom-environmentintegrity-attestationtoken"><code><c- g>attestationToken</c-></code></dfn>;
@@ -2349,13 +2361,13 @@ to the response from <a data-link-type="dfn" href="#attester-attester" id="ref-f
     <dd data-md>
      <p>The toJSON method returns a human readable JSON representation of the attestation token. It will first decode the CBOR object. Useful for local debugging.</p>
    </dl>
-   <h2 class="heading settled" data-level="5" id="security-and-privacy"><span class="secno">5. </span><span class="content">Security and privacy considerations</span><a class="self-link" href="#security-and-privacy"></a></h2>
-   <h3 class="heading settled" data-level="5.1" id="security"><span class="secno">5.1. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h3>
-   <h4 class="heading settled" data-level="5.1.1" id="security-secure-context"><span class="secno">5.1.1. </span><span class="content">Secure context only</span><a class="self-link" href="#security-secure-context"></a></h4>
+   <h2 class="heading settled" data-level="6" id="security-and-privacy"><span class="secno">6. </span><span class="content">Security and privacy considerations</span><a class="self-link" href="#security-and-privacy"></a></h2>
+   <h3 class="heading settled" data-level="6.1" id="security"><span class="secno">6.1. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h3>
+   <h4 class="heading settled" data-level="6.1.1" id="security-secure-context"><span class="secno">6.1.1. </span><span class="content">Secure context only</span><a class="self-link" href="#security-secure-context"></a></h4>
    <p>Web environment integrity MUST only be enabled in a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#secure-context" id="ref-for-secure-context">secure context</a>. This is to ensure that the
 website is not spoofed.</p>
    <p><i>Todo</i></p>
-   <h3 class="heading settled" data-level="5.2" id="privacy"><span class="secno">5.2. </span><span class="content">Privacy considerations</span><a class="self-link" href="#privacy"></a></h3>
+   <h3 class="heading settled" data-level="6.2" id="privacy"><span class="secno">6.2. </span><span class="content">Privacy considerations</span><a class="self-link" href="#privacy"></a></h3>
    <p><i>Todo</i></p>
   </main>
   <div data-fill-with="conformance">
@@ -2507,18 +2519,20 @@ website is not spoofed.</p>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#dom-environmentintegrity-attestationtoken">attestationToken</a><span>, in § 4.2</span>
-   <li><a href="#attester-attester">attester</a><span>, in § 3.1</span>
-   <li><a href="#attester-connection-attester-connection">attester connection</a><span>, in § 3.1.1</span>
-   <li><a href="#attester-verdict-attester-verdict">attester verdict</a><span>, in § 3.1.2</span>
+   <li><a href="#dom-environmentintegrity-attestationtoken">attestationToken</a><span>, in § 5.2</span>
+   <li><a href="#attester-attester">attester</a><span>, in § 4.1</span>
+   <li><a href="#attester-connection-attester-connection">attester connection</a><span>, in § 4.1.1</span>
+   <li><a href="#attester-verdict-attester-verdict">attester verdict</a><span>, in § 4.1.2</span>
    <li><a href="#content-binding-content-binding">content binding</a><span>, in § 2</span>
-   <li><a href="#dom-environmentintegrity-encode">encode()</a><span>, in § 4.2</span>
-   <li><a href="#environmentintegrity">EnvironmentIntegrity</a><span>, in § 4.2</span>
-   <li><a href="#dom-navigator-getenvironmentintegrity">getEnvironmentIntegrity(contentBinding)</a><span>, in § 4.1.1</span>
-   <li><a href="#attester-verdict-raw-response">raw response</a><span>, in § 3.1.2</span>
-   <li><a href="#relying-party-relying-party">relying party</a><span>, in § 2</span>
-   <li><a href="#dom-environmentintegrity-tojson">toJSON()</a><span>, in § 4.2</span>
+   <li><a href="#dom-environmentintegrity-encode">encode()</a><span>, in § 5.2</span>
+   <li><a href="#entropy-entropy">Entropy</a><span>, in § 2</span>
+   <li><a href="#environmentintegrity">EnvironmentIntegrity</a><span>, in § 5.2</span>
+   <li><a href="#dom-navigator-getenvironmentintegrity">getEnvironmentIntegrity(contentBinding)</a><span>, in § 5.1.1</span>
+   <li><a href="#attester-verdict-raw-response">raw response</a><span>, in § 4.1.2</span>
+   <li><a href="#relying-party-relying-party">relying party</a><span>, in § 3</span>
+   <li><a href="#dom-environmentintegrity-tojson">toJSON()</a><span>, in § 5.2</span>
    <li><a href="#web-environment-web-environment">web environment</a><span>, in § 2</span>
+   <li><a href="#web-environment-integrity-web-environment-integrity">Web Environment Integrity</a><span>, in § 1.1</span>
   </ul>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
@@ -2890,30 +2904,31 @@ website is not spoofed.</p>
 </script>
 <script>/* Boilerplate: script-dfn-panel-json */
 window.dfnpanelData = {};
-window.dfnpanelData['be0c27b2'] = {"dfnID": "be0c27b2", "url": "https://html.spec.whatwg.org/multipage/system-state.html#navigator", "dfnText": "Navigator", "refSections": [{"refs": [{"id": "ref-for-navigator"}, {"id": "ref-for-navigator\u2460"}], "title": "4.1. Extensions to Navigator"}], "external": true};
-window.dfnpanelData['a72449dd'] = {"dfnID": "a72449dd", "url": "https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel", "dfnText": "in parallel", "refSections": [{"refs": [{"id": "ref-for-in-parallel"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
-window.dfnpanelData['65181da8'] = {"dfnID": "65181da8", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#secure-context", "dfnText": "secure context", "refSections": [{"refs": [{"id": "ref-for-secure-context"}], "title": "5.1.1. Secure context only"}], "external": true};
-window.dfnpanelData['6d19ac93'] = {"dfnID": "6d19ac93", "url": "https://infra.spec.whatwg.org/#user-agent", "dfnText": "user agent", "refSections": [{"refs": [{"id": "ref-for-user-agent"}], "title": "1. Introduction"}, {"refs": [{"id": "ref-for-user-agent\u2460"}], "title": "2. Key terms"}, {"refs": [{"id": "ref-for-user-agent\u2461"}, {"id": "ref-for-user-agent\u2462"}], "title": "3.1. Attesters"}, {"refs": [{"id": "ref-for-user-agent\u2463"}, {"id": "ref-for-user-agent\u2464"}], "title": "3.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-user-agent\u2465"}], "title": "3.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-user-agent\u2466"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
-window.dfnpanelData['2f8afbfe'] = {"dfnID": "2f8afbfe", "url": "https://webidl.spec.whatwg.org/#idl-ArrayBuffer", "dfnText": "ArrayBuffer", "refSections": [{"refs": [{"id": "ref-for-idl-ArrayBuffer"}], "title": "3.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-idl-ArrayBuffer\u2460"}, {"id": "ref-for-idl-ArrayBuffer\u2461"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
-window.dfnpanelData['8855a9aa'] = {"dfnID": "8855a9aa", "url": "https://webidl.spec.whatwg.org/#idl-DOMString", "dfnText": "DOMString", "refSections": [{"refs": [{"id": "ref-for-idl-DOMString"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-idl-DOMString\u2460"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
-window.dfnpanelData['889e932f'] = {"dfnID": "889e932f", "url": "https://webidl.spec.whatwg.org/#Exposed", "dfnText": "Exposed", "refSections": [{"refs": [{"id": "ref-for-Exposed"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-Exposed\u2460"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
-window.dfnpanelData['bdbd19d1'] = {"dfnID": "bdbd19d1", "url": "https://webidl.spec.whatwg.org/#idl-promise", "dfnText": "Promise", "refSections": [{"refs": [{"id": "ref-for-idl-promise"}], "title": "4.1. Extensions to Navigator"}], "external": true};
-window.dfnpanelData['b75bb3bd'] = {"dfnID": "b75bb3bd", "url": "https://webidl.spec.whatwg.org/#SecureContext", "dfnText": "SecureContext", "refSections": [{"refs": [{"id": "ref-for-SecureContext"}], "title": "4.1. Extensions to Navigator"}], "external": true};
-window.dfnpanelData['dacde8b5'] = {"dfnID": "dacde8b5", "url": "https://webidl.spec.whatwg.org/#a-new-promise", "dfnText": "a new promise", "refSections": [{"refs": [{"id": "ref-for-a-new-promise"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
-window.dfnpanelData['cd787c3f'] = {"dfnID": "cd787c3f", "url": "https://webidl.spec.whatwg.org/#dfn-exception", "dfnText": "exception", "refSections": [{"refs": [{"id": "ref-for-dfn-exception"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
-window.dfnpanelData['efd1ec5d'] = {"dfnID": "efd1ec5d", "url": "https://webidl.spec.whatwg.org/#idl-object", "dfnText": "object", "refSections": [{"refs": [{"id": "ref-for-idl-object"}], "title": "4.2. EnvironmentIntegrity"}], "external": true};
-window.dfnpanelData['b262501e'] = {"dfnID": "b262501e", "url": "https://webidl.spec.whatwg.org/#reject", "dfnText": "reject", "refSections": [{"refs": [{"id": "ref-for-reject"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
-window.dfnpanelData['3b90bdcd'] = {"dfnID": "3b90bdcd", "url": "https://webidl.spec.whatwg.org/#resolve", "dfnText": "resolve", "refSections": [{"refs": [{"id": "ref-for-resolve"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": true};
-window.dfnpanelData['web-environment-web-environment'] = {"dfnID": "web-environment-web-environment", "url": "#web-environment-web-environment", "dfnText": "web environment", "refSections": [{"refs": [{"id": "ref-for-web-environment-web-environment"}, {"id": "ref-for-web-environment-web-environment\u2460"}], "title": "1. Introduction"}, {"refs": [{"id": "ref-for-web-environment-web-environment\u2461"}], "title": "3.1.2. Attester Verdict"}], "external": false};
-window.dfnpanelData['content-binding-content-binding'] = {"dfnID": "content-binding-content-binding", "url": "#content-binding-content-binding", "dfnText": "content binding", "refSections": [{"refs": [{"id": "ref-for-content-binding-content-binding"}], "title": "3.1.1. Attester Connection"}], "external": false};
+window.dfnpanelData['be0c27b2'] = {"dfnID": "be0c27b2", "url": "https://html.spec.whatwg.org/multipage/system-state.html#navigator", "dfnText": "Navigator", "refSections": [{"refs": [{"id": "ref-for-navigator"}, {"id": "ref-for-navigator\u2460"}], "title": "5.1. Extensions to Navigator"}], "external": true};
+window.dfnpanelData['a72449dd'] = {"dfnID": "a72449dd", "url": "https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel", "dfnText": "in parallel", "refSections": [{"refs": [{"id": "ref-for-in-parallel"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['65181da8'] = {"dfnID": "65181da8", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#secure-context", "dfnText": "secure context", "refSections": [{"refs": [{"id": "ref-for-secure-context"}], "title": "6.1.1. Secure context only"}], "external": true};
+window.dfnpanelData['6d19ac93'] = {"dfnID": "6d19ac93", "url": "https://infra.spec.whatwg.org/#user-agent", "dfnText": "user agent", "refSections": [{"refs": [{"id": "ref-for-user-agent"}], "title": "1. Introduction"}, {"refs": [{"id": "ref-for-user-agent\u2460"}, {"id": "ref-for-user-agent\u2461"}], "title": "1.1. Motivations"}, {"refs": [{"id": "ref-for-user-agent\u2462"}], "title": "3. Attesters"}, {"refs": [{"id": "ref-for-user-agent\u2463"}, {"id": "ref-for-user-agent\u2464"}], "title": "4.1. Attesters"}, {"refs": [{"id": "ref-for-user-agent\u2465"}, {"id": "ref-for-user-agent\u2466"}], "title": "4.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-user-agent\u2467"}], "title": "4.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-user-agent\u2468"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['2f8afbfe'] = {"dfnID": "2f8afbfe", "url": "https://webidl.spec.whatwg.org/#idl-ArrayBuffer", "dfnText": "ArrayBuffer", "refSections": [{"refs": [{"id": "ref-for-idl-ArrayBuffer"}], "title": "4.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-idl-ArrayBuffer\u2460"}, {"id": "ref-for-idl-ArrayBuffer\u2461"}], "title": "5.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['8855a9aa'] = {"dfnID": "8855a9aa", "url": "https://webidl.spec.whatwg.org/#idl-DOMString", "dfnText": "DOMString", "refSections": [{"refs": [{"id": "ref-for-idl-DOMString"}], "title": "5.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-idl-DOMString\u2460"}], "title": "5.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['889e932f'] = {"dfnID": "889e932f", "url": "https://webidl.spec.whatwg.org/#Exposed", "dfnText": "Exposed", "refSections": [{"refs": [{"id": "ref-for-Exposed"}], "title": "5.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-Exposed\u2460"}], "title": "5.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['bdbd19d1'] = {"dfnID": "bdbd19d1", "url": "https://webidl.spec.whatwg.org/#idl-promise", "dfnText": "Promise", "refSections": [{"refs": [{"id": "ref-for-idl-promise"}], "title": "5.1. Extensions to Navigator"}], "external": true};
+window.dfnpanelData['b75bb3bd'] = {"dfnID": "b75bb3bd", "url": "https://webidl.spec.whatwg.org/#SecureContext", "dfnText": "SecureContext", "refSections": [{"refs": [{"id": "ref-for-SecureContext"}], "title": "5.1. Extensions to Navigator"}], "external": true};
+window.dfnpanelData['dacde8b5'] = {"dfnID": "dacde8b5", "url": "https://webidl.spec.whatwg.org/#a-new-promise", "dfnText": "a new promise", "refSections": [{"refs": [{"id": "ref-for-a-new-promise"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['cd787c3f'] = {"dfnID": "cd787c3f", "url": "https://webidl.spec.whatwg.org/#dfn-exception", "dfnText": "exception", "refSections": [{"refs": [{"id": "ref-for-dfn-exception"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['efd1ec5d'] = {"dfnID": "efd1ec5d", "url": "https://webidl.spec.whatwg.org/#idl-object", "dfnText": "object", "refSections": [{"refs": [{"id": "ref-for-idl-object"}], "title": "5.2. EnvironmentIntegrity"}], "external": true};
+window.dfnpanelData['b262501e'] = {"dfnID": "b262501e", "url": "https://webidl.spec.whatwg.org/#reject", "dfnText": "reject", "refSections": [{"refs": [{"id": "ref-for-reject"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['3b90bdcd'] = {"dfnID": "3b90bdcd", "url": "https://webidl.spec.whatwg.org/#resolve", "dfnText": "resolve", "refSections": [{"refs": [{"id": "ref-for-resolve"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": true};
+window.dfnpanelData['web-environment-web-environment'] = {"dfnID": "web-environment-web-environment", "url": "#web-environment-web-environment", "dfnText": "web environment", "refSections": [{"refs": [{"id": "ref-for-web-environment-web-environment"}, {"id": "ref-for-web-environment-web-environment\u2460"}], "title": "1. Introduction"}, {"refs": [{"id": "ref-for-web-environment-web-environment\u2461"}, {"id": "ref-for-web-environment-web-environment\u2462"}], "title": "1.1. Motivations"}, {"refs": [{"id": "ref-for-web-environment-web-environment\u2463"}], "title": "4.1.2. Attester Verdict"}], "external": false};
+window.dfnpanelData['content-binding-content-binding'] = {"dfnID": "content-binding-content-binding", "url": "#content-binding-content-binding", "dfnText": "content binding", "refSections": [{"refs": [{"id": "ref-for-content-binding-content-binding"}], "title": "4.1.1. Attester Connection"}], "external": false};
+window.dfnpanelData['entropy-entropy'] = {"dfnID": "entropy-entropy", "url": "#entropy-entropy", "dfnText": "Entropy", "refSections": [{"refs": [{"id": "ref-for-entropy-entropy"}], "title": "1.1. Motivations"}], "external": false};
 window.dfnpanelData['relying-party-relying-party'] = {"dfnID": "relying-party-relying-party", "url": "#relying-party-relying-party", "dfnText": "relying party", "refSections": [{"refs": [{"id": "ref-for-relying-party-relying-party"}], "title": "1. Introduction"}], "external": false};
-window.dfnpanelData['attester-attester'] = {"dfnID": "attester-attester", "url": "#attester-attester", "dfnText": "attester", "refSections": [{"refs": [{"id": "ref-for-attester-attester"}], "title": "1. Introduction"}, {"refs": [{"id": "ref-for-attester-attester\u2460"}], "title": "3.1. Attesters"}, {"refs": [{"id": "ref-for-attester-attester\u2461"}], "title": "3.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-attester-attester\u2462"}, {"id": "ref-for-attester-attester\u2463"}], "title": "3.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-attester-attester\u2464"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
-window.dfnpanelData['attester-connection-attester-connection'] = {"dfnID": "attester-connection-attester-connection", "url": "#attester-connection-attester-connection", "dfnText": "attester connection", "refSections": [{"refs": [{"id": "ref-for-attester-connection-attester-connection"}, {"id": "ref-for-attester-connection-attester-connection\u2460"}, {"id": "ref-for-attester-connection-attester-connection\u2461"}], "title": "3.1. Attesters"}, {"refs": [{"id": "ref-for-attester-connection-attester-connection\u2462"}, {"id": "ref-for-attester-connection-attester-connection\u2463"}, {"id": "ref-for-attester-connection-attester-connection\u2464"}], "title": "3.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-attester-connection-attester-connection\u2465"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
-window.dfnpanelData['attester-verdict-attester-verdict'] = {"dfnID": "attester-verdict-attester-verdict", "url": "#attester-verdict-attester-verdict", "dfnText": "attester verdict", "refSections": [{"refs": [{"id": "ref-for-attester-verdict-attester-verdict"}], "title": "1. Introduction"}, {"refs": [{"id": "ref-for-attester-verdict-attester-verdict\u2460"}, {"id": "ref-for-attester-verdict-attester-verdict\u2461"}], "title": "3.1. Attesters"}, {"refs": [{"id": "ref-for-attester-verdict-attester-verdict\u2462"}, {"id": "ref-for-attester-verdict-attester-verdict\u2463"}], "title": "3.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-attester-verdict-attester-verdict\u2464"}, {"id": "ref-for-attester-verdict-attester-verdict\u2465"}], "title": "3.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-attester-verdict-attester-verdict\u2466"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
-window.dfnpanelData['attester-verdict-raw-response'] = {"dfnID": "attester-verdict-raw-response", "url": "#attester-verdict-raw-response", "dfnText": "raw response", "refSections": [{"refs": [{"id": "ref-for-attester-verdict-raw-response"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
-window.dfnpanelData['dom-navigator-getenvironmentintegrity'] = {"dfnID": "dom-navigator-getenvironmentintegrity", "url": "#dom-navigator-getenvironmentintegrity", "dfnText": "getEnvironmentIntegrity(contentBinding)", "refSections": [{"refs": [{"id": "ref-for-dom-navigator-getenvironmentintegrity"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-dom-navigator-getenvironmentintegrity\u2460"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
-window.dfnpanelData['environmentintegrity'] = {"dfnID": "environmentintegrity", "url": "#environmentintegrity", "dfnText": "EnvironmentIntegrity", "refSections": [{"refs": [{"id": "ref-for-environmentintegrity"}], "title": "4.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-environmentintegrity\u2460"}], "title": "4.1.1. getEnvironmentIntegrity()"}, {"refs": [{"id": "ref-for-environmentintegrity\u2461"}], "title": "4.2. EnvironmentIntegrity"}], "external": false};
-window.dfnpanelData['dom-environmentintegrity-attestationtoken'] = {"dfnID": "dom-environmentintegrity-attestationtoken", "url": "#dom-environmentintegrity-attestationtoken", "dfnText": "attestationToken", "refSections": [{"refs": [{"id": "ref-for-dom-environmentintegrity-attestationtoken"}], "title": "4.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['attester-attester'] = {"dfnID": "attester-attester", "url": "#attester-attester", "dfnText": "attester", "refSections": [{"refs": [{"id": "ref-for-attester-attester"}], "title": "1. Introduction"}, {"refs": [{"id": "ref-for-attester-attester\u2460"}], "title": "1.1. Motivations"}, {"refs": [{"id": "ref-for-attester-attester\u2461"}], "title": "4.1. Attesters"}, {"refs": [{"id": "ref-for-attester-attester\u2462"}], "title": "4.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-attester-attester\u2463"}, {"id": "ref-for-attester-attester\u2464"}], "title": "4.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-attester-attester\u2465"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['attester-connection-attester-connection'] = {"dfnID": "attester-connection-attester-connection", "url": "#attester-connection-attester-connection", "dfnText": "attester connection", "refSections": [{"refs": [{"id": "ref-for-attester-connection-attester-connection"}, {"id": "ref-for-attester-connection-attester-connection\u2460"}, {"id": "ref-for-attester-connection-attester-connection\u2461"}], "title": "4.1. Attesters"}, {"refs": [{"id": "ref-for-attester-connection-attester-connection\u2462"}, {"id": "ref-for-attester-connection-attester-connection\u2463"}, {"id": "ref-for-attester-connection-attester-connection\u2464"}], "title": "4.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-attester-connection-attester-connection\u2465"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['attester-verdict-attester-verdict'] = {"dfnID": "attester-verdict-attester-verdict", "url": "#attester-verdict-attester-verdict", "dfnText": "attester verdict", "refSections": [{"refs": [{"id": "ref-for-attester-verdict-attester-verdict"}], "title": "1. Introduction"}, {"refs": [{"id": "ref-for-attester-verdict-attester-verdict\u2460"}, {"id": "ref-for-attester-verdict-attester-verdict\u2461"}], "title": "4.1. Attesters"}, {"refs": [{"id": "ref-for-attester-verdict-attester-verdict\u2462"}, {"id": "ref-for-attester-verdict-attester-verdict\u2463"}], "title": "4.1.1. Attester Connection"}, {"refs": [{"id": "ref-for-attester-verdict-attester-verdict\u2464"}, {"id": "ref-for-attester-verdict-attester-verdict\u2465"}], "title": "4.1.2. Attester Verdict"}, {"refs": [{"id": "ref-for-attester-verdict-attester-verdict\u2466"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['attester-verdict-raw-response'] = {"dfnID": "attester-verdict-raw-response", "url": "#attester-verdict-raw-response", "dfnText": "raw response", "refSections": [{"refs": [{"id": "ref-for-attester-verdict-raw-response"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['dom-navigator-getenvironmentintegrity'] = {"dfnID": "dom-navigator-getenvironmentintegrity", "url": "#dom-navigator-getenvironmentintegrity", "dfnText": "getEnvironmentIntegrity(contentBinding)", "refSections": [{"refs": [{"id": "ref-for-dom-navigator-getenvironmentintegrity"}], "title": "5.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-dom-navigator-getenvironmentintegrity\u2460"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": false};
+window.dfnpanelData['environmentintegrity'] = {"dfnID": "environmentintegrity", "url": "#environmentintegrity", "dfnText": "EnvironmentIntegrity", "refSections": [{"refs": [{"id": "ref-for-environmentintegrity"}], "title": "5.1. Extensions to Navigator"}, {"refs": [{"id": "ref-for-environmentintegrity\u2460"}], "title": "5.1.1. getEnvironmentIntegrity()"}, {"refs": [{"id": "ref-for-environmentintegrity\u2461"}], "title": "5.2. EnvironmentIntegrity"}], "external": false};
+window.dfnpanelData['dom-environmentintegrity-attestationtoken'] = {"dfnID": "dom-environmentintegrity-attestationtoken", "url": "#dom-environmentintegrity-attestationtoken", "dfnText": "attestationToken", "refSections": [{"refs": [{"id": "ref-for-dom-environmentintegrity-attestationtoken"}], "title": "5.1.1. getEnvironmentIntegrity()"}], "external": false};
 </script>
 <script>/* Boilerplate: script-dom-helper */
 function query(sel) { return document.querySelector(sel); }
