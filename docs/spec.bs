@@ -11,6 +11,20 @@ Markup Shorthands: markdown yes, css no
 
 <pre class=link-defaults>
 spec:infra; type:dfn; text:user agent
+spec:url; type:dfn; text:origin
+</pre>
+
+<pre class=biblio>
+{
+  "SHA-256": {
+    "href":"https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf",
+    "title":"Secure Hash Standard (SHS) (FIPS PUB 180-4)",
+    "authors": ["National Institute of Standards and Technology"],
+    "publisher":"NIST",
+    "id":"FIPS 180-4",
+    "date": "August 2015"
+  }
+}
 </pre>
 
 # Introduction # {#introduction}
@@ -140,8 +154,9 @@ The [=attester verdict=] consists of:
 
     1. Let |promise| be [=a new promise=]
     1. Run the following steps [=in parallel=]:
-        1. Set |attesterVerdict| to a new [=attester verdict=] from the |attesterConnection| using the |contentBinding|. If this fails then:
-            1. [=Reject=] |promise| with a <i>TODO</i> [=Exception=]
+        1. Let |hashedCB| be the digest [[SHA-256]](|contentBinding| + ";" + [=origin=])
+        1. Set |attesterVerdict| to a new [=attester verdict=] from the |attesterConnection| using the |hashedCB|. If this fails then:
+            1. [=Reject=] |promise| with a "{{UnknownError}}" {{DOMException}}
             1. Abort these steps
         1. Let |environmentIntegrity| be a new {{EnvironmentIntegrity}} with:
             - {{EnvironmentIntegrity/attestationToken}} set to the [=attester verdict/raw response=] in the |attesterVerdict|
