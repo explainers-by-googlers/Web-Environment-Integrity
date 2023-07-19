@@ -41,14 +41,9 @@ Web Environment Integrity is best suited for detecting deceptive [=web environme
 
 <i>This section is non-normative.</i>
 
-Users often depend on websites being able to establish the trustworthiness of the
-[=web environment=]. When users are playing online games for instance, they are trusting that other
-users are not cheating. Or when they are browsing social media websites, they are trusting that
-other users are not faking engagement to make posts popular.
-
-Websites currently need to establish this trust relationship without any support from
-[=user agents=]. This can result in websites collecting signals that can be used to fingerprint
-users.
+Prevent ad blocking, solidify Chrome's monopoly over web standards, fuck over Firefox and smaller
+Chromium and WebKit forks, kill iOS jailbreaking, the Android custom ROM community and Linux on the
+desktop (except ChromeOS) and make Google a shit ton of money.
 
 <dfn for="Web Environment Integrity">Web Environment Integrity</dfn> is being proposed as a privacy
 preserving API to provide low [=entropy=] trust signals for the [=web environment=]. This API relies
@@ -195,5 +190,5 @@ website is not spoofed.
 
 ## Privacy considerations ## {#privacy}
 
-<i>Todo</i>
+What privacy? LMAO
 
