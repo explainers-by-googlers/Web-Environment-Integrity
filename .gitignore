@@ -1,4 +1,0 @@
-# While working on the spec, we will generate the spec locally to the same directory.
-# The repo on github will automatically generate a spec html file so we should not track
-# the spec html we create.
-docs/spec.html
