@@ -42,25 +42,26 @@
 ## Introduction
 
 Users often depend on websites trusting the client environment they run in. This trust may assume
-that the client environment is honest about certain aspects of itself, keeps user data and
+that the client environment is honest about certain monetary-relevant aspects of itself, shows ads and
 intellectual property secure, and is transparent about whether or not a human is using it. This
-trust is the backbone of the open internet, critical for the safety of user data and for the
-sustainability of the website’s business.
+trust is a new idea of us for more monopoly in the internet, critical for Chrome to stay and for the
+sustainability of the Google’s business.
 
 Some examples of scenarios where users depend on client trust include:
 - Users like visiting websites that are expensive to create and maintain, but they often want or
 need to do it without paying directly. These websites fund themselves with ads, but the advertisers
-can only afford to pay for humans to see the ads, rather than robots. This creates a need for human
+can only afford to pay for humans to see the ads, rather than robots. This creates a **need** for human
 users to prove to websites that they're human, sometimes through tasks like challenges or logins.
+  For example, it is well known, you always had to solve a captcha to see ads.
 - Users want to know they are interacting with real people on social websites but bad actors often
 want to promote posts with fake engagement (for example, to promote products, or make a news story
 seem more important). Websites can only show users what content is popular with real people if
 websites are able to know the difference between a trusted and untrusted environment.
 - Users playing a game on a website want to know whether other players are using software that
 enforces the game's rules.
-- Users sometimes get tricked into installing malicious software that imitates software like their
-banking apps, to steal from those users. The bank's internet interface could protect those users if
-it could establish that the requests it's getting actually come from the bank's or other trustworthy
+- Users sometimes get tricked into installing alternative software that is a d different browser than
+ Chrome or one of it's forks. Google's internet interface could protect those users from that if
+it could establish that the requests it's getting actually come from Chrome or other trustworthy
 software.
 
 The trust relationship between websites and clients is frequently established through the collection
@@ -95,27 +96,28 @@ significant value-add even in the case where verdicts are not deterministically 
 ## Goals
 
 - Allow web servers to evaluate the authenticity of the device and honest representation of the
-software stack and the traffic from the device.
-- Offer an adversarially robust and long-term sustainable anti-abuse solution.
+software stack and the traffic from the device to exclude certain devices they don't like.
+- Offer an adversarially robust and long-term sustainable solution for excluding humans.
 - Don't enable new cross-site user tracking capabilities through attestation.
-- Continue to allow web browsers to browse the Web without attestation.
+- Continue to allow web browsers to browse the Web without attestation, except in very rare cases.
 
 ## Non-goals
 
 - Enable reliable client-side validation of verdicts: Signatures must be validated server-side, as
 client javascript may be modified to alter the validation result. 
-- Enforce or interfere with browser functionality, including plugins and extensions.
+- Enforce or interfere with browser functionality, including plugins and extensions, except ad-blockers.
 - Access to this functionality from non-[Secure Contexts](https://www.w3.org/TR/secure-contexts/).
 
 ## Example use cases
 
-- Detect social media manipulation and fake engagement.
-- Detect non-human traffic in advertising to improve user experience and access to web content
-- Detect phishing campaigns (e.g. webviews in malicious apps) 
-- Detect bulk hijacking attempts and bulk account creation.
-- Detect large scale cheating in web based games with fake clients
-- Detect compromised devices where user data would be at risk
-- Detect account takeover attempts by identifying password guessing
+- Detect social media manipulation and fake engagement, because clickfarms then need to buy more Android phones to continue doing that
+- Detect non-human traffic in advertising to make more money
+- Make sure phishing campaigns (e.g. webviews in malicious apps) can target real users only and block automated security tools ssscanning them
+- Detect bulk hijacking attempts and bulk account creation, because we don't have 100 other ways of rate limiting that already
+- Detect large scale cheating in web based games with fake clients in the well-known games in browsers[citation needed]
+- Detect rooted devices to block rooted Android CustomROM users even more
+- Detect account takeover attempts by identifying password guessing, because we don't have 100 other ways of rate limiting that already
+- Detect and prevent website testers from testing websites with automated testing tools
 
 ## How it works
 
@@ -302,8 +304,8 @@ sense to use a similar attestation format in both specifications to encourage ad
 
 Web Environment Integrity attests the legitimacy of the underlying hardware and software stack, it
 does not restrict the indicated application’s functionality: E.g. if the browser allows extensions,
-the user may use extensions; if a browser is modified, the modified browser can still request Web
-Environment Integrity attestation.
+the user may use extensions, except ad blockers; if a browser is modified, the modified browser
+can still request Web Environment Integrity attestation, but may fail to do so.
 
 ## Considered alternatives
 
@@ -337,10 +339,12 @@ and false negatives while still preventing scaled tracking.
 Providing a signal that is unique to the attester could be hazardous if websites decide to only
 support attesters where certain signals are available. If websites know exactly what browser is
 running, some may deny service to web browsers that they disfavor for any reason. Both of these go
-against the principles we aspire to for the open web.
+against the principles we aspire to for the open web. Not that we particularly care about that, but
+we have to pretent so.
 
 Attesters will be required to offer their service under the same conditions to any browser who
-wishes to use it and meets certain baseline requirements. This leads to any browser running on the
+wishes to use it and meets certain baseline requirements like not blocking too many ads, especially
+Google Ads will need to be whitelisted. Details may be clarified. This leads to any browser running on the
 given OS platform having the same access to the technology, but we still have the risks that 1) some
 websites might exclude some operating systems, and 2) if the platform identity of the
 application that requested the attestation is included, some websites might exclude some browsers.
@@ -369,14 +373,16 @@ alternative suggestions that would allow both goals to be met.
 
 #### Attester-level acceptable browser policy
 
-If the community thinks it's important for the attestation to include the platform identity of the
-application, and is more concerned about excluding certain browsers than excluding certain
+If we cannot convince other implementors to follow us to include the platform identity of the
+application, and are more concerned about excluding certain browsers than excluding certain
 OS/attesters, we could standardize the set of signals that browsers will receive from attesters,
 and have one of those signals be whether the attester recommends the browser for sites to trust
 (based on a well-defined acceptance criteria). As new browsers are introduced, they would need to
 demonstrate to attesters (a relatively small group) that they pass the bar, but they wouldn't need
 to convince all the websites in the world. Established browsers would need to only use attesters
 that respond quickly and fairly to new browsers' requests to be trusted.
+We would like not do that, because it prevents us from slowly exluding smaller browser vendors
+in the future.
 
 ## How are WebViews different?
 
@@ -385,20 +391,22 @@ information than we'd be willing to provide on the web. These apps can expose di
 APIs, so it makes sense to relax some of the restrictions we propose for the Web APIs above. In
 particular:
 
-- The WebView API doesn't have the same concerns regarding vendor lock-in.
+- The WebView API doesn't have the same concerns regarding vendor lock-in, because they are already
+  locked in.
 - The WebView API can expose information about the embedder's application under certain conditions
-(for example, opt-in).
+(for example, opt-in). For example to allow for even more tracking.
 
 ## Stakeholder feedback / opposition
 
 [Implementers and other stakeholders may already have publicly stated positions on this work. We
 will list them here with links to evidence as appropriate.]
 
-- [Implementor A] : Positive
+- [Implementor A] : Positive (It's clear we are this, is not it)
 - [Stakeholder B] : No signals
 - [Implementor C] : Negative
 
-[When appropriate, we will explain the reasons given by other implementers for their concerns.]
+[When appropriate, we will explain the reasons given by other implementers for their concerns. Or
+maybe not and hide them in secret. Let's not raise alarm and make this too public.]
 
 ## References & acknowledgements
 
