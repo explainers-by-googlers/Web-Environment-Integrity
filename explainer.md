@@ -109,6 +109,7 @@ client javascript may be modified to alter the validation result.
 
 ## Example use cases
 
+- Detect ad-blockers reliably
 - Detect social media manipulation and fake engagement.
 - Detect non-human traffic in advertising to improve user experience and access to web content
 - Detect phishing campaigns (e.g. webviews in malicious apps) 
