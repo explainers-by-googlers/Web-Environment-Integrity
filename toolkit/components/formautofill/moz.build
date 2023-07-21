@@ -1,0 +1,33 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+JAR_MANIFESTS += ["jar.mn"]
+
+with Files("**"):
+    BUG_COMPONENT = ("Toolkit", "Form Autofill")
+
+EXTRA_JS_MODULES.shared += [
+    "shared/AddressComponent.sys.mjs",
+    "shared/AddressParser.sys.mjs",
+    "shared/CreditCardRuleset.sys.mjs",
+    "shared/FieldScanner.sys.mjs",
+    "shared/FormAutofillHandler.sys.mjs",
+    "shared/FormAutofillHeuristics.sys.mjs",
+    "shared/FormAutofillNameUtils.sys.mjs",
+    "shared/FormAutofillSection.sys.mjs",
+    "shared/FormAutofillUtils.sys.mjs",
+    "shared/FormStateManager.sys.mjs",
+    "shared/HeuristicsRegExp.sys.mjs",
+    "shared/LabelUtils.sys.mjs",
+]
+
+EXPORTS.mozilla += ["FormAutofillNative.h"]
+
+UNIFIED_SOURCES += ["FormAutofillNative.cpp"]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+FINAL_LIBRARY = "xul"

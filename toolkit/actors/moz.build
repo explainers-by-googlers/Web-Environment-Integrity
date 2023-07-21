@@ -1,0 +1,85 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Toolkit", "General")
+
+with Files("AutoScroll*.sys.mjs"):
+    BUG_COMPONENT = ("Core", "Panning and Zooming")
+
+with Files("Finder*.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Find Toolbar")
+
+with Files("KeyPressEventModelCheckerChild.sys.mjs"):
+    BUG_COMPONENT = ("Core", "DOM: Events")
+
+with Files("PictureInPictureChild.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Picture-in-Picture")
+
+SPHINX_TREES["actors"] = "docs"
+
+TESTING_JS_MODULES += [
+    "TestProcessActorChild.jsm",
+    "TestProcessActorChild.sys.mjs",
+    "TestProcessActorParent.jsm",
+    "TestProcessActorParent.sys.mjs",
+    "TestWindowChild.jsm",
+    "TestWindowChild.sys.mjs",
+    "TestWindowParent.jsm",
+    "TestWindowParent.sys.mjs",
+]
+
+FINAL_TARGET_FILES.actors += [
+    "AboutHttpsOnlyErrorChild.sys.mjs",
+    "AboutHttpsOnlyErrorParent.sys.mjs",
+    "AudioPlaybackChild.sys.mjs",
+    "AudioPlaybackParent.sys.mjs",
+    "AutoCompleteChild.sys.mjs",
+    "AutoCompleteParent.sys.mjs",
+    "AutoplayChild.sys.mjs",
+    "AutoplayParent.sys.mjs",
+    "AutoScrollChild.sys.mjs",
+    "AutoScrollParent.sys.mjs",
+    "BackgroundThumbnailsChild.sys.mjs",
+    "BrowserElementChild.sys.mjs",
+    "BrowserElementParent.sys.mjs",
+    "ClipboardReadPasteChild.sys.mjs",
+    "ClipboardReadPasteParent.sys.mjs",
+    "ContentMetaChild.sys.mjs",
+    "ContentMetaParent.sys.mjs",
+    "ControllersChild.sys.mjs",
+    "ControllersParent.sys.mjs",
+    "DateTimePickerChild.sys.mjs",
+    "DateTimePickerParent.sys.mjs",
+    "ExtFindChild.sys.mjs",
+    "FindBarChild.sys.mjs",
+    "FindBarParent.sys.mjs",
+    "FinderChild.sys.mjs",
+    "InlineSpellCheckerChild.sys.mjs",
+    "InlineSpellCheckerParent.sys.mjs",
+    "KeyPressEventModelCheckerChild.sys.mjs",
+    "NetErrorChild.sys.mjs",
+    "NetErrorParent.sys.mjs",
+    "PictureInPictureChild.sys.mjs",
+    "PopupBlockingChild.sys.mjs",
+    "PopupBlockingParent.sys.mjs",
+    "PrintingChild.sys.mjs",
+    "PrintingParent.sys.mjs",
+    "PrintingSelectionChild.sys.mjs",
+    "PurgeSessionHistoryChild.sys.mjs",
+    "RemotePageChild.sys.mjs",
+    "SelectChild.sys.mjs",
+    "SelectParent.sys.mjs",
+    "ThumbnailsChild.sys.mjs",
+    "UAWidgetsChild.sys.mjs",
+    "UnselectedTabHoverChild.sys.mjs",
+    "UnselectedTabHoverParent.sys.mjs",
+    "ViewSourceChild.sys.mjs",
+    "ViewSourcePageChild.sys.mjs",
+    "ViewSourcePageParent.sys.mjs",
+    "WebChannelChild.sys.mjs",
+    "WebChannelParent.sys.mjs",
+]

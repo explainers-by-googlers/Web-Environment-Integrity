@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <script>
+      /* global RPMSendQuery */
+      function do_test(override) {
+        if (override || document.location.hash.indexOf("#auto") == 0) {
+          RPMSendQuery("tabswitch-do-test", {}).then(results => {
+            tpRecordTime(results.times.join(","), 0, results.urls.join(","));
+          });
+        }
+      }
+    </script>
+  </head>
+  <body onload="do_test(false)">
+    Hello Talos!
+  </body>
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin" type="text/css"?>
+<?xml-stylesheet href="chrome://mochikit/content/tests/SimpleTest/test.css" type="text/css"?>
+
+<window title="Blinking Context Menu Item Tests"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"></script>      
+  <script src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"></script>      
+
+  <menulist id="menulist">
+    <menupopup id="menupopup">
+      <menuitem label="Menu Item" id="menuitem"/>
+    </menupopup>
+  </menulist>
+<script class="testbody" type="application/javascript">
+<![CDATA[
+
+SimpleTest.waitForExplicitFinish();
+SimpleTest.waitForFocus(startTest);
+
+function startTest() {
+  if (!/Mac/.test(navigator.platform)) {
+    ok(true, "Nothing to test on non-Mac.");
+    SimpleTest.finish();
+    return;
+  }
+  test_crash();
+}
+
+function test_crash() {
+  var menupopup = document.getElementById("menupopup");
+  var menuitem = document.getElementById("menuitem");
+  menupopup.addEventListener("popupshown", function () {
+    menuitem.addEventListener("mouseup", function (e) {
+      const observer = new MutationObserver((aMutationList, aObserver) => {
+        for (const mutation of aMutationList) {
+          if (mutation.attributeName != "_moz-menuactive") {
+            continue;
+          }
+          menuitem.hidden = true;
+          menuitem.getBoundingClientRect();
+          ok(true, "Didn't crash on _moz-menuactive mutation")
+          menuitem.hidden = false;
+          aObserver.disconnect();
+          SimpleTest.executeSoon(function () {
+            menupopup.hidePopup();
+          });
+        }
+      });
+      observer.observe(menuitem, { attributes: true });
+    }, {once: true});
+    menupopup.addEventListener("popuphidden", SimpleTest.finish, {once: true});
+    synthesizeMouse(menuitem, 10, 5, { type : "mousemove" });
+    synthesizeMouse(menuitem, 10, 5, { type : "mousemove" });
+    synthesizeMouse(menuitem, 10, 5, { type : "mousedown" });
+    SimpleTest.executeSoon(function () {
+      synthesizeMouse(menuitem, 10, 5, { type : "mouseup" });
+    });
+  }, {once: true});
+  document.getElementById("menulist").open = true;
+}
+
+]]>
+</script>
+
+<body xmlns="http://www.w3.org/1999/xhtml">
+<p id="display">
+</p>
+<div id="content" style="display: none">
+</div>
+<pre id="test">
+</pre>
+</body>
+
+</window>

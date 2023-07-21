@@ -1,0 +1,341 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Testing test</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/ExtensionTestUtils.js"></script>
+  <script type="text/javascript" src="head.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css">
+</head>
+<body>
+
+<script>
+"use strict";
+
+function loadExtensionAndInterceptTest(extensionData) {
+  let results = [];
+  let testResolve;
+  let testDone = new Promise(resolve => { testResolve = resolve; });
+  let handler = {
+    testResult(...result) {
+      result.pop();
+      results.push(result);
+      SimpleTest.info(`Received test result: ${JSON.stringify(result)}`);
+    },
+
+    testMessage(msg, ...args) {
+      results.push(["test-message", msg, ...args]);
+      SimpleTest.info(`Received message: ${msg} ${JSON.stringify(args)}`);
+      if (msg === "This is the last browser.test call") {
+        testResolve();
+      }
+    },
+  };
+  let extension = SpecialPowers.loadExtension(extensionData, handler);
+  SimpleTest.registerCleanupFunction(() => {
+    if (extension.state == "pending" || extension.state == "running") {
+      SimpleTest.ok(false, "Extension left running at test shutdown");
+      return extension.unload();
+    } else if (extension.state == "unloading") {
+      SimpleTest.ok(false, "Extension not fully unloaded at test shutdown");
+    }
+  });
+  extension.awaitResults = () => testDone.then(() => results);
+  return extension;
+}
+
+// NOTE: This test does not verify the behavior expected by calling the browser.test API methods.
+//
+// On the contrary it tests what messages ext-test.js sends to the parent process as a result of
+// processing different kind of parameters (e.g. how a dom element or a JS object with a custom
+// toString method are being serialized into strings).
+//
+// All browser.test calls results are intercepted by the test itself, see verifyTestResults for
+// the expectations of each browser.test call.
+function testScript() {
+  browser.test.notifyPass("dot notifyPass");
+  browser.test.notifyFail("dot notifyFail");
+  browser.test.log("dot log");
+  browser.test.fail("dot fail");
+  browser.test.succeed("dot succeed");
+  browser.test.assertTrue(true);
+  browser.test.assertFalse(false);
+  browser.test.assertEq("", "");
+
+  let obj = {};
+  let arr = [];
+  browser.test.assertTrue(obj, "Object truthy");
+  browser.test.assertTrue(arr, "Array truthy");
+  browser.test.assertTrue(true, "True truthy");
+  browser.test.assertTrue(false, "False truthy");
+  browser.test.assertTrue(null, "Null truthy");
+  browser.test.assertTrue(undefined, "Void truthy");
+
+  browser.test.assertFalse(obj, "Object falsey");
+  browser.test.assertFalse(arr, "Array falsey");
+  browser.test.assertFalse(true, "True falsey");
+  browser.test.assertFalse(false, "False falsey");
+  browser.test.assertFalse(null, "Null falsey");
+  browser.test.assertFalse(undefined, "Void falsey");
+
+  browser.test.assertEq(obj, obj, "Object equality");
+  browser.test.assertEq(arr, arr, "Array equality");
+  browser.test.assertEq(null, null, "Null equality");
+  browser.test.assertEq(undefined, undefined, "Void equality");
+
+  browser.test.assertEq({}, {}, "Object reference inequality");
+  browser.test.assertEq([], [], "Array reference inequality");
+  browser.test.assertEq(true, 1, "strict: true and 1 inequality");
+  browser.test.assertEq("1", 1, "strict: '1' and 1 inequality");
+  browser.test.assertEq(null, undefined, "Null and void inequality");
+
+  browser.test.assertDeepEq({a: 1, b: 1}, {b: 1, a: 1}, "Object deep eq");
+  browser.test.assertDeepEq([[2], [1]], [[2], [1]], "Array deep eq");
+  browser.test.assertDeepEq(true, 1, "strict: true and 1 deep ineq");
+  browser.test.assertDeepEq("1", 1, "strict: '1' and 1 deep ineq");
+  // Key with undefined value should be different from object without key:
+  browser.test.assertDeepEq(null, undefined, "Null and void deep ineq");
+  browser.test.assertDeepEq({c: undefined}, {c: null}, "void+null deep ineq");
+  browser.test.assertDeepEq({a: undefined, b: 1}, {b: 1}, "void/- deep ineq");
+
+  browser.test.assertDeepEq(NaN, NaN, "NaN deep eq");
+  browser.test.assertDeepEq(NaN, null, "NaN+null deep ineq");
+  browser.test.assertDeepEq(Infinity, Infinity, "Infinity deep eq");
+  browser.test.assertDeepEq(Infinity, null, "Infinity+null deep ineq");
+
+  obj = {
+    toString() {
+      return "Dynamic toString";
+    },
+  };
+  browser.test.assertEq(obj, obj, "obj with dynamic toString()");
+
+  browser.test.assertThrows(
+    () => { throw new Error("dummy"); },
+    /dummy2/,
+    "intentional failure"
+  );
+  browser.test.assertThrows(
+    () => { throw new Error("dummy2"); },
+    /dummy3/
+  );
+  browser.test.assertThrows(
+    () => {},
+    /dummy/
+  );
+
+  // The WebIDL version of assertDeepEq structurally clones before sending the
+  // params to the main thread. This check verifies that the behavior is
+  // consistent between the WebIDL and Schemas.jsm-generated API bindings.
+  browser.test.assertThrows(
+    () => browser.test.assertDeepEq(obj, obj, "obj with func"),
+    /An unexpected error occurred/,
+    "assertDeepEq obj with function throws"
+  );
+  browser.test.assertThrows(
+    () => browser.test.assertDeepEq(() => {}, () => {}, "func to assertDeepEq"),
+    /An unexpected error occurred/,
+    "assertDeepEq with function throws"
+  );
+  browser.test.assertThrows(
+    () => browser.test.assertDeepEq(/./, /./, "regexp"),
+    /Unsupported obj type: RegExp/,
+    "assertDeepEq with RegExp throws"
+  );
+
+  // Set of additional tests to only run on background page and content script
+  // (but skip on background service worker).
+  if (self === self.window) {
+    let dom = document.createElement("body");
+    browser.test.assertTrue(dom, "Element truthy");
+    browser.test.assertTrue(false, document.createElement("html"));
+    browser.test.assertFalse(dom, "Element falsey");
+    browser.test.assertFalse(true, document.createElement("head"));
+    browser.test.assertEq(dom, dom, "Element equality");
+    browser.test.assertEq(dom, document.createElement("body"), "Element inequality");
+    browser.test.assertEq(true, false, document.createElement("div"));
+  }
+
+  browser.test.sendMessage("Ran test at", location.protocol);
+  browser.test.sendMessage("This is the last browser.test call");
+}
+
+function verifyTestResults(results, shortName, expectedProtocol, useServiceWorker) {
+  let expectations = [
+    ["test-done", true, "dot notifyPass"],
+    ["test-done", false, "dot notifyFail"],
+    ["test-log", true, "dot log"],
+    ["test-result", false, "dot fail"],
+    ["test-result", true, "dot succeed"],
+    ["test-result", true, "undefined"],
+    ["test-result", true, "undefined"],
+    ["test-eq", true, "undefined", "", ""],
+
+    ["test-result", true, "Object truthy"],
+    ["test-result", true, "Array truthy"],
+    ["test-result", true, "True truthy"],
+    ["test-result", false, "False truthy"],
+    ["test-result", false, "Null truthy"],
+    ["test-result", false, "Void truthy"],
+
+    ["test-result", false, "Object falsey"],
+    ["test-result", false, "Array falsey"],
+    ["test-result", false, "True falsey"],
+    ["test-result", true, "False falsey"],
+    ["test-result", true, "Null falsey"],
+    ["test-result", true, "Void falsey"],
+
+    ["test-eq", true, "Object equality", "[object Object]", "[object Object]"],
+    ["test-eq", true, "Array equality", "", ""],
+    ["test-eq", true, "Null equality", "null", "null"],
+    ["test-eq", true, "Void equality", "undefined", "undefined"],
+
+    ["test-eq", false, "Object reference inequality", "[object Object]", "[object Object] (different)"],
+    ["test-eq", false, "Array reference inequality", "", " (different)"],
+    ["test-eq", false, "strict: true and 1 inequality", "true", "1"],
+    ["test-eq", false, "strict: '1' and 1 inequality", "1", "1 (different)"],
+    ["test-eq", false, "Null and void inequality", "null", "undefined"],
+
+    ["test-eq", true, "Object deep eq", `{"a":1,"b":1}`, `{"b":1,"a":1}`],
+    ["test-eq", true, "Array deep eq", "[[2],[1]]", "[[2],[1]]"],
+    ["test-eq", false, "strict: true and 1 deep ineq", "true", "1"],
+    ["test-eq", false, "strict: '1' and 1 deep ineq", `"1"`, "1"],
+    ["test-eq", false, "Null and void deep ineq", "null", "undefined"],
+    ["test-eq", false, "void+null deep ineq", `{"c":"undefined"}`, `{"c":null}`],
+    ["test-eq", false, "void/- deep ineq", `{"a":"undefined","b":1}`, `{"b":1}`],
+
+    ["test-eq", true, "NaN deep eq", `NaN`, `NaN`],
+    ["test-eq", false, "NaN+null deep ineq", `NaN`, `null`],
+    ["test-eq", true, "Infinity deep eq", `Infinity`, `Infinity`],
+    ["test-eq", false, "Infinity+null deep ineq", `Infinity`, `null`],
+
+    [
+      "test-eq",
+      true,
+      "obj with dynamic toString()",
+      // - Privileged JS API Bindings: the ext-test.js module will get a XrayWrapper and so when
+      //   the object is being stringified the custom `toString()` method will not be called and
+      //   "[object Object]" is the value we expect.
+      // - WebIDL API Bindngs: the parameter is being serialized into a string on the worker thread,
+      //   the object is stringified using the worker principal and so there is no XrayWrapper
+      //   involved and the value expected is the value returned by the custom toString method the.
+      //   object does provide.
+      useServiceWorker ? "Dynamic toString" : "[object Object]",
+      useServiceWorker ? "Dynamic toString" : "[object Object]",
+    ],
+
+    [
+      "test-result", false,
+      "Function threw, expecting error to match '/dummy2/', got \'Error: dummy\': intentional failure"
+    ],
+    [
+      "test-result", false,
+      "Function threw, expecting error to match '/dummy3/', got \'Error: dummy2\'"
+    ],
+    [
+      "test-result", false,
+      "Function did not throw, expected error '/dummy/'"
+    ],
+    [
+      "test-result", true,
+      "Function threw, expecting error to match '/An unexpected error occurred/', got 'Error: An unexpected error occurred': assertDeepEq obj with function throws",
+    ],
+    [
+      "test-result", true,
+      "Function threw, expecting error to match '/An unexpected error occurred/', got 'Error: An unexpected error occurred': assertDeepEq with function throws",
+    ],
+    [
+      "test-result", true,
+      "Function threw, expecting error to match '/Unsupported obj type: RegExp/', got 'Error: Unsupported obj type: RegExp': assertDeepEq with RegExp throws",
+    ],
+  ];
+
+  if (!useServiceWorker) {
+    expectations.push(...[
+      ["test-result", true, "Element truthy"],
+      ["test-result", false, "[object HTMLHtmlElement]"],
+      ["test-result", false, "Element falsey"],
+      ["test-result", false, "[object HTMLHeadElement]"],
+      ["test-eq", true, "Element equality", "[object HTMLBodyElement]", "[object HTMLBodyElement]"],
+      ["test-eq", false, "Element inequality", "[object HTMLBodyElement]", "[object HTMLBodyElement] (different)"],
+      ["test-eq", false, "[object HTMLDivElement]", "true", "false"],
+    ]);
+  }
+
+  expectations.push(...[
+    ["test-message", "Ran test at", expectedProtocol],
+    ["test-message", "This is the last browser.test call"],
+  ]);
+
+  expectations.forEach((expectation, i) => {
+    let msg = expectation.slice(2).join(" - ");
+    isDeeply(results[i], expectation, `${shortName} (${msg})`);
+  });
+  is(results[expectations.length], undefined, "No more results");
+}
+
+add_task(async function test_test_in_background() {
+  let extensionData = {
+    background: `(${testScript})()`,
+    // This test case should never run the background script in a worker,
+    // even if this test file is running when "extensions.backgroundServiceWorker.forceInTest"
+    // pref is true
+    useServiceWorker: false,
+  };
+
+  let extension = loadExtensionAndInterceptTest(extensionData);
+  await extension.startup();
+  let results = await extension.awaitResults();
+  verifyTestResults(results, "background page", "moz-extension:", false);
+  await extension.unload();
+});
+
+add_task(async function test_test_in_background_service_worker() {
+  if (!ExtensionTestUtils.isInBackgroundServiceWorkerTests()) {
+    is(
+      ExtensionTestUtils.getBackgroundServiceWorkerEnabled(),
+      false,
+      "This test should only be skipped with background service worker disabled"
+    )
+    info("Test intentionally skipped on 'extensions.backgroundServiceWorker.enabled=false'");
+    return;
+  }
+
+  let extensionData = {
+    background: `(${testScript})()`,
+    // This test case should always run the background script in a worker,
+    // or be skipped if the background service worker is disabled by prefs.
+    useServiceWorker: true,
+  };
+
+  let extension = loadExtensionAndInterceptTest(extensionData);
+  await extension.startup();
+  let results = await extension.awaitResults();
+  verifyTestResults(results, "background service worker", "moz-extension:", true);
+  await extension.unload();
+});
+
+add_task(async function test_test_in_content_script() {
+  let extensionData = {
+    manifest: {
+      content_scripts: [{
+        matches: ["http://mochi.test/*/file_sample.html"],
+        js: ["contentscript.js"],
+      }],
+    },
+    files: {
+      "contentscript.js": `(${testScript})()`,
+    },
+  };
+
+  let extension = loadExtensionAndInterceptTest(extensionData);
+  await extension.startup();
+  let win = window.open("file_sample.html");
+  let results = await extension.awaitResults();
+  win.close();
+  verifyTestResults(results, "content script", "http:", false);
+  await extension.unload();
+});
+</script>
+</body>
+</html>

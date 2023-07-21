@@ -1,0 +1,82 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+  <script type="application/javascript" src="pc.js"></script>
+  <script type="application/javascript" src="parser_rtp.js"></script>
+  <script type="application/javascript" src="sdpUtils.js"></script>
+</head>
+<body>
+<pre id="test">
+<script type="application/javascript">
+  createHTML({
+    bug: "1416932",
+    title: "Basic video-only peer connection and verify rtp header extensions"
+  });
+
+  var test;
+  runNetworkTest(function (options) {
+    test = new PeerConnectionTest(options);
+    test.setMediaConstraints([{video: true}], [{video: true}]);
+
+    let getRtpPacketWithExtension = (pc, extension) => {
+      // we only examine received packets
+      let sending = false;
+      pc.mozEnablePacketDump(0, "rtp", sending);
+      return new Promise((res, rej) =>
+        pc.mozSetPacketCallback((...args) => {
+          const packet = ParseRtpPacket(args[3]);
+          info(`midId = ${extension} packet = ${JSON.stringify(packet, null, 2)}`);
+          if (packet.header.extensions.find(e => e.id == extension) !== undefined) {
+            res(packet);
+            pc.mozSetPacketCallback(() => {});
+            pc.mozDisablePacketDump(0, "rtp", sending);
+          }
+        })
+      );
+    }
+
+    let havePacketWithMid;
+    let sdpExtmaps;
+
+    // MID can stop being sent when acked causing failures if packets are checked later.
+    // Starting packet sniffer before PC_LOCAL_SET_REMOTE_DESCRIPTION to be ready
+    // to inspect packets ahead of any packets arriving.
+    test.chain.insertBefore('PC_LOCAL_SET_REMOTE_DESCRIPTION', [
+      function PC_REMOTE_FIND_RTP_PACKETS_WITH_MIDID() {
+
+        sdpExtmaps = sdputils.findExtmapIdsUrnsDirections(test.originalAnswer.sdp);
+        const [midId] = sdpExtmaps.find(([, urn]) => urn == "urn:ietf:params:rtp-hdrext:sdes:mid");
+        const pc = SpecialPowers.wrap(test.pcRemote._pc);
+        havePacketWithMid = getRtpPacketWithExtension(pc, midId);
+      }
+    ]);
+
+    test.chain.insertBefore('PC_REMOTE_WAIT_FOR_MEDIA_FLOW', [
+      async function PC_REMOTE_CHECK_RTP_HEADER_EXTS_AGAINST_SDP() {
+
+        const sdpExtmapIds = sdpExtmaps.map(e => e[0]);
+        const packet = await havePacketWithMid;
+        const extIds = packet.header.extensions.map(e => `${e.id}`);
+        // make sure we got the same number of rtp header extensions in
+        // the received packet as were negotiated in the sdp.  Then
+        // check to make sure each of the received extension ids were in
+        // the sdp.
+        is(sdpExtmapIds.length, extIds.length,
+           `number of sdp ids match received ids ` +
+           `${JSON.stringify(sdpExtmapIds)} == ${JSON.stringify(extIds)}\n` +
+           `sdp = ${test.originalAnswer.sdp}\n` +
+           `packet = ${JSON.stringify(packet, null, 2)}`);
+        // note, we are comparing a number (from the parsed rtp packet)
+        // and a string (from the answer sdp)
+        ok(extIds.every(id => sdpExtmapIds.includes(id)) &&
+           sdpExtmapIds.every(id => extIds.includes(id)),
+          `extension id arrays equivalent`);
+      }
+    ]);
+
+    return test.run();
+  });
+</script>
+</pre>
+</body>
+</html>

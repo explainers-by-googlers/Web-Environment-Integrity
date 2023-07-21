@@ -1,0 +1,43 @@
+schema: 1
+
+bugzilla:
+  product: Core
+  component: "Audio/Video: Playback"
+
+origin:
+  name: nestegg
+  description: "WebM demuxer"
+  url: https://github.com/mozilla/nestegg
+  license: ISC
+  release: commit ec6adfbbf979678e3058cc4695257366f39e290b (2021-08-13T20:05:30Z).
+  revision: ec6adfbbf979678e3058cc4695257366f39e290b
+
+vendoring:
+  url: https://github.com/mozilla/nestegg
+  source-hosting: github
+  vendor-directory: media/libnestegg
+  skip-vendoring-steps:
+    - update-moz-build
+  exclude:
+    - configure.ac
+    - docs
+    - INSTALL
+    - m4
+    - Makefile.am
+    - nestegg.pc.in
+    - nestegg-uninstalled.pc.in
+    - test
+    - TODO
+  keep:
+    - include/moz.build
+    - src/moz.build
+
+updatebot:
+  maintainer-phab: kinetik
+  maintainer-bz: kinetik@flim.org
+  fuzzy-query: media
+  tasks:
+    - type: vendoring
+      enabled: True
+      frequency: every
+

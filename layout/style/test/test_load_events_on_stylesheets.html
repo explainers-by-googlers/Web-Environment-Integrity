@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+<!--
+https://bugzilla.mozilla.org/show_bug.cgi?id=185236
+-->
+<head>
+  <title>Test for Bug 185236</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
+  <script>
+    var pendingEventCounter = 0;
+    SimpleTest.waitForExplicitFinish();
+    addLoadEvent(function() {
+      is(pendingEventCounter, 0,
+         "How did onload for the page fire before onload for all the stylesheets?");
+      SimpleTest.finish();
+    });
+    // Count the link we're about to parse
+    pendingEventCounter = 1;
+  </script>
+  <link rel="stylesheet" href="data:text/css,*{}"
+        onload="--pendingEventCounter;
+                ok(true, 'Load event firing on basic stylesheet')"
+        onerror="--pendingEventCounter;
+                 ok(false, 'Error event firing on basic stylesheet')">
+</head>
+<body>
+<a target="_blank" href="https://bugzilla.mozilla.org/show_bug.cgi?id=185236">Mozilla Bug 185236</a>
+<p id="display"></p>
+<div id="content" style="display: none">
+  
+</div>
+<pre id="test">
+<script>
+/** Test for Bug 185236 **/
+
+function checkSheetComplete(sheet, length) {
+  try {
+    is(sheet.cssRules.length, length, `Should be loaded with ${length} rule(s)`);
+  } catch (e) {
+    ok(false, "Sheet has not been loaded completely");
+  }
+}
+
+
+// There should be usually 1 pending event but the load event might have fired
+// if the parser yields between the link and starting the script execution.
+const pendingEventCounterAtStart = pendingEventCounter;
+
+ok(pendingEventCounter <= 1, `There should be at most one pending event, got ${pendingEventCounterAtStart}`);
+
+is(document.styleSheets.length, 2, "Should have two stylesheets");
+checkSheetComplete(document.styleSheets[1], 1);
+
+// Test sheet that will already be complete when we write it out
+++pendingEventCounter;
+document.write('<link rel="stylesheet" href="data:text/css,*{}"\
+                onload="--pendingEventCounter;\
+                        ok(true, \'Load event firing on basic stylesheet\')"\
+                onerror="--pendingEventCounter;\
+                        ok(false, \'Error event firing on basic stylesheet\')">');
+
+// Make sure we have that second stylesheet
+is(document.styleSheets.length, 3, "Should have three stylesheets");
+
+// Make sure that the second stylesheet is all loaded
+// If we ever switch away from sync loading of already-complete sheets, this
+// test will need adjusting
+checkSheetComplete(document.styleSheets[2], 1);
+
+// Make sure the load event for that stylesheet has not fired yet
+is(pendingEventCounter, pendingEventCounterAtStart + 1, "After first document write");
+++pendingEventCounter;
+
+document.write('<style\
+                onload="--pendingEventCounter;\
+                        ok(true, \'Load event firing on inline stylesheet\')"\
+                onerror="--pendingEventCounter;\
+                        ok(false, \'Error event firing on inline stylesheet\')"></style>');
+
+// Make sure the load event for that second stylesheet has not fired yet
+is(pendingEventCounter, pendingEventCounterAtStart + 2, "after second document write");
+++pendingEventCounter;
+
+document.write('<link rel="stylesheet" href="http://www.example.com"\
+                onload="--pendingEventCounter;\
+                        ok(false, \'Load event firing on broken stylesheet 1\')"\
+                onerror="--pendingEventCounter;\
+                        ok(true, \'Error event firing on broken stylesheet 1\')">');
+++pendingEventCounter;
+
+var link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = "http://www.example.com";
+link.onload = function() { --pendingEventCounter;
+  ok(false, 'Load event firing on broken stylesheet 2');
+};
+link.onerror = function() { --pendingEventCounter;
+  ok(true, 'Error event firing on broken stylesheet 2');
+}
+document.body.appendChild(link);
+
+++pendingEventCounter;
+link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = "data:text/css,*{}";
+link.onload = function() { --pendingEventCounter;
+  ok(true, 'Load event firing on external stylesheet');
+};
+link.onerror = function() { --pendingEventCounter;
+  ok(false, 'Error event firing on external stylesheet');
+}
+document.body.appendChild(link);
+
+// If we ever switch away from sync loading of already-complete sheets, this
+// test will need adjusting
+checkSheetComplete(link.sheet, 1);
+
+++pendingEventCounter;
+link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = "data:text/css,@import url('data:text/css,*{}')";
+link.onload = function() { --pendingEventCounter;
+  ok(true, 'Load event firing on external stylesheet');
+};
+link.onerror = function() { --pendingEventCounter;
+  ok(false, 'Error event firing on external stylesheet');
+}
+document.body.appendChild(link);
+
+++pendingEventCounter;
+link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = "data:text/css,@import url('http://www.example.com')";
+link.onload = function() { --pendingEventCounter;
+  ok(false, 'Load event firing on broken stylesheet 3');
+};
+link.onerror = function() { --pendingEventCounter;
+  ok(true, 'Error event firing on broken stylesheet 3');
+}
+document.body.appendChild(link);
+
+function absoluteURL(relativeURL) {
+  return new URL(relativeURL, location.href).href;
+}
+
+++pendingEventCounter;
+link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = `data:text/css,@import url('http://www.example.com'); @import url(${absoluteURL('slow_ok_sheet.sjs')});`;
+link.onload = function() { --pendingEventCounter;
+  ok(false, 'Load event firing on broken stylesheet 4');
+};
+link.onerror = function() { --pendingEventCounter;
+  ok(true, 'Error event firing on broken stylesheet 4');
+}
+document.body.appendChild(link);
+
+++pendingEventCounter;
+link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = `data:text/css,@import url(${absoluteURL('slow_broken_sheet.sjs')}); @import url('data:text/css,');`;
+link.onload = function() { --pendingEventCounter;
+  ok(false, 'Load event firing on broken stylesheet 5');
+};
+link.onerror = function() { --pendingEventCounter;
+  ok(true, 'Error event firing on broken stylesheet 5');
+}
+document.body.appendChild(link);
+
+// Make sure the load events for all those stylesheets have not fired yet
+is(pendingEventCounter, pendingEventCounterAtStart + 9, "There should be nine more pending events");
+</script>
+</pre>
+</body>
+</html>

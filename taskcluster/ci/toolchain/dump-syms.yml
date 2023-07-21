@@ -1,0 +1,62 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    attributes:
+        local-toolchain: true
+    description: "dump_syms toolchain build"
+    worker-type: b-linux-gcp
+    worker:
+        max-run-time: 1800
+    run:
+        script: build-rust-based-toolchain.sh
+        toolchain-artifact: public/build/dump_syms.tar.zst
+    fetches:
+        fetch:
+            - dump-syms
+
+linux64-dump_syms:
+    treeherder:
+        symbol: TL(dump_syms)
+    run:
+        arguments: ['x86_64-unknown-linux-gnu']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-toolchain
+            - sysroot-x86_64-linux-gnu
+
+macosx64-dump_syms:
+    treeherder:
+        symbol: TM(dump_syms)
+    worker-type: b-linux-gcp
+    run:
+        arguments: ['x86_64-apple-darwin']
+    fetches:
+        toolchain:
+            - linux64-rust-macos-toolchain
+            - linux64-clang-toolchain
+            - macosx64-sdk-toolchain
+
+macosx64-aarch64-dump_syms:
+    treeherder:
+        symbol: TM(dump_syms-arm64)
+    run:
+        arguments: ['aarch64-apple-darwin']
+    fetches:
+        toolchain:
+            - linux64-rust-macos-toolchain
+            - linux64-clang-toolchain
+            - macosx64-sdk-toolchain
+
+win64-dump_syms:
+    treeherder:
+        symbol: TW64(dump_syms)
+    run:
+        arguments: ['x86_64-pc-windows-msvc']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-windows-toolchain
+            - vs-toolchain

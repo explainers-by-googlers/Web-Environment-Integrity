@@ -1,0 +1,154 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/* ===== global.css =====================================================
+  == Styles that apply everywhere.
+  ======================================================================= */
+
+@import url("chrome://global/skin/global-shared.css");
+
+@namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+@namespace html url("http://www.w3.org/1999/xhtml");
+
+:root {
+  background-color: -moz-Dialog;
+  color: -moz-DialogText;
+  font: message-box;
+  /* Override some menu color variables for light browser themes. */
+  --menu-icon-opacity: 0.7;
+}
+
+/* Override the menu color variables for dark browser themes. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --menu-icon-opacity: 1;
+  }
+}
+
+@media (prefers-contrast) {
+  :root {
+    /* In high-contrast mode on Windows, ThreeDLightShadow provides more
+       contrast than ThreeDShadow. See bug 1022564. */
+    --arrowpanel-border-color: ThreeDLightShadow;
+  }
+}
+
+/* ::::: Alert icons :::::*/
+
+.message-icon,
+.alert-dialog #infoIcon,
+.alert-icon,
+.error-icon,
+.question-icon {
+  width: 32px;
+  height: 32px;
+  -moz-context-properties: fill;
+  fill: currentColor;
+}
+
+.message-icon {
+  list-style-image: url("chrome://global/skin/icons/info.svg");
+}
+
+.alert-dialog #infoIcon,
+.alert-icon {
+  list-style-image: url("chrome://global/skin/icons/warning.svg");
+  fill: #ffa436;
+}
+
+.error-icon {
+  list-style-image: url("chrome://global/skin/icons/error.svg");
+  fill: #e22850;
+}
+
+.question-icon {
+  list-style-image: url("chrome://global/skin/icons/help.svg");
+  -moz-context-properties: fill, fill-opacity;
+  fill-opacity: 0.8;
+}
+
+/* XXX(ntim): [mode="text"] is only used by comm-central */
+
+xul|toolbar[mode="text"] .toolbarbutton-text {
+  padding: 0 !important;
+  margin: 3px 5px !important;
+}
+
+/* Separators */
+
+xul|separator:not([orient="vertical"]) {
+  height: 1.5em;
+}
+xul|separator[orient="vertical"] {
+  width: 1.5em;
+}
+
+xul|separator.thin:not([orient="vertical"]) {
+  height: 0.5em;
+}
+xul|separator.thin[orient="vertical"] {
+  width: 0.5em;
+}
+
+xul|separator.groove:not([orient="vertical"]) {
+  border-top: 1px solid ThreeDShadow;
+  border-bottom: 1px solid ThreeDHighlight;
+  height: 0;
+  margin-block: 0.4em;
+}
+xul|separator.groove[orient="vertical"] {
+  border-left: 1px solid ThreeDShadow;
+  border-right: 1px solid ThreeDHighlight;
+  width: 0;
+  margin-inline: 0.4em;
+}
+
+/* Input margins */
+
+html|input {
+  margin: 2px 4px;
+}
+
+/* Content select */
+
+.contentSelectDropdown-ingroup > .menu-iconic-text {
+  padding-inline-start: 20px;
+}
+
+#ContentSelectDropdown > menupopup > menucaption,
+#ContentSelectDropdown > menupopup > menuitem {
+  padding: 0 6px;
+  border-width: 0;
+}
+
+#ContentSelectDropdown > menupopup {
+  font: -moz-list;
+}
+
+#ContentSelectDropdown > menupopup > menucaption > .menu-iconic-text,
+#ContentSelectDropdown > menupopup > menuitem > .menu-iconic-text {
+  /* Padding should follow the 4/12 ratio, where 12px is the default font-size
+     with 4px being the preferred padding size. */
+  padding-block: .3333em;
+}
+
+#ContentSelectDropdown > menupopup > menucaption > .menu-iconic-text {
+  font-weight: bold;
+}
+
+#ContentSelectDropdown > menupopup > menuitem[_moz-menuactive="true"][disabled="true"] {
+  color: GrayText;
+  background-color: unset;
+}
+
+#ContentSelectDropdown > menupopup > menucaption[disabled="true"] {
+  color: GrayText;
+}
+
+#ContentSelectDropdown > .isOpenedViaTouch > menucaption > .menu-iconic-text,
+#ContentSelectDropdown > .isOpenedViaTouch > menuitem > .menu-iconic-text {
+  /* Touch padding should follow the 11/12 ratio, where 12px is the default
+     font-size with 11px being the preferred padding size. */
+  padding-block: .9167em;
+}

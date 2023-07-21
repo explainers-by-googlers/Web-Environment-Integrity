@@ -1,0 +1,147 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+with Files("**"):
+    BUG_COMPONENT = ("WebExtensions", "General")
+
+EXTRA_JS_MODULES += [
+    "ConduitsChild.sys.mjs",
+    "ConduitsParent.sys.mjs",
+    "Extension.sys.mjs",
+    "ExtensionActions.sys.mjs",
+    "ExtensionActivityLog.sys.mjs",
+    "ExtensionChild.sys.mjs",
+    "ExtensionChildDevToolsUtils.sys.mjs",
+    "ExtensionCommon.sys.mjs",
+    "ExtensionContent.sys.mjs",
+    "ExtensionDNR.sys.mjs",
+    "ExtensionDNRLimits.sys.mjs",
+    "ExtensionDNRStore.sys.mjs",
+    "ExtensionPageChild.sys.mjs",
+    "ExtensionParent.sys.mjs",
+    "ExtensionPermissionMessages.sys.mjs",
+    "ExtensionPermissions.sys.mjs",
+    "ExtensionPreferencesManager.sys.mjs",
+    "ExtensionProcessScript.sys.mjs",
+    "extensionProcessScriptLoader.js",
+    "ExtensionScriptingStore.sys.mjs",
+    "ExtensionSettingsStore.sys.mjs",
+    "ExtensionShortcuts.sys.mjs",
+    "ExtensionStorage.sys.mjs",
+    "ExtensionStorageIDB.sys.mjs",
+    "ExtensionStorageSync.sys.mjs",
+    "ExtensionStorageSyncKinto.sys.mjs",
+    "ExtensionTelemetry.sys.mjs",
+    "ExtensionUtils.sys.mjs",
+    "ExtensionWorkerChild.sys.mjs",
+    "FindContent.sys.mjs",
+    "MatchURLFilters.sys.mjs",
+    "MessageManagerProxy.sys.mjs",
+    "NativeManifests.sys.mjs",
+    "NativeMessaging.sys.mjs",
+    "ProxyChannelFilter.sys.mjs",
+    "Schemas.sys.mjs",
+    "WebNavigation.sys.mjs",
+    "WebNavigationFrames.sys.mjs",
+]
+
+EXTRA_COMPONENTS += [
+    "extensions-toolkit.manifest",
+]
+
+TESTING_JS_MODULES += [
+    "ExtensionTestCommon.sys.mjs",
+    "ExtensionXPCShellUtils.sys.mjs",
+    "MessageChannel.sys.mjs",
+    "test/xpcshell/data/TestWorkerWatcherChild.sys.mjs",
+    "test/xpcshell/data/TestWorkerWatcherParent.sys.mjs",
+]
+
+DIRS += [
+    "schemas",
+    "storage",
+    "webidl-api",
+    "webrequest",
+]
+
+IPDL_SOURCES += [
+    "PExtensions.ipdl",
+]
+
+XPIDL_SOURCES += [
+    "extIWebNavigation.idl",
+    "mozIExtensionAPIRequestHandling.idl",
+    "mozIExtensionProcessScript.idl",
+]
+
+XPIDL_MODULE = "webextensions"
+
+EXPORTS.mozilla = [
+    "ExtensionPolicyService.h",
+]
+
+EXPORTS.mozilla.extensions = [
+    "DocumentObserver.h",
+    "ExtensionsChild.h",
+    "ExtensionsParent.h",
+    "MatchGlob.h",
+    "MatchPattern.h",
+    "WebExtensionContentScript.h",
+    "WebExtensionPolicy.h",
+]
+
+UNIFIED_SOURCES += [
+    "ExtensionPolicyService.cpp",
+    "ExtensionsChild.cpp",
+    "ExtensionsParent.cpp",
+    "MatchPattern.cpp",
+    "WebExtensionPolicy.cpp",
+]
+
+XPCOM_MANIFESTS += [
+    "components.conf",
+]
+
+FINAL_LIBRARY = "xul"
+
+
+JAR_MANIFESTS += ["jar.mn"]
+
+BROWSER_CHROME_MANIFESTS += [
+    "test/browser/browser-serviceworker.ini",
+    "test/browser/browser.ini",
+]
+
+MOCHITEST_MANIFESTS += [
+    "test/mochitest/mochitest-remote.ini",
+    "test/mochitest/mochitest.ini",
+]
+MOCHITEST_CHROME_MANIFESTS += ["test/mochitest/chrome.ini"]
+XPCSHELL_TESTS_MANIFESTS += [
+    "test/xpcshell/native_messaging.ini",
+    "test/xpcshell/xpcshell-e10s.ini",
+    "test/xpcshell/xpcshell-legacy-ep.ini",
+    "test/xpcshell/xpcshell-remote.ini",
+    "test/xpcshell/xpcshell.ini",
+]
+
+# Only include tests that requires the WebExtensions WebIDL API bindings
+# in builds where they are enabled (currently only on Nightly builds).
+if CONFIG["MOZ_WEBEXT_WEBIDL_ENABLED"]:
+    XPCSHELL_TESTS_MANIFESTS += [
+        "test/xpcshell/webidl-api/xpcshell.ini",
+        "test/xpcshell/xpcshell-serviceworker.ini",
+    ]
+    MOCHITEST_MANIFESTS += ["test/mochitest/mochitest-serviceworker.ini"]
+
+
+SPHINX_TREES["webextensions"] = "docs"
+
+with Files("docs/**"):
+    SCHEDULES.exclusive = ["docs"]
+
+include("/ipc/chromium/chromium-config.mozbuild")

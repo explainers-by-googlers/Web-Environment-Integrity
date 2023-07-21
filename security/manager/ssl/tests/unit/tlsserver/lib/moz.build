@@ -1,0 +1,48 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+UNIFIED_SOURCES += [
+    "OCSPCommon.cpp",
+    "TLSServer.cpp",
+]
+
+USE_LIBS += [
+    "mozpkix-testlib",
+]
+
+if not CONFIG["MOZ_SYSTEM_NSS"]:
+    # Bug 1805371: The FaultyServer binary added in Bug 1754746 needs to
+    # be statically linked against NSS, but the configuration here breaks
+    # builds with system NSS. A complete solution involves some changes
+    # to the NSS build system. For now we're disabling FaultyServer when
+    # using system NSS and linking the rest of the tests dynamically.
+    DEFINES["NSS_USE_STATIC_LIBS"] = True
+
+    USE_LIBS += [
+        "certdb",
+        "certhi",
+        "cryptohi",
+        "freebl",
+        "mozpkix",
+        "mozpkix-testlib",
+        "nspr",
+        "nss_static",
+        "nssb",
+        "nssdev",
+        "nsspki",
+        "pk11wrap",
+        "smime",
+        "softokn3",
+        "sqlite",
+        "ssl",
+    ]
+
+    if CONFIG["MOZ_FOLD_LIBS"]:
+        USE_LIBS += ["nssutil"]
+    else:
+        USE_LIBS += ["nssutil3"]
+
+Library("tlsserver")

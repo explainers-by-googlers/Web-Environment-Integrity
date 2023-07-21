@@ -1,0 +1,72 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    description: "fix-stacks toolchain build"
+    attributes:
+        local-toolchain: true
+    worker-type: b-linux-gcp
+    worker:
+        max-run-time: 1800
+    run:
+        script: build-rust-based-toolchain.sh
+        toolchain-artifact: public/build/fix-stacks.tar.zst
+    fetches:
+        fetch:
+            - fix-stacks
+
+linux64-fix-stacks:
+    treeherder:
+        symbol: TL(fix-stacks)
+    run:
+        arguments: ['x86_64-unknown-linux-gnu']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-toolchain
+            - sysroot-x86_64-linux-gnu
+
+macosx64-fix-stacks:
+    treeherder:
+        symbol: TM(fix-stacks)
+    run:
+        arguments: ['x86_64-apple-darwin']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-macos-toolchain
+            - macosx64-sdk-toolchain
+
+macosx64-aarch64-fix-stacks:
+    treeherder:
+        symbol: TM(fix-stacks-arm64)
+    run:
+        arguments: ['aarch64-apple-darwin']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-macos-toolchain
+            - macosx64-sdk-toolchain
+
+win32-fix-stacks:
+    treeherder:
+        symbol: TW32(fix-stacks)
+    run:
+        arguments: ['i686-pc-windows-msvc']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-windows-toolchain
+            - vs-toolchain
+
+win64-fix-stacks:
+    treeherder:
+        symbol: TW64(fix-stacks)
+    run:
+        arguments: ['x86_64-pc-windows-msvc']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-windows-toolchain
+            - vs-toolchain

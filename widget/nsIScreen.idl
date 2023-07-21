@@ -1,0 +1,127 @@
+/* -*- Mode: IDL; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*-
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+%{C++
+#include "Units.h"
+
+namespace mozilla::dom {
+// TODO(zrhoffman, bug 1444515): ScreenColorGamut should be forward-declared
+// using `webidl` once the webidl identifier supports enums.
+enum class ScreenColorGamut : uint8_t;
+}  // namespace mozilla::dom
+
+/**
+ * The display type of nsIScreen belongs to.
+ */
+enum class DisplayType: int32_t {
+  DISPLAY_PRIMARY,  // primary screen
+  DISPLAY_EXTERNAL, // wired displays, such as HDMI, DisplayPort, etc.
+  DISPLAY_VIRTUAL   // wireless displays, such as Chromecast, WiFi-Display, etc.
+};
+%}
+
+native ScreenColorGamut(mozilla::dom::ScreenColorGamut);
+
+[scriptable, builtinclass, uuid(826e80c8-d70f-42e2-8aa9-82c05f2a370a)]
+interface nsIScreen : nsISupports
+{
+  /**
+   * These report screen dimensions in (screen-specific) device pixels
+   */
+  void GetRect(out long left, out long top, out long width, out long height);
+  void GetAvailRect(out long left, out long top, out long width, out long height);
+
+%{C++
+  mozilla::LayoutDeviceIntRect GetRect() {
+    int32_t left = 0, top = 0, width = 0, height = 0;
+    GetRect(&left, &top, &width, &height);
+    return {left, top, width, height};
+  }
+
+  mozilla::LayoutDeviceIntRect GetAvailRect() {
+    int32_t left = 0, top = 0, width = 0, height = 0;
+    GetAvailRect(&left, &top, &width, &height);
+    return {left, top, width, height};
+  }
+%}
+
+  /**
+   * And these report in desktop pixels
+   */
+  void GetRectDisplayPix(out long left, out long top, out long width, out long height);
+  void GetAvailRectDisplayPix(out long left, out long top, out long width, out long height);
+
+%{C++
+  mozilla::DesktopIntRect GetRectDisplayPix() {
+    int32_t left = 0, top = 0, width = 0, height = 0;
+    GetRectDisplayPix(&left, &top, &width, &height);
+    return {left, top, width, height};
+  }
+
+  mozilla::DesktopIntRect GetAvailRectDisplayPix() {
+    int32_t left = 0, top = 0, width = 0, height = 0;
+    GetAvailRectDisplayPix(&left, &top, &width, &height);
+    return {left, top, width, height};
+  }
+%}
+
+  [infallible] readonly attribute long pixelDepth;
+  [infallible] readonly attribute long colorDepth;
+  /**
+   * ScreenColorGamut is native type, which cannot be declared [infallible].
+   */
+  readonly attribute ScreenColorGamut colorGamut;
+
+  /**
+   * The number of device pixels per desktop pixel for this screen (for
+   * hidpi configurations where there may be multiple device pixels per
+   * desktop px and/or per CSS px).
+   *
+   * This seems poorly named (something like devicePixelsPerDesktopPixel
+   * would be more accurate/explicit), but given that it is exposed to
+   * front-end code and may also be used by add-ons, it's probably not
+   * worth the disruption of changing it.
+   *
+   * Returns 1.0 if HiDPI mode is disabled or unsupported, or if the
+   * host OS uses device pixels as its desktop pixel units (e.g. Windows 7 or
+   * GTK/X11). Per-monitor DPI is available in Windows 8.1+, GTK/Wayland or
+   * macOS.
+   */
+  [infallible] readonly attribute double contentsScaleFactor;
+
+  /**
+   * The default number of device pixels per unscaled CSS pixel for this
+   * screen. This is probably what contentsScaleFactor originally meant
+   * to be, prior to confusion between CSS pixels and desktop pixel units.
+   */
+  [infallible] readonly attribute double defaultCSSScaleFactor;
+
+%{C++
+
+  mozilla::DesktopToLayoutDeviceScale GetDesktopToLayoutDeviceScale() {
+    return mozilla::DesktopToLayoutDeviceScale(GetContentsScaleFactor());
+  }
+
+  mozilla::CSSToLayoutDeviceScale GetCSSToLayoutDeviceScale() {
+    return mozilla::CSSToLayoutDeviceScale(GetDefaultCSSScaleFactor());
+  }
+
+  mozilla::CSSToDesktopScale GetCSSToDesktopScale() {
+    return GetCSSToLayoutDeviceScale() / GetDesktopToLayoutDeviceScale();
+  }
+
+%}
+  /**
+   * The DPI of the screen.
+   */
+  [infallible] readonly attribute float dpi;
+
+  /** The target screen refresh rate, in Hz, or 0 if unknown */
+  [infallible] readonly attribute long refreshRate;
+  [infallible] readonly attribute boolean isPseudoDisplay;
+};

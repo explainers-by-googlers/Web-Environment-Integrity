@@ -1,0 +1,72 @@
+# Version of this schema
+schema: 1
+
+bugzilla:
+  # Bugzilla product and component for this directory and subdirectories
+  product: Core
+  component: "Graphics: Text"
+
+# Document the source of externally hosted code
+origin:
+
+  # Short name of the package/library
+  name: harfbuzz
+
+  description: HarfBuzz is a text shaping engine.
+
+  # Full URL for the package's homepage/etc
+  # Usually different from repository url
+  url: https://github.com/harfbuzz/harfbuzz
+
+  # Human-readable identifier for this version/release
+  # Generally "version NNN", "tag SSS", "bookmark SSS"
+  release: 8.0.0 (2023-07-09T02:54:30+03:00).
+
+  # Revision to pull in
+  # Must be a long or short commit SHA (long preferred)
+  revision: 8.0.0
+
+  # The package's license, where possible using the mnemonic from
+  # https://spdx.org/licenses/
+  # Multiple licenses can be specified (as a YAML list)
+  # A "LICENSE" file must exist containing the full license text
+  license: MIT
+  license-file: COPYING
+
+  notes: >
+    To test the upstream's main branch tip, one can
+    run `./mach vendor --revision tip gfx/harfbuzz/moz.yaml`
+
+vendoring:
+  url: https://github.com/harfbuzz/harfbuzz
+  source-hosting: github
+  tracking: tag
+
+  include:
+    - AUTHORS
+    - autogen.sh
+    - configure.ac
+    - COPYING
+    - git.mk
+    - harfbuzz.doap
+    - Makefile.am
+    - NEWS
+    - README.md
+    - src
+    - THANKS
+
+  exclude:
+    - "**"
+    - "**/.*"
+    - ".*"
+    - ".*/**"
+    - "src/test*"
+    - src/hb-ucdn
+
+updatebot:
+  maintainer-phab: jfkthame
+  maintainer-bz: jfkthame@gmail.com
+  fuzzy-query: "'crashtest | 'reftest !'print !'jsref"
+  tasks:
+    - type: vendoring
+      enabled: true

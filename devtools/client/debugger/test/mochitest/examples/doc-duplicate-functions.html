@@ -1,0 +1,27 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<html>
+ <head>
+   <title>Debugger test page</title>
+ </head>
+ <body>
+   <h1> debugger test page2</h1>
+   <script type="text/javascript">
+     var func;
+     function a() {
+       function render() {
+         console.log('a');
+       }
+       func = render;
+     }
+
+     function b() {
+       function render() {
+         console.log('b');
+       }
+       func = render;
+     }
+   </script>
+ </body>
+</html>

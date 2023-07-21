@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="mediaStreamPlayback.js"></script>
+</head>
+<body>
+  <script>
+"use strict";
+
+createHTML({
+  title: "Test labeled devices or speakers aren't exposed in enumerateDevices() after fake getUserMedia()",
+  bug: "1743524"
+});
+
+runTest(async () => {
+  await pushPrefs(
+    ["media.setsinkid.enabled", true],
+    // This test uses real devices because fake devices are not grouped with
+    // audiooutput devices.
+    ["media.navigator.streams.fake", false]);
+  const devices = navigator.mediaDevices;
+  {
+    // `fake:true` means that getUserMedia() resolves without any permission
+    // check, and so this should not be sufficient to expose real device info.
+    const stream = await devices.getUserMedia({ audio: true, fake: true });
+    stream.getTracks()[0].stop();
+    const list = await devices.enumerateDevices();
+    const labeledDevices = list.filter(({label}) => label != "");
+    is(labeledDevices.length, 0, "must be zero labeled devices after fake gUM");
+    const outputDevices = list.filter(({kind}) => kind == "audiooutput");
+    is(outputDevices.length, 0, "must be zero output devices after fake gUM");
+  }
+  {
+    // Check without `fake:true` to verify assumptions about existing devices.
+    let stream;
+    try {
+      stream = await devices.getUserMedia({ audio: true });
+      stream.getTracks()[0].stop();
+    } catch (e) {
+      if (e.name == "NotFoundError" &&
+          navigator.userAgent.includes("Mac OS X")) {
+        todo(false, "Expecting no real audioinput device on Mac test machines");
+        return;
+      }
+      throw e;
+    }
+    {
+      const list = await devices.enumerateDevices();
+      const audioDevices = list.filter(({kind}) => kind.includes("audio"));
+      ok(audioDevices.length, "have audio devices after real gUM");
+      const unlabeledAudioDevices = audioDevices.filter(({label}) => !label);
+      is(unlabeledAudioDevices.length, 0,
+         "must be zero unlabeled audio devices after real gUM");
+
+      const outputDevices = list.filter(({kind}) => kind == "audiooutput");
+      isnot(outputDevices.length, 0, "have output devices after real gUM");
+    }
+  }
+});
+  </script>
+</body>
+</html>

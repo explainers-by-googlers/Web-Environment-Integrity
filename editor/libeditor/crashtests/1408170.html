@@ -1,0 +1,40 @@
+<script>
+function onLoad() {
+  try {
+    document.execCommand("insertUnorderedList");
+  } catch(e) {}
+  try {
+    document.execCommand("delete");
+  } catch(e) {}
+}
+
+function onToggle1() {
+  try {
+    getSelection().collapse(
+      document.querySelector("font"),
+      1
+    );
+  } catch(e) {}
+}
+
+function onToggle2() {
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // text node in the <summary> which is the last child of the <body>.
+  const summary = document.querySelector("summary");
+  getSelection().collapse(summary.firstChild, summary.firstChild.length);
+  try {
+    document.querySelector("label").appendChild(
+      document.querySelector("font")
+    );
+  } catch(e) {}
+}
+</script>
+<body onload="onLoad()">
+<label contenteditable>
+<details ontoggle="onToggle2()" open>
+</details>
+</label>
+<details ontoggle="onToggle1()" open>
+<font dir="rtl">
+<summary>
+</details></font></summary></body>

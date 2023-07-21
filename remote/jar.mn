@@ -1,0 +1,77 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+remote.jar:
+% content remote %content/
+  content/components/Marionette.sys.mjs (components/Marionette.sys.mjs)
+  content/components/RemoteAgent.sys.mjs (components/RemoteAgent.sys.mjs)
+
+  # transport layer (http / websocket)
+  content/server/httpd.sys.mjs (../netwerk/test/httpserver/httpd.sys.mjs)
+  content/server/WebSocketHandshake.sys.mjs (server/WebSocketHandshake.sys.mjs)
+  content/server/WebSocketTransport.sys.mjs (server/WebSocketTransport.sys.mjs)
+
+  # shared modules (all protocols)
+  content/shared/AppInfo.sys.mjs (shared/AppInfo.sys.mjs)
+  content/shared/Browser.sys.mjs (shared/Browser.sys.mjs)
+  content/shared/Capture.sys.mjs (shared/Capture.sys.mjs)
+  content/shared/DOM.sys.mjs (shared/DOM.sys.mjs)
+  content/shared/Format.sys.mjs (shared/Format.sys.mjs)
+  content/shared/Log.sys.mjs (shared/Log.sys.mjs)
+  content/shared/MobileTabBrowser.sys.mjs (shared/MobileTabBrowser.sys.mjs)
+  content/shared/Navigate.sys.mjs (shared/Navigate.sys.mjs)
+  content/shared/NavigationManager.sys.mjs (shared/NavigationManager.sys.mjs)
+  content/shared/PDF.sys.mjs (shared/PDF.sys.mjs)
+  content/shared/Realm.sys.mjs (shared/Realm.sys.mjs)
+  content/shared/RecommendedPreferences.sys.mjs (shared/RecommendedPreferences.sys.mjs)
+  content/shared/RemoteError.sys.mjs (shared/RemoteError.sys.mjs)
+  content/shared/Stack.sys.mjs (shared/Stack.sys.mjs)
+  content/shared/Sync.sys.mjs (shared/Sync.sys.mjs)
+  content/shared/TabManager.sys.mjs (shared/TabManager.sys.mjs)
+  content/shared/UUID.sys.mjs (shared/UUID.sys.mjs)
+  content/shared/WebSocketConnection.sys.mjs (shared/WebSocketConnection.sys.mjs)
+  content/shared/WindowManager.sys.mjs (shared/WindowManager.sys.mjs)
+  content/shared/listeners/BrowsingContextListener.sys.mjs (shared/listeners/BrowsingContextListener.sys.mjs)
+  content/shared/listeners/ConsoleAPIListener.sys.mjs (shared/listeners/ConsoleAPIListener.sys.mjs)
+  content/shared/listeners/ConsoleListener.sys.mjs (shared/listeners/ConsoleListener.sys.mjs)
+  content/shared/listeners/LoadListener.sys.mjs (shared/listeners/LoadListener.sys.mjs)
+  content/shared/listeners/NetworkEventRecord.sys.mjs (shared/listeners/NetworkEventRecord.sys.mjs)
+  content/shared/listeners/NetworkListener.sys.mjs (shared/listeners/NetworkListener.sys.mjs)
+
+  # JSWindowActors
+  content/shared/js-window-actors/NavigationListenerActor.sys.mjs (shared/js-window-actors/NavigationListenerActor.sys.mjs)
+  content/shared/js-window-actors/NavigationListenerChild.sys.mjs (shared/js-window-actors/NavigationListenerChild.sys.mjs)
+  content/shared/js-window-actors/NavigationListenerParent.sys.mjs (shared/js-window-actors/NavigationListenerParent.sys.mjs)
+
+  # shared modules (messagehandler architecture)
+  content/shared/messagehandler/Errors.sys.mjs (shared/messagehandler/Errors.sys.mjs)
+  content/shared/messagehandler/EventsDispatcher.sys.mjs (shared/messagehandler/EventsDispatcher.sys.mjs)
+  content/shared/messagehandler/MessageHandler.sys.mjs (shared/messagehandler/MessageHandler.sys.mjs)
+  content/shared/messagehandler/MessageHandlerRegistry.sys.mjs (shared/messagehandler/MessageHandlerRegistry.sys.mjs)
+  content/shared/messagehandler/Module.sys.mjs (shared/messagehandler/Module.sys.mjs)
+  content/shared/messagehandler/ModuleCache.sys.mjs (shared/messagehandler/ModuleCache.sys.mjs)
+  content/shared/messagehandler/RootMessageHandler.sys.mjs (shared/messagehandler/RootMessageHandler.sys.mjs)
+  content/shared/messagehandler/RootMessageHandlerRegistry.sys.mjs (shared/messagehandler/RootMessageHandlerRegistry.sys.mjs)
+  content/shared/messagehandler/WindowGlobalMessageHandler.sys.mjs (shared/messagehandler/WindowGlobalMessageHandler.sys.mjs)
+  content/shared/messagehandler/sessiondata/SessionData.sys.mjs (shared/messagehandler/sessiondata/SessionData.sys.mjs)
+  content/shared/messagehandler/sessiondata/SessionDataReader.sys.mjs (shared/messagehandler/sessiondata/SessionDataReader.sys.mjs)
+  content/shared/messagehandler/transports/js-window-actors/MessageHandlerFrameActor.sys.mjs (shared/messagehandler/transports/js-window-actors/MessageHandlerFrameActor.sys.mjs)
+  content/shared/messagehandler/transports/js-window-actors/MessageHandlerFrameChild.sys.mjs (shared/messagehandler/transports/js-window-actors/MessageHandlerFrameChild.sys.mjs)
+  content/shared/messagehandler/transports/js-window-actors/MessageHandlerFrameParent.sys.mjs (shared/messagehandler/transports/js-window-actors/MessageHandlerFrameParent.sys.mjs)
+  content/shared/messagehandler/transports/BrowsingContextUtils.sys.mjs (shared/messagehandler/transports/BrowsingContextUtils.sys.mjs)
+  content/shared/messagehandler/transports/RootTransport.sys.mjs (shared/messagehandler/transports/RootTransport.sys.mjs)
+
+  # shared modules (WebDriver HTTP / BiDi only)
+  content/shared/webdriver/Actions.sys.mjs (shared/webdriver/Actions.sys.mjs)
+  content/shared/webdriver/Assert.sys.mjs (shared/webdriver/Assert.sys.mjs)
+  content/shared/webdriver/Capabilities.sys.mjs (shared/webdriver/Capabilities.sys.mjs)
+  content/shared/webdriver/Errors.sys.mjs (shared/webdriver/Errors.sys.mjs)
+  content/shared/webdriver/KeyData.sys.mjs (shared/webdriver/KeyData.sys.mjs)
+  content/shared/webdriver/NodeCache.sys.mjs (shared/webdriver/NodeCache.sys.mjs)
+  content/shared/webdriver/Session.sys.mjs (shared/webdriver/Session.sys.mjs)
+  content/shared/webdriver/process-actors/WebDriverProcessDataChild.sys.mjs (shared/webdriver/process-actors/WebDriverProcessDataChild.sys.mjs)
+  content/shared/webdriver/process-actors/WebDriverProcessDataParent.sys.mjs (shared/webdriver/process-actors/WebDriverProcessDataParent.sys.mjs)
+
+  # imports from external folders
+  content/external/EventUtils.js (../testing/mochitest/tests/SimpleTest/EventUtils.js)

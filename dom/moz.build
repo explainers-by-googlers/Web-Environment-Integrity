@@ -1,0 +1,120 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# interfaces/*/ are annotated per directory, this is for new files
+with Files("**"):
+    BUG_COMPONENT = ("Core", "DOM: Core & HTML")
+
+JAR_MANIFESTS += ["jar.mn"]
+
+interfaces = [
+    "base",
+    "html",
+    "events",
+    "sidebar",
+    "xul",
+    "security",
+    "storage",
+    "geolocation",
+    "notification",
+    "push",
+    "payments",
+]
+
+DIRS += ["interfaces/" + i for i in interfaces]
+
+DIRS += [
+    "abort",
+    "animation",
+    "base",
+    "bindings",
+    "battery",
+    "browser-element",
+    "cache",
+    "canvas",
+    "webgpu",
+    "chrome-webidl",
+    "clients",
+    "commandhandler",
+    "credentialmanagement",
+    "crypto",
+    "debugger",
+    "encoding",
+    "events",
+    "fetch",
+    "file",
+    "filesystem",
+    "flex",
+    "fs",
+    "gamepad",
+    "geolocation",
+    "grid",
+    "html",
+    "jsurl",
+    "mathml",
+    "media",
+    "midi",
+    "notification",
+    "power",
+    "push",
+    "quota",
+    "security",
+    "storage",
+    "svg",
+    "locales",
+    "locks",
+    "network",
+    "permission",
+    "plugins/base",
+    "prototype",
+    "indexedDB",
+    "system",
+    "ipc",
+    "workers",
+    "audiochannel",
+    "broadcastchannel",
+    "messagechannel",
+    "promise",
+    "smil",
+    "streams",
+    "url",
+    "webauthn",
+    "webidl",
+    "webshare",
+    "webtransport",
+    "xml",
+    "xslt",
+    "xul",
+    "manifest",
+    "vr",
+    "console",
+    "performance",
+    "webbrowserpersist",
+    "xhr",
+    "worklet",
+    "script",
+    "payments",
+    "websocket",
+    "serializers",
+    "serviceworkers",
+    "simpledb",
+    "reporting",
+    "localstorage",
+    "l10n",
+    "origin-trials",
+    "webscheduling",
+]
+
+
+TEST_DIRS += [
+    "tests",
+    "imptests",
+]
+
+if CONFIG["MOZ_WIDGET_TOOLKIT"] in ("gtk", "cocoa", "windows"):
+    TEST_DIRS += ["plugins/test"]
+
+SPHINX_TREES["/dom"] = "docs"

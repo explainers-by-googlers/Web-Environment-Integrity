@@ -1,0 +1,6 @@
+This is the Refcount Balancer.  See
+https://firefox-source-docs.mozilla.org/performance/memory/refcount_tracing_and_balancing.html
+for documentation.
+
+Note that the `fix_stacks.py` script is used in several other places in the
+repository.

@@ -1,0 +1,60 @@
+<html>
+<head>
+<script>
+try {
+  var style = document.createElement("style");
+} catch(e) {}
+try {
+  var output = document.createElement("output");
+} catch(e) {}
+try {
+  var input = document.createElement("input");
+} catch(e) {}
+try {
+  var script = document.createElement("script");
+} catch(e) {}
+try {
+  var clonedOutput = output.cloneNode(false);
+} catch(e) {}
+try {
+  document.documentElement.appendChild(style);
+} catch(e) {}
+try {
+  style.outerHTML = '<a contenteditable="true">';
+} catch(e) {}
+// For emulating the traditional behavior, collapse Selection to end of the
+// <body> which must be empty (<style> was added after the <body>).
+getSelection().collapse(document.body, document.body.childNodes.length);
+try {
+  document.documentElement.appendChild(input);
+} catch(e) {}
+try {
+  var text = document.createTextNode(" ");
+} catch(e) {}
+try {
+  script.appendChild(text);
+} catch(e) {}
+try {
+  document.documentElement.appendChild(script);
+} catch(e) {}
+try {
+  var selection = getSelection();
+} catch(e) {}
+try {
+  input.select();
+} catch(e) {}
+try {
+  document.replaceChild(document.documentElement, document.documentElement);
+} catch(e) {}
+try {
+  selection.setBaseAndExtent(text, 0, clonedOutput, 0);
+} catch(e) {}
+try {
+  document.designMode = "on";
+} catch(e) {}
+try {
+  document.execCommand("insertImage", false, "http://localhost/");
+} catch(e) {}
+</script>
+</head>
+</html>

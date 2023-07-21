@@ -1,0 +1,38 @@
+schema: 1
+
+bugzilla:
+  product: Core
+  component: "Graphics: ImageLib"
+
+origin:
+  name: libjxl
+  description: JPEG XL image format reference implementation
+
+  url: https://github.com/libjxl/libjxl
+
+  release: 190d44fbe463c5c3081081c80633639f69478d97 (2023-06-30T21:25:24Z).
+
+  revision: 190d44fbe463c5c3081081c80633639f69478d97
+
+  license: Apache-2.0
+
+  license-file: LICENSE
+
+updatebot:
+    maintainer-phab: saschanaz
+    maintainer-bz: krosylight@mozilla.com
+    tasks:
+      - type: vendoring
+        enabled: True
+        frequency: 3 weeks
+
+vendoring:
+  url: https://github.com/libjxl/libjxl
+  source-hosting: github
+  vendor-directory: third_party/jpeg-xl
+
+  exclude:
+    - doc
+    - third_party/testdata
+    - tools
+    - lib/lib.gni # Symlink is not permitted in mozilla-central

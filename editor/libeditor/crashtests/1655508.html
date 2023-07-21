@@ -1,0 +1,34 @@
+<html>
+<head>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // text node at end of the <body> (end of the text node after the <h3>).
+  getSelection().collapse(
+    document.body.lastChild,
+    document.body.lastChild.length
+  );
+  const textarea = document.querySelector("textarea");
+  const abbr = document.querySelector("abbr");
+  let node;
+  document.addEventListener("DOMAttrModified", event => {
+    node = event.originalTarget.getRootNode({});
+    abbr.insertBefore(textarea, abbr.childNodes[0]);
+  }, false);
+  abbr.contentEditable = false;
+  node.normalize();
+  document.designMode = "on";
+  document.execCommand("insertParagraph");
+});
+</script>
+</head>
+<body>
+<dfn contenteditable>
+    <abbr></abbr>
+</dfn>
+<h3>
+    <textarea autofocus></textarea>
+    <script></script>
+</h3>
+</body>
+</html>

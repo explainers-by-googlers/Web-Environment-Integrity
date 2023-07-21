@@ -1,0 +1,51 @@
+<script>
+function onLoad() {
+  const feComponentTransfer = document.querySelector("feComponentTransfer");
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // text node in the <feComponentTransfer> which is the deepest last child of
+  // the <body>.
+  getSelection().collapse(
+    feComponentTransfer.firstChild,
+    feComponentTransfer.firstChild.length
+  );
+  getSelection().setPosition(
+    document.querySelector("pre[contenteditable]"),
+    1
+  );
+  getSelection().setBaseAndExtent(
+    document.querySelector("fieldset"),
+    0,
+    document.querySelector("use"),
+    0
+  );
+  feComponentTransfer.before(
+    document.querySelector("font-face-uri").previousElementSibling
+  );
+
+  document.execCommand("removeFormat");
+  document.execCommand("hiliteColor", false, "-moz-buttondefault");
+  document.execCommand("insertText", false, "");
+}
+function onBegin() {
+  document.querySelector("desc").appendChild(
+    document.querySelector("fieldset")
+  );
+  document.querySelector("span").appendChild(
+    document.querySelector("a[hidden][contenteditable]")
+  );
+}
+</script>
+<body onload="onLoad()">
+<span>
+<pre contenteditable>
+<fieldset></fieldset>
+<iframe srcdoc="H"></iframe>
+<a hidden contenteditable>
+<svg>
+<set onbegin="onBegin()"/>
+<use>
+<desc></desc>
+</use>
+<font-face-uri/>
+<feComponentTransfer>
+</feComponentTransfer></svg></a></pre></body>

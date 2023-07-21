@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script type="text/javascript">
+function onLoad() {
+  document.querySelector("td").contentEditable = "true";
+  getSelection().collapse(
+    document.querySelector("td"),
+    document.querySelector("td").childNodes.length
+  );
+  document.querySelector("td").focus();
+  document.documentElement.contentEditable = "true";
+  document.documentElement.focus();
+  document.execCommand("indent");
+  document.execCommand("insertParagraph");
+}
+</script>
+</head>
+
+<body onload="onLoad();" contenteditable="false"><td></td></body>
+
+</html>

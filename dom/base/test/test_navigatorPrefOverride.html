@@ -1,0 +1,51 @@
+<!--
+  Any copyright is dedicated to the Public Domain.
+  http://creativecommons.org/publicdomain/zero/1.0/
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for navigator property override</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<p id="display"></p>
+<div id="content" style="display: none"></div>
+<pre id="test"></pre>
+<script class="testbody" type="text/javascript">
+
+  ok(navigator.appVersion, "This is used just to populate the cache");
+  ok(navigator.platform, "This is used just to populate the cache");
+  ok(navigator.userAgent, "This is used just to populate the cache");
+  ok(navigator.buildID, "This is used just to populate the cache");
+
+  SpecialPowers.pushPrefEnv({"set": [
+    ["general.appversion.override", "appVersion overridden"],
+    ["general.platform.override", "platform overridden"],
+    ["general.useragent.override", "userAgent overridden"],
+    ["general.buildID.override", "buildID overridden"],
+    ]},
+    function() {
+      var ifr = document.createElement('IFRAME');
+      ifr.src = "about:blank";
+
+      ifr.addEventListener('load', function() {
+        var nav = ifr.contentWindow.navigator;
+        isnot(navigator.appVersion, nav.appVersion, "appVersion should match");
+        isnot(navigator.platform, nav.platform, "platform should match");
+        isnot(navigator.userAgent, nav.userAgent, "userAgent should match");
+        isnot(navigator.buildID, nav.buildID, "buildID should match");
+        SimpleTest.finish();
+      });
+
+      document.getElementById('content').appendChild(ifr);
+    }
+  );
+
+  SimpleTest.waitForExplicitFinish();
+
+</script>
+</pre>
+</body>
+</html>

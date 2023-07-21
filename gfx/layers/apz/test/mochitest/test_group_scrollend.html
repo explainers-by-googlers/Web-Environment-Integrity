@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Various scrollend tests that spawn in new windows</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script type="application/javascript" src="apz_test_utils.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
+  <script type="application/javascript">
+
+var basePrefs = [
+  ["apz.test.mac.synth_wheel_input", true],
+];
+
+var scrollendDisabledPrefs = [
+  ...basePrefs,
+  ["apz.scrollend-event.content.enabled", false],
+];
+
+var prefs = [
+  ...basePrefs,
+  ["apz.scrollend-event.content.enabled", true],
+];
+
+var smoothScrollDisabled = [
+  ...basePrefs,
+  ["general.smoothScroll", true],
+];
+
+var subtests = [
+  {"file": "helper_basic_scrollend.html?chrome-only=true",
+        "prefs": scrollendDisabledPrefs},
+  {"file": "helper_basic_scrollend.html?chrome-only=true", "prefs": prefs},
+  {"file": "helper_basic_scrollend.html?chrome-only=false", "prefs": prefs},
+  {"file": "helper_scrollend_bubbles.html?scroll-target=document", "prefs": prefs},
+  {"file": "helper_scrollend_bubbles.html?scroll-target=element", "prefs": prefs},
+  {"file": "helper_main_thread_smooth_scroll_scrollend.html", "prefs": prefs},
+  {"file": "helper_scrollend_bubbles.html?scroll-target=document",
+        "prefs": smoothScrollDisabled},
+  {"file": "helper_scrollend_bubbles.html?scroll-target=element",
+        "prefs": smoothScrollDisabled},
+  {"file": "helper_main_thread_smooth_scroll_scrollend.html",
+        "prefs": smoothScrollDisabled},
+];
+
+if (isApzEnabled()) {
+  SimpleTest.waitForExplicitFinish();
+  window.onload = function() {
+    runSubtestsSeriallyInFreshWindows(subtests)
+    .then(SimpleTest.finish, SimpleTest.finishWithFailure);
+  };
+}
+
+  </script>
+</head>
+<body>
+</body>
+</html>

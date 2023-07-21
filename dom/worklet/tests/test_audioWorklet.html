@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for AudioWorklet</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
+  <script type="application/javascript" src="common.js"></script>
+</head>
+<body>
+
+<script type="application/javascript">
+
+function configureTest() {
+  const ConsoleAPIStorage = SpecialPowers.Cc[
+    "@mozilla.org/consoleAPI-storage;1"
+  ].getService(SpecialPowers.Ci.nsIConsoleAPIStorage);
+
+  function consoleListener() {
+    this.observe = this.observe.bind(this);
+    ConsoleAPIStorage.addLogEventListener(this.observe, SpecialPowers.wrap(document).nodePrincipal);
+  }
+
+  consoleListener.prototype  = {
+    observe(aSubject) {
+      var obj = aSubject.wrappedJSObject;
+      if (obj.arguments[0] == "So far so good") {
+        ok(true, "Message received \\o/");
+
+        ConsoleAPIStorage.removeLogEventListener(this.observe);
+        SimpleTest.finish();
+        return;
+      }
+    }
+  }
+
+  var cl = new consoleListener();
+}
+
+// This function is called into an iframe.
+function runTestInIframe() {
+  ok(window.isSecureContext, "Test should run in secure context");
+  var audioContext = new AudioContext();
+  ok(audioContext.audioWorklet instanceof AudioWorklet,
+     "AudioContext.audioWorklet should be an instance of AudioWorklet");
+  audioContext.audioWorklet.addModule("worklet_audioWorklet.js")
+}
+</script>
+</body>
+</html>

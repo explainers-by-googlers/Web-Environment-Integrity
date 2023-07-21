@@ -1,0 +1,43 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" role="document" id="shopping">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src resource: chrome: https://staging-trustwerty.fakespot.io https://staging-affiliates.fakespot.io/v1/fx/sp_search; object-src 'none'; img-src chrome:;"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="localization" href="branding/brand.ftl" />
+    <link rel="localization" href="preview/shopping.ftl" />
+
+    <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" />
+
+    <script src="chrome://global/content/customElements.js"></script>
+    <script
+      type="module"
+      src="chrome://browser/content/shopping/shopping-container.mjs"
+    ></script>
+    <script
+      type="module"
+      src="chrome://browser/content/shopping/highlights.mjs"
+    ></script>
+    <script
+      type="module"
+      src="chrome://browser/content/shopping/letter-grade.mjs"
+    ></script>
+    <script
+      type="module"
+      src="chrome://browser/content/shopping/settings.mjs"
+    ></script>
+    <title data-l10n-id="shopping-page-title"></title>
+  </head>
+  <body>
+    <shopping-container></shopping-container>
+    <!-- TODO: Remove below elements when tests for review-highlights and shopping-settings are updated -->
+    <review-highlights hidden></review-highlights>
+    <shopping-settings></shopping-settings>
+  </body>
+</html>

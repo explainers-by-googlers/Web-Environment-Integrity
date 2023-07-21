@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for Form History / DataList Duplicate Autocomplete Entries: Bug 1263588</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <script type="text/javascript" src="satchel_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<div id="content">
+
+  <!-- normal, basic form -->
+  <form id="form1" onsubmit="return false;">
+    <input list="suggest" type="text" name="field1" id="field1">
+    <button type="submit">Submit</button>
+    <datalist id="suggest">
+      <option value="Mozilla">
+      <option value="Firefox">
+      <option value="Relay is awesome">
+    </datalist>
+  </form>
+
+</div>
+
+<script>
+
+add_setup(async () => {
+  await updateFormHistory([
+    { op: "add", fieldname: "field1", value: "Mozilla" },
+    { op: "add", fieldname: "field1", value: "Firefox" },
+    { op: "add", fieldname: "field1", value: "Relay" },
+  ]);
+});
+
+add_task(async function test_all_entries_are_unique_and_ordered() {
+  await triggerAutofillAndCheckEntriesValue("",["Relay", "Mozilla", "Firefox", "Relay is awesome"]);
+});
+
+add_task(async function test_duplicate_entries_are_shown_once() {
+  await triggerAutofillAndCheckEntriesValue("f", ["Firefox"]);
+});
+
+add_task(async function test_non_duplicate_entries_are_shown_once() {
+  await triggerAutofillAndCheckEntriesValue("rel",["Relay", "Relay is awesome"]);
+});
+
+async function triggerAutofillAndCheckEntriesValue(inputValue, expectedValues) {
+  await openPopupOn("#form1 > input", { inputValue });
+  isDeeply(getMenuEntries(), expectedValues, "Matching deduplicated autocomplete list entries with expected values.");
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+// |reftest| shell-option(--enable-iterator-helpers) skip-if(!this.hasOwnProperty('Iterator')||!xulRuntime.shell) -- iterator-helpers is not enabled unconditionally, requires shell-options
+// Copyright (C) 2023 Michael Ficarra. All rights reserved.
+// This code is governed by the BSD license found in the LICENSE file.
+/*---
+esid: sec-iteratorprototype.reduce
+description: >
+  Iterator.prototype.reduce reducer this value is undefined
+info: |
+  %Iterator.prototype%.reduce ( reducer )
+
+features: [iterator-helpers]
+flags: []
+---*/
+function* g() {
+  yield 0;
+  yield 1;
+}
+
+let iter = g();
+
+let expectedThis = function () {
+  return this;
+}.call(undefined);
+
+let assertionCount = 0;
+let result = iter.reduce(function (memo, v, count) {
+  assert.sameValue(this, expectedThis);
+  ++assertionCount;
+  return memo;
+});
+
+assert.sameValue(result, 0);
+assert.sameValue(assertionCount, 1);
+
+reportCompare(0, 0);

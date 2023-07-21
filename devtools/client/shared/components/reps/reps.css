@@ -1,0 +1,394 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+.theme-dark,
+.theme-light {
+  --number-color: var(--theme-highlight-green);
+  --string-color: var(--theme-highlight-red);
+  --null-color: var(--theme-comment);
+  --object-color: var(--theme-highlight-blue);
+  --caption-color: var(--theme-highlight-blue);
+  --location-color: var(--theme-comment);
+  --source-link-color: var(--theme-highlight-blue);
+  --node-color: var(--theme-highlight-purple);
+  --reference-color: var(--theme-highlight-blue);
+  --comment-node-color: var(--theme-comment);
+}
+
+/******************************************************************************/
+
+.inline {
+  display: inline;
+  white-space: normal;
+}
+
+.objectBox-object {
+  font-weight: bold;
+  color: var(--object-color);
+  white-space: pre-wrap;
+}
+
+.objectBox-string,
+.objectBox-symbol,
+.objectBox-text,
+.objectBox-textNode,
+.objectBox-table {
+  white-space: pre-wrap;
+}
+
+.objectBox * {
+  unicode-bidi: isolate;
+}
+
+.objectBox-number,
+.objectBox-styleRule,
+.objectBox-element,
+.objectBox-textNode,
+.objectBox-array > .length {
+  color: var(--number-color);
+}
+
+.objectBox-textNode,
+.objectBox-string,
+.objectBox-symbol {
+  color: var(--string-color);
+}
+
+.objectBox-empty-string {
+  font-style: italic;
+}
+
+.objectBox-string a {
+  word-break: break-all;
+}
+
+.objectBox-string a,
+.objectBox-string a:visited {
+  color: currentColor;
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  font-style: italic;
+  cursor: pointer;
+}
+
+/* Visually hide the middle of "cropped" url */
+.objectBox-string a .cropped-url-middle {
+  max-width: 0;
+  max-height: 0;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.objectBox-string a .cropped-url-end::before {
+  content: "…";
+}
+
+
+.objectBox-function,
+.objectBox-profile {
+  color: var(--object-color);
+}
+
+.objectBox-stackTrace.reps-custom-format,
+.objectBox-stackTrace.reps-custom-format > .objectBox-string {
+  color: var(--error-color);
+}
+
+.objectBox-stackTrace-grid {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  margin-top: 3px;
+}
+
+.objectBox-stackTrace-fn {
+  color: var(--console-output-color);
+  padding-inline-start: 17px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-inline-end: 5px;
+}
+
+.objectBox-stackTrace-location {
+  color: var(--frame-link-source, currentColor);
+  direction: rtl;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: end;
+}
+
+.objectBox-stackTrace-location:hover {
+  text-decoration: underline;
+}
+
+.objectBox-stackTrace-location {
+  cursor: pointer;
+}
+
+.objectBox-Location,
+.location {
+  color: var(--location-color);
+}
+
+.objectBox-null,
+.objectBox-undefined,
+.objectBox-hint,
+.objectBox-nan,
+.logRowHint {
+  color: var(--null-color);
+}
+
+.objectBox-sourceLink {
+  position: absolute;
+  right: 4px;
+  top: 2px;
+  padding-left: 8px;
+  font-weight: bold;
+  color: var(--source-link-color);
+}
+
+.objectBox-failure {
+  color: var(--string-color);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 2px;
+  font-size: 0.8em;
+  padding: 0 2px;
+}
+
+.objectBox-accessible.clickable,
+.objectBox-node.clickable {
+  cursor: pointer;
+}
+
+/* JsonML reps can be nested, though only the top-level rep needs layout
+ * adjustments to align it with the toggle arrow and fit its width to its
+ * contents. */
+.objectBox-jsonml-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  width: fit-content;
+  word-break: break-word;
+  line-height: normal;
+}
+
+.objectBox-jsonml-wrapper[data-expandable="true"] {
+  cursor: default;
+}
+
+.objectBox-jsonml-wrapper .jsonml-header-collapse-button {
+  margin: 0 4px 2px 0;
+  padding: 0;
+  vertical-align: middle;
+}
+
+.objectBox-jsonml-wrapper .jsonml-header-collapse-button::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: url("chrome://devtools/skin/images/arrow.svg") no-repeat center;
+  background-size: 10px;
+  transform: rotate(-90deg);
+  transition: transform 125ms ease;
+  -moz-context-properties: fill;
+  fill: var(--theme-icon-dimmed-color);
+}
+
+.objectBox-jsonml-wrapper .jsonml-header-collapse-button[aria-expanded="true"]::before {
+  transform: rotate(0deg);
+}
+
+/******************************************************************************/
+
+.objectBox-event,
+.objectBox-eventLog,
+.objectBox-regexp,
+.objectBox-object {
+  color: var(--object-color);
+  white-space: pre-wrap;
+}
+
+.objectBox .Date {
+  color: var(--string-color);
+  white-space: pre-wrap;
+}
+
+/******************************************************************************/
+
+.objectBox.theme-comment {
+  color: var(--comment-node-color);
+}
+
+.accessible-role,
+.tag-name {
+  color: var(--object-color);
+}
+
+.attrName {
+  color: var(--string-color);
+}
+
+.attrEqual,
+.objectEqual {
+  color: var(--comment-node-color);
+}
+
+.attrValue,
+.attrValue.objectBox-string {
+  color: var(--node-color);
+}
+
+.angleBracket {
+  color: var(--theme-body-color);
+}
+
+/******************************************************************************/
+/* Length bubble for arraylikes and maplikes */
+
+.objectLengthBubble {
+  color: var(--null-color);
+}
+
+/******************************************************************************/
+
+.objectLeftBrace,
+.objectRightBrace,
+.arrayLeftBracket,
+.arrayRightBracket {
+  color: var(--object-color);
+}
+
+/******************************************************************************/
+/* Cycle reference */
+
+.objectBox-Reference {
+  font-weight: bold;
+  color: var(--reference-color);
+}
+
+[class*="objectBox"] > .objectTitle {
+  color: var(--object-color);
+}
+
+.caption {
+  color: var(--caption-color);
+}
+
+/******************************************************************************/
+/* Themes */
+
+.theme-dark .objectBox-null,
+.theme-dark .objectBox-undefined,
+.theme-light .objectBox-null,
+.theme-light .objectBox-undefined {
+  font-style: normal;
+}
+
+.theme-dark .objectBox-object,
+.theme-light .objectBox-object {
+  font-weight: normal;
+  white-space: pre-wrap;
+}
+
+.theme-dark .caption,
+.theme-light .caption {
+  font-weight: normal;
+}
+
+/******************************************************************************/
+/* Open DOMNode in inspector or Accessible in accessibility inspector button */
+
+button.open-accessibility-inspector {
+  background: url("chrome://devtools/content/shared/components/reps/images/open-a11y.svg")
+    no-repeat;
+}
+
+button.open-inspector {
+  background: url("chrome://devtools/content/shared/components/reps/images/open-inspector.svg")
+    no-repeat;
+}
+
+button.highlight-node {
+  background: url("chrome://devtools/skin/images/highlight-selector.svg")
+    no-repeat;
+}
+
+
+button:is(.open-accessibility-inspector, .open-inspector, .highlight-node) {
+  display: inline-block;
+  vertical-align: top;
+  height: 15px;
+  width: 15px;
+  margin: 0 4px;
+  padding: 0;
+  border: none;
+  fill: var(--theme-icon-color);
+  cursor: pointer;
+  -moz-context-properties: fill;
+}
+
+.objectBox-accessible:hover .open-accessibility-inspector,
+.objectBox-node:hover .open-inspector,
+.objectBox-textNode:hover .open-inspector,
+.open-accessibility-inspector:hover,
+.highlight-node:hover,
+.open-inspector:hover {
+  fill: var(--theme-icon-checked-color);
+}
+
+/******************************************************************************/
+/* Jump to definition button */
+
+button.jump-definition {
+  display: inline-block;
+  height: 16px;
+  margin-left: 0.25em;
+  vertical-align: middle;
+  background: 0% 50%
+    url("chrome://devtools/content/shared/components/reps/images/jump-definition.svg")
+    no-repeat;
+  border-color: transparent;
+  stroke: var(--theme-icon-color);
+  -moz-context-properties: stroke;
+  cursor: pointer;
+}
+
+.jump-definition:hover {
+  stroke: var(--theme-icon-checked-color);
+}
+
+.tree-node.focused .jump-definition {
+  stroke: currentColor;
+}
+
+/******************************************************************************/
+/* Invoke getter button */
+
+button.invoke-getter {
+  mask: url(chrome://devtools/content/shared/components/reps/images/input.svg)
+    no-repeat;
+  display: inline-block;
+  background-color: var(--theme-icon-color);
+  height: 10px;
+  vertical-align: middle;
+  border: none;
+}
+
+.invoke-getter:hover {
+  background-color: var(--theme-icon-checked-color);
+}
+
+/******************************************************************************/
+/* "more…" ellipsis */
+.more-ellipsis {
+  color: var(--comment-node-color);
+}
+
+/* function parameters */
+.objectBox-function .param {
+  color: var(--theme-highlight-red);
+}

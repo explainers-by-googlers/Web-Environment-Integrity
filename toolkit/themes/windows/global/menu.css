@@ -1,0 +1,209 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@import url("chrome://global/skin/menu-shared.css");
+
+/* ===== menu.css =======================================================
+  == Styles used by XUL menu-related elements.
+  ======================================================================= */
+
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+/* ::::: menu/menuitem ::::: */
+
+menupopup,
+menubar {
+  font: menu;
+}
+
+menu,
+menuitem,
+menucaption {
+  flex-shrink: 0;
+  align-items: center;
+  list-style-image: none;
+}
+
+menu:where([disabled="true"]),
+menuitem:where([disabled="true"]),
+menu:where([_moz-menuactive="true"][disabled="true"]),
+menuitem:where([_moz-menuactive="true"][disabled="true"]) {
+  color: GrayText;
+  text-shadow: none;
+}
+
+menu:where([_moz-menuactive="true"][disabled="true"]),
+menuitem:where([_moz-menuactive="true"][disabled="true"]) {
+  background-color: -moz-menuhoverdisabled;
+}
+
+menuitem[default="true"],
+menuitem.spell-suggestion,
+menucaption {
+  font-weight: bold;
+}
+
+menubar > menu:-moz-window-inactive {
+  color: ThreeDShadow;
+}
+
+/* ..... Internal content .... */
+
+.menu-accel,
+.menu-iconic-accel,
+.menu-text,
+.menu-iconic-text {
+  margin: 0 !important;
+  padding: 1px 0;
+}
+
+.menu-accel,
+.menu-iconic-accel {
+  margin-inline: 0.74em 1.35em !important;
+}
+
+.menu-iconic-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.menu-iconic > .menu-iconic-left,
+.menuitem-iconic > .menu-iconic-left {
+  padding-top: 2px;
+}
+
+menuitem:is([type="checkbox"], [type="radio"]):not([checked="true"]) > .menu-iconic-left > .menu-iconic-icon {
+  display: none;
+}
+
+/* ..... menu arrow box ..... */
+
+/* Override the native menu arrow with a custom one for Win10. */
+.menu-right {
+  list-style-image: url("chrome://global/skin/icons/arrow-right.svg");
+  -moz-context-properties: fill, fill-opacity;
+  fill: currentColor;
+  fill-opacity: var(--menu-icon-opacity);
+  margin-inline-end: 1em;
+}
+
+.menu-right > image {
+  /* Do not make this smaller than the size of the svg, but upscale for
+   * people with large fonts. */
+  width: max(1em, 16px);
+}
+
+.menu-right:-moz-locale-dir(rtl) {
+  list-style-image: url("chrome://global/skin/icons/arrow-left.svg");
+}
+
+/* ::::: menu/menuitems in menubar ::::: */
+
+menubar > menu[_moz-menuactive="true"]:not([disabled="true"]) {
+  color: -moz-menubarhovertext;
+}
+
+menubar > menu:-moz-lwtheme {
+  appearance: none;
+  border-color: transparent;
+}
+
+menubar > menu:-moz-lwtheme:not([disabled="true"]) {
+  color: inherit;
+}
+
+menubar > menu:-moz-lwtheme[_moz-menuactive="true"]:not([disabled="true"]) {
+  background-color: SelectedItem;
+  color: SelectedItemText;
+  text-shadow: none;
+}
+
+/* ..... internal content .... */
+
+.menubar-text {
+  margin: 1px 6px 2px !important;
+}
+
+/* ::::: menu/menuitems in popups ::::: */
+
+menupopup > menu,
+menupopup > menuitem,
+menupopup > menucaption {
+  max-width: 42em;
+}
+
+menu:where([_moz-menuactive="true"]:not([disabled="true"])),
+menuitem:where([_moz-menuactive="true"]:not([disabled="true"])) {
+  background-color: -moz-menuhover;
+  color: -moz-menuhovertext;
+}
+
+/* ::::: menu/menuitems in menulist popups ::::: */
+
+menulist > menupopup > menuitem,
+menulist > menupopup > menucaption,
+menulist > menupopup > menu {
+  max-width: none;
+}
+
+menulist > menupopup > menuitem {
+  padding-inline-end: 1em;
+}
+
+
+menulist > menupopup > menuitem > .menu-iconic-left,
+menulist > menupopup > menucaption > .menu-iconic-left,
+menulist > menupopup > menu > .menu-iconic-left {
+  display: none;
+}
+
+menulist > menupopup > menuitem > label,
+menulist > menupopup > menucaption > label,
+menulist > menupopup > menu > label {
+  padding-block: 0;
+}
+
+menulist > menupopup > menuitem[_moz-menuactive="true"][disabled="true"] {
+  color: GrayText;
+}
+
+menulist > menupopup > :is(menuitem, menucaption):not(.menuitem-iconic) > .menu-iconic-text {
+  margin: 0 !important;
+}
+
+/* ::::: checkbox and radio menuitems ::::: */
+
+menupopup[needsgutter] menu:not([icon], .menu-iconic),
+menupopup[needsgutter] menuitem:not([checked="true"], [icon], .menuitem-iconic) {
+  padding-inline-start: 36px;
+}
+
+.menu-iconic > .menu-iconic-left,
+.menuitem-iconic > .menu-iconic-left {
+  margin-inline-end: 8px;
+}
+
+menuitem[checked="true"] {
+  padding-inline-start: 12px;
+}
+
+/* We need to do something to override the default style for selected
+   checkboxes and radio buttons because the native drawing we use on other
+   Windows versions looks pretty bad with the Win10 styles, so for now we'll
+   insert a generic checkmark icon for both types. */
+menuitem[checked="true"] > .menu-iconic-left {
+  -moz-context-properties: fill, fill-opacity;
+  fill: currentColor;
+  fill-opacity: var(--menu-icon-opacity);
+  list-style-image: url("chrome://global/skin/icons/menu-check.svg");
+  width: 16px;
+  margin-inline-end: 8px;
+}
+
+/* ::::: menuseparator ::::: */
+
+menuseparator {
+  /* The side padding should align with the start of the menu item text. */
+  padding-inline: 1em;
+}

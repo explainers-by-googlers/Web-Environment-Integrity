@@ -1,0 +1,127 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    description: "Clang-tidy build"
+    attributes:
+        local-toolchain: true
+    index:
+        product: static-analysis
+    worker-type: b-linux-large-gcp
+    worker:
+        max-run-time: 3600
+    run:
+        toolchain-artifact: public/build/clang-tidy.tar.zst
+        resources:
+            - 'build/clang-plugin/**/*.cpp'
+            - 'build/clang-plugin/**/*.h'
+            - 'build/clang-plugin/*.inc'
+            - 'build/clang-plugin/*.py'
+            - 'build/clang-plugin/*.txt'
+            - 'build/clang-plugin/moz.build'
+            - 'build/clang-plugin/Makefile.in'
+            - 'build/build-clang/build-clang.py'
+    fetches:
+        fetch:
+            - clang-16
+
+linux64-clang-tidy:
+    index:
+        job-name: linux64-clang-tidy
+    treeherder:
+        symbol: TL(clang-tidy)
+    run:
+        script: build-clang.sh
+        arguments:
+            - 'build/build-clang/clang-tidy-linux64.json'
+        resources:
+            - 'build/build-clang/clang-tidy-linux64.json'
+    fetches:
+        toolchain:
+            - linux64-clang-16
+            - linux64-toolchain-sysroot
+
+macosx64-clang-tidy:
+    index:
+        job-name: macosx64-clang-tidy
+    treeherder:
+        symbol: TM(clang-tidy)
+    worker-type: b-linux-large-gcp
+    run:
+        script: build-clang.sh
+        arguments:
+            - 'build/build-clang/clang-tidy-macosx64.json'
+            - 'build/build-clang/macosx64.json'
+        resources:
+            - 'build/build-clang/clang-tidy-macosx64.json'
+            - 'build/build-clang/macosx64.json'
+    fetches:
+        toolchain:
+            - linux64-clang-16
+            - macosx64-sdk-toolchain
+
+macosx64-aarch64-clang-tidy:
+    index:
+        job-name: macosx64-aarch64-clang-tidy
+    treeherder:
+        symbol: TM(clang-tidy-aarch64)
+    worker-type: b-linux-large-gcp
+    run:
+        script: build-clang.sh
+        arguments:
+            - 'build/build-clang/clang-tidy-macosx64.json'
+            - 'build/build-clang/macosx64.json'
+            - 'build/build-clang/macosx64-aarch64.json'
+        resources:
+            - 'build/build-clang/clang-tidy-macosx64.json'
+            - 'build/build-clang/macosx64.json'
+            - 'build/build-clang/macosx64-aarch64.json'
+    fetches:
+        toolchain:
+            - linux64-clang-16
+            - macosx64-sdk-toolchain
+
+win64-clang-tidy:
+    description: "Clang-tidy toolchain build"
+    index:
+        job-name: win64-clang-tidy
+    treeherder:
+        symbol: TW64(clang-tidy)
+        tier: 2
+    worker:
+        max-run-time: 7200
+    run:
+        script: build-clang.sh
+        arguments:
+            - 'build/build-clang/clang-tidy-win64.json'
+            - 'build/build-clang/win64.json'
+        resources:
+            - 'build/build-clang/clang-tidy-win64.json'
+            - 'build/build-clang/win64.json'
+    fetches:
+        toolchain:
+            - linux64-clang-16
+            - vs-toolchain
+
+linux64-clang-tidy-external:
+    attributes:
+        local-toolchain: false
+    index:
+        job-name: linux64-clang-tidy-external
+    treeherder:
+        symbol: TL(clang-tidy-e)
+    run:
+        toolchain-artifact: project/civet/clang-tidy.tar.zst
+        script: build-clang-tidy-external.sh
+        arguments:
+            - 'build/build-clang/clang-tidy-external-linux64.json'
+        resources:
+            - 'build/build-clang/clang-tidy-external-linux64.json'
+    run-on-projects: []
+    fetches:
+        fetch:
+            - civet-source
+        toolchain:
+            - linux64-clang-16
+            - linux64-toolchain-sysroot

@@ -1,0 +1,337 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@import url("chrome://global/skin/in-content/common.css");
+
+#screenshots-component {
+  width: 100%;
+  height: 100%;
+  overflow: clip;
+  user-select: none;
+  pointer-events: auto;
+  touch-action: none;
+  font: message-box;
+}
+
+#screenshots-overlay-container {
+  position: absolute;
+  z-index: 1;
+  pointer-events: auto;
+  cursor: crosshair;
+}
+
+#preview-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#selection-container {
+  overflow: clip;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#screenshots-overlay-container[hidden] {
+  display: none;
+}
+
+#screenshots-overlay-container[dragging] {
+  cursor: grabbing;
+}
+
+#buttons {
+  position: absolute;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--in-content-page-background);
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.screenshots-button {
+  display: inline-flex;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 6;
+  min-width: 32px;
+  margin-inline: 4px;
+}
+
+#screenshots-cancel-button {
+  background-color: transparent;
+  margin-top: 40px;
+  width: fit-content;
+  border-color: #fff;
+  color: #fff;
+}
+
+#screenshots-cancel-button:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+@media (forced-colors: active), (prefers-contrast) {
+  #screenshots-cancel-button {
+    border-color: ButtonBorder;
+    color: CanvasText;
+  }
+}
+
+.screenshots-button > img {
+  -moz-context-properties: fill;
+  fill: currentColor;
+  width: 16px;
+  height: 16px;
+}
+
+#cancel > img {
+  content: url("chrome://global/skin/icons/close.svg");
+}
+
+#copy > img {
+  content: url("chrome://global/skin/icons/edit-copy.svg");
+}
+
+#download > img {
+  content: url("chrome://browser/skin/downloads/downloads.svg");
+}
+
+#download > img,
+#copy > img {
+  margin-inline-end: 5px;
+}
+
+.fixed-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  inset-inline-start: 0;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.face-container {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.face {
+  width: 62px;
+  height: 62px;
+  display: block;
+  background-image: url("chrome://browser/content/screenshots/icon-welcome-face-without-eyes.svg");
+}
+
+.eye {
+  background-color: #fff;
+  width: 10px;
+  height: 14px;
+  position: absolute;
+  border-radius: 100%;
+  overflow: hidden;
+  inset-inline-start: 16px;
+  top: 19px;
+}
+
+.eyeball {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #000;
+  border-radius: 50%;
+  inset-inline-start: 2px;
+  top: 4px;
+  z-index: 10;
+}
+
+.left {
+  margin-inline-start: 0;
+}
+
+.right {
+  margin-inline-start: 20px;
+}
+
+.preview-instructions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 125ms cubic-bezier(0.07, 0.95, 0, 1);
+  color: #fff;
+  font-size: 24px;
+  line-height: 32px;
+  text-align: center;
+  padding-top: 20px;
+  width: 400px;
+}
+
+@media (forced-colors: active), (prefers-contrast) {
+  .preview-instructions {
+    color: CanvasText;
+  }
+}
+
+#hover-highlight {
+  animation: fade-in 125ms forwards cubic-bezier(0.07, 0.95, 0, 1);
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 1px;
+  pointer-events: none;
+  position: absolute;
+  z-index: 11;
+}
+
+.bghighlight {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  overflow: clip;
+}
+
+.highlight {
+  border-radius: 1px;
+  border: 2px dashed rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
+  cursor: move;
+  position: absolute;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.mover-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+.mover-target.direction-topLeft {
+  cursor: nwse-resize;
+  height: 60px;
+  left: -30px;
+  top: -30px;
+  width: 60px;
+}
+
+.mover-target.direction-top {
+  cursor: ns-resize;
+  height: 60px;
+  inset-inline-start: 0;
+  top: -30px;
+  width: 100%;
+  z-index: 4;
+}
+
+.mover-target.direction-topRight {
+  cursor: nesw-resize;
+  height: 60px;
+  right: -30px;
+  top: -30px;
+  width: 60px;
+}
+
+.mover-target.direction-left {
+  cursor: ew-resize;
+  height: 100%;
+  left: -30px;
+  top: 0;
+  width: 60px;
+  z-index: 4;
+}
+
+.mover-target.direction-right {
+  cursor: ew-resize;
+  height: 100%;
+  right: -30px;
+  top: 0;
+  width: 60px;
+  z-index: 4;
+}
+
+.mover-target.direction-bottomLeft {
+  bottom: -30px;
+  cursor: nesw-resize;
+  height: 60px;
+  left: -30px;
+  width: 60px;
+}
+
+.mover-target.direction-bottom {
+  bottom: -30px;
+  cursor: ns-resize;
+  height: 60px;
+  inset-inline-start: 0;
+  width: 100%;
+  z-index: 4;
+}
+
+.mover-target.direction-bottomRight {
+  bottom: -30px;
+  cursor: nwse-resize;
+  height: 60px;
+  right: -30px;
+  width: 60px;
+}
+
+.mover-target:hover .mover {
+  transform: scale(1.05);
+}
+
+.mover {
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  height: 16px;
+  opacity: 1;
+  position: relative;
+  transition: transform 125ms cubic-bezier(0.07, 0.95, 0, 1);
+  width: 16px;
+}
+
+.small-selection .mover {
+  height: 10px;
+  width: 10px;
+}
+
+.direction-topLeft .mover,
+.direction-left .mover,
+.direction-bottomLeft .mover {
+  left: -1px;
+}
+
+.direction-topLeft .mover,
+.direction-top .mover,
+.direction-topRight .mover {
+  top: -1px;
+}
+
+.direction-topRight .mover,
+.direction-right .mover,
+.direction-bottomRight .mover {
+  right: -1px;
+}
+
+.direction-bottomRight .mover,
+.direction-bottom .mover,
+.direction-bottomLeft .mover {
+  bottom: -1px;
+}

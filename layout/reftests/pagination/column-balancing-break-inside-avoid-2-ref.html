@@ -1,0 +1,31 @@
+<html>
+<head>
+  <link rel="author" title="Mats Palmgren" href="https://bugzilla.mozilla.org/show_bug.cgi?id=685012">
+  <link rel="help" href="http://www.w3.org/TR/CSS21/page.html#propdef-page-break-inside">
+  <meta name="flags" content="paged">
+    <meta charset="utf-8">
+    <title>Balancing Overflow, page-break-inside:avoid</title>
+<style>
+#colset { width: 200px;
+          padding: 2px;
+          column-count: 3;
+          column-gap: 2px;
+          column-fill: auto; }
+#a      { height:  auto;   background: lightblue;}
+#b      { height:  50px;   background: lightblue;}
+#c      { height:  51px;   background: orange;}
+</style>
+</head>
+<!-- Removing whitespace in body for simpler frame trees -->
+<body
+ ><div id="colset"
+   ><div
+     ><div id="a"></div
+     ><div id="b"
+       ><div id="c"></div
+       ><div id="d"></div
+     ></div
+   ></div
+ ></div
+></body>
+</html>

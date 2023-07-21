@@ -1,0 +1,282 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+loader: gecko_taskgraph.loader.transform:loader
+
+kind-dependencies:
+    - packages
+
+transforms:
+    - gecko_taskgraph.transforms.docker_image:transforms
+    - gecko_taskgraph.transforms.cached_tasks:transforms
+    - gecko_taskgraph.transforms.task:transforms
+
+# make a task for each docker-image we might want.  For the moment, since we
+# write artifacts for each, these are whitelisted, but ideally that will change
+# (to use subdirectory clones of the proper directory), at which point we can
+# generate tasks for every docker image in the directory, secure in the
+# knowledge that unnecessary images will be omitted from the target task graph
+jobs:
+    image_builder:
+        symbol: I(ib)
+    # Neither the ubuntu1804-*raw nor the ubuntu1804-*packages images can have
+    # packages dependencies.
+    ubuntu1804-raw:
+        symbol: I(ub18-raw)
+        definition: debian-raw
+        args:
+            BASE_IMAGE: ubuntu:bionic
+    ubuntu1804-packages:
+        symbol: I(ub18-pkg)
+        definition: debian-packages
+        parent: ubuntu1804-raw
+    ubuntu1804-i386-raw:
+        symbol: I(ub18-32-raw)
+        definition: debian-raw
+        args:
+            BASE_IMAGE: i386/ubuntu:bionic
+    ubuntu1804-i386-packages:
+        symbol: I(ub18-32-pkg)
+        definition: debian-packages
+        parent: ubuntu1804-i386-raw
+    ubuntu1804-base:
+        symbol: I(ub18-base)
+        parent: ubuntu1804-raw
+        packages:
+            - ub18-mercurial
+            - ub18-python-zstandard
+            - ub18-python-psutil
+    ubuntu1804-test-base:
+        symbol: I(ub18-test-base)
+        parent: ubuntu1804-base
+        packages:
+            - ub18-libc6
+            - ub18-32-libc6
+    ubuntu1804-test:
+        symbol: I(ub18-test)
+        parent: ubuntu1804-test-base
+    ubuntu1804-build-python:
+        symbol: I(ub18-build-python)
+        parent: ubuntu1804-base
+    # Neither the ubuntu1804-*raw nor the ubuntu1804-*packages images can have
+    # packages dependencies.
+    ubuntu2004-raw:
+        symbol: I(ub20-raw)
+        definition: debian-raw
+        args:
+            BASE_IMAGE: ubuntu:focal
+    ubuntu2204-raw:
+        symbol: I(ub22-raw)
+        definition: debian-raw
+        args:
+            BASE_IMAGE: ubuntu:jammy
+    ubuntu2004-packages:
+        symbol: I(ub20-pkg)
+        definition: debian-packages
+        parent: ubuntu2004-raw
+    ubuntu2204-packages:
+        symbol: I(ub22-pkg)
+        definition: debian-packages
+        parent: ubuntu2204-raw
+    ubuntu2004-base:
+        symbol: I(ub20-base)
+        definition: debian-base
+        parent: ubuntu2004-raw
+        packages:
+            - ub20-mercurial
+            - ub20-python-zstandard
+    ubuntu2204-base:
+        symbol: I(ub22-base)
+        definition: debian-base
+        parent: ubuntu2204-raw
+        packages:
+            - ub22-mercurial
+            - ub22-python-zstandard
+    # Neither the debian8-*raw nor the debian8-*packages images can have
+    # packages dependencies.
+    debian8-raw:
+        symbol: I(deb8-raw)
+        definition: debian-raw
+        args:
+            BASE_IMAGE: debian:jessie-20210208
+            DIST: jessie
+    debian8-packages:
+        symbol: I(deb8-pkg)
+        definition: debian-packages
+        parent: debian8-raw
+    debian8-i386-raw:
+        symbol: I(deb8-32-raw)
+        definition: debian-raw
+        args:
+            BASE_IMAGE: i386/debian:jessie-20210208
+            DIST: jessie
+    debian8-i386-packages:
+        symbol: I(deb8-32-pkg)
+        definition: debian-packages
+        parent: debian8-i386-raw
+    custom-v8:
+        symbol: I(custom-v8)
+        parent: debian11-base
+    # Chromium-as-Release
+    custom-car-linux:
+        symbol: I(custom-car-linux)
+        parent: debian11-base
+    valgrind-build:
+        symbol: I(vb)
+        parent: debian12-amd64-build
+        packages:
+            - deb12-valgrind
+    lint:
+        symbol: I(lnt)
+        parent: debian11-base
+    # Neither the debian11-raw nor the debian11-packages images can have
+    # packages dependencies.
+    debian11-raw:
+        symbol: I(deb11-raw)
+        definition: debian-raw
+        args:
+            BASE_IMAGE: debian:bullseye-20230612
+            DIST: bullseye
+            SNAPSHOT: '20230611T210420Z'
+    debian11-packages:
+        symbol: I(deb11-pkg)
+        definition: debian-packages
+        parent: debian11-raw
+    debian11-base:
+        symbol: I(deb11-base)
+        definition: debian-base
+        parent: debian11-raw
+        packages:
+            - deb11-mercurial
+            - deb11-python-zstandard
+    debian11-amd64-build:
+        symbol: I(deb11)
+        parent: debian11-base
+        definition: debian-build
+    debian11-repackage:
+        symbol: I(deb11-rpk)
+        parent: debian11-base
+        definition: debian-repackage
+        packages:
+            - deb11-mercurial
+    deb11-toolchain-build:
+        symbol: I(deb11-toolchain)
+        parent: debian11-base
+        definition: toolchain-build
+        packages:
+            - deb11-cmake
+    # Neither the debian12-raw nor the debian12-packages images can have
+    # packages dependencies.
+    debian12-raw:
+        symbol: I(deb12-raw)
+        definition: debian-raw
+        args:
+            BASE_IMAGE: debian:bookworm-20230612
+            DIST: bookworm
+            SNAPSHOT: '20230611T210420Z'
+    debian12-packages:
+        symbol: I(deb12-pkg)
+        definition: debian-packages
+        parent: debian12-raw
+    debian12-base:
+        symbol: I(deb12-base)
+        definition: debian-base
+        parent: debian12-raw
+        packages:
+            - deb12-mercurial
+            - deb12-python-zstandard
+    debian12-amd64-build:
+        symbol: I(deb12)
+        parent: debian12-base
+        definition: debian-build
+    debian12-repackage:
+        symbol: I(deb12-rpk)
+        parent: debian12-base
+        definition: debian-repackage
+        packages:
+            - deb12-mercurial
+    deb12-toolchain-build:
+        symbol: I(deb12-toolchain)
+        parent: debian12-base
+        definition: toolchain-build
+    android-build:
+        symbol: I(agb)
+        parent: debian12-base
+    fetch:
+        symbol: I(fetch)
+        parent: debian11-raw
+        packages:
+            - deb11-python-zstandard
+    static-analysis-build:
+        symbol: I(static-analysis-build)
+        parent: debian12-base
+    gdb-test:
+        symbol: I(gdb)
+        parent: debian12-amd64-build
+        definition: gdb-test
+    index-task:
+        symbol: I(idx)
+    funsize-update-generator:
+        symbol: I(pg)
+    update-verify:
+        symbol: I(uv)
+        parent: ubuntu2004-base
+    diffoscope:
+        symbol: I(diff)
+        parent: debian11-base
+    partner-repack:
+        symbol: I(PR)
+        parent: debian11-base
+        definition: partner-repack
+    updatebot:
+        symbol: I(3rdp)
+        parent: push-to-try
+    periodic-updates:
+        symbol: I(file)
+        parent: debian11-base
+    firefox-snap:
+        symbol: I(snap)
+    firefox-flatpak:
+        symbol: I(flatpak)
+    webrender:
+        symbol: I(webrender)
+        parent: debian11-base
+    condprof:
+        symbol: I(condprof)
+        parent: ubuntu1804-test
+    github-sync:
+        symbol: I(github-sync)
+        parent: debian11-base
+    sentry:
+        symbol: I(sentry)
+        parent: debian11-base
+    system-symbols-mac:
+        symbol: I(system-symbols-mac)
+        parent: debian11-base
+    system-symbols-win:
+        symbol: I(system-symbols-win)
+        parent: debian11-base
+    system-symbols-linux-scraper:
+        symbol: I(system-symbols-linux)
+        parent: debian11-base
+    push-to-try:
+        symbol: I(push-to-try)
+        parent: debian11-base
+    decision:
+        symbol: I(decision)
+        parent: ubuntu2004-base
+    snap-build-core20:
+        symbol: I(snap20-build)
+        parent: ubuntu2004-base
+        definition: snap-coreXX-build
+        args:
+            SNAP_BASE: core20
+            SNAP_LIST: "gnome-3-38-2004-sdk"
+    snap-build-core22:
+        symbol: I(snap22-build)
+        parent: ubuntu2204-base
+        definition: snap-coreXX-build
+        args:
+            SNAP_BASE: core22
+            SNAP_LIST: "gnome-42-2204 gtk-common-themes gnome-42-2204-sdk"

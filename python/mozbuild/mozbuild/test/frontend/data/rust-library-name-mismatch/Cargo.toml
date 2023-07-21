@@ -1,0 +1,15 @@
+[package]
+name = "deterministic-crate"
+version = "0.1.0"
+authors = [
+  "The Mozilla Project Developers",
+]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+[dependencies]
+mozilla-central-workspace-hack = { version = "0.1", features = ["deterministic-crate"], optional = true }

@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<head>
+  <meta charset=utf-8>
+  <title>Test Backdrop-Filter Enabled State</title>
+  <link rel="author" title="Erik Nordin" href="mailto:nordzilla@mozilla.com">
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+</head>
+<script>
+SimpleTest.waitForExplicitFinish();
+
+(async function() {
+  for (let enabled of [true, false]) {
+    await SpecialPowers.pushPrefEnv({"set": [["layout.css.backdrop-filter.enabled", enabled]]});
+    is(enabled, CSS.supports("backdrop-filter: initial"),
+      "backdrop-filter is available only if backdrop-filter pref is set");
+  }
+  SimpleTest.finish();
+}());
+
+</script>
+

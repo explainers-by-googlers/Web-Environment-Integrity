@@ -1,0 +1,29 @@
+{
+  "last-release-sha": "30e5b1a58edb8b1d94acdff00d64c76e76cf02a3",
+  "prerelease": true,
+  "packages": {
+    "packages/puppeteer": {
+      "component": "puppeteer"
+    },
+    "packages/puppeteer-core": {
+      "component": "puppeteer-core"
+    },
+    "packages/testserver": {},
+    "packages/ng-schematics": {
+      "release-as": "0.2.0"
+    },
+    "packages/browsers": {}
+  },
+  "plugins": [
+    {
+      "type": "node-workspace",
+      "merge": false
+    },
+    {
+      "type": "linked-versions",
+      "group-name": "puppeteer",
+      "groupName": "puppeteer",
+      "components": ["puppeteer", "puppeteer-core"]
+    }
+  ]
+}

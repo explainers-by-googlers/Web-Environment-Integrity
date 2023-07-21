@@ -1,0 +1,17 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+toolkit.jar:
+#ifdef XP_WIN
+   content/global/printPageSetup.js                 (content/printPageSetup.js)
+   content/global/printPageSetup.xhtml              (content/printPageSetup.xhtml)
+#endif
+   content/global/printPreviewPagination.js         (content/printPreviewPagination.js)
+   content/global/printUtils.js                     (content/printUtils.js)
+   content/global/print.js                          (content/print.js)
+   content/global/print.html                        (content/print.html)
+   content/global/print.css                         (content/print.css)
+   content/global/toggle-group.css                  (content/toggle-group.css)
+   content/global/simplifyMode.css                  (content/simplifyMode.css)
+   content/global/printPagination.css               (content/printPagination.css)

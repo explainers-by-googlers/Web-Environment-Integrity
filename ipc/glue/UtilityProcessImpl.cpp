@@ -1,0 +1,127 @@
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* vim: set ts=8 sts=2 et sw=2 tw=80: */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+#include "UtilityProcessImpl.h"
+
+#include "mozilla/ipc/IOThreadChild.h"
+#include "mozilla/GeckoArgs.h"
+
+#if defined(XP_WIN)
+#  include "nsExceptionHandler.h"
+#endif
+
+#if defined(XP_WIN) && defined(MOZ_SANDBOX)
+#  include "mozilla/sandboxTarget.h"
+#  include "WMF.h"
+#  include "WMFDecoderModule.h"
+#endif
+
+#if defined(XP_OPENBSD) && defined(MOZ_SANDBOX)
+#  include "mozilla/SandboxSettings.h"
+#endif
+
+namespace mozilla::ipc {
+
+UtilityProcessImpl::~UtilityProcessImpl() = default;
+
+#if defined(XP_WIN)
+/* static */
+void UtilityProcessImpl::LoadLibraryOrCrash(LPCWSTR aLib) {
+  // re-try a few times depending on the error we get ; inspired by both our
+  // results on content process allocations as well as msys2:
+  // https://github.com/git-for-windows/msys2-runtime/blob/b4fed42af089ab955286343835a97e287496b3f8/winsup/cygwin/autoload.cc#L323-L339
+
+  const int kMaxRetries = 10;
+  DWORD err;
+
+  for (int i = 0; i < kMaxRetries; i++) {
+    HMODULE module = ::LoadLibraryW(aLib);
+    if (module) {
+      return;
+    }
+
+    err = ::GetLastError();
+
+    if (err != ERROR_NOACCESS && err != ERROR_DLL_INIT_FAILED) {
+      break;
+    }
+
+    PR_Sleep(0);
+  }
+
+  switch (err) {
+    /* case ERROR_ACCESS_DENIED: */
+    /* case ERROR_BAD_EXE_FORMAT: */
+    /* case ERROR_SHARING_VIOLATION: */
+    case ERROR_MOD_NOT_FOUND:
+    case ERROR_COMMITMENT_LIMIT:
+      // We want to make it explicit in telemetry that this was in fact an
+      // OOM condition, even though we could not detect it on our own
+      CrashReporter::AnnotateOOMAllocationSize(1);
+      break;
+
+    default:
+      break;
+  }
+
+  MOZ_CRASH_UNSAFE_PRINTF("Unable to preload module: 0x%lx", err);
+}
+#endif  // defined(XP_WIN)
+
+bool UtilityProcessImpl::Init(int aArgc, char* aArgv[]) {
+  Maybe<uint64_t> sandboxingKind = geckoargs::sSandboxingKind.Get(aArgc, aArgv);
+  if (sandboxingKind.isNothing()) {
+    return false;
+  }
+
+  if (*sandboxingKind >= SandboxingKind::COUNT) {
+    return false;
+  }
+
+#if defined(MOZ_SANDBOX) && defined(XP_WIN)
+  // We delay load winmm.dll so that its dependencies don't interfere with COM
+  // initialization when win32k is locked down. We need to load it before we
+  // lower the sandbox in processes where the policy will prevent loading.
+  LoadLibraryOrCrash(L"winmm.dll");
+
+  if (*sandboxingKind == SandboxingKind::GENERIC_UTILITY) {
+    // Preload audio generic libraries required for ffmpeg only
+    UtilityAudioDecoderParent::GenericPreloadForSandbox();
+  }
+
+  if (*sandboxingKind == SandboxingKind::UTILITY_AUDIO_DECODING_WMF
+#  ifdef MOZ_WMF_MEDIA_ENGINE
+      || *sandboxingKind == SandboxingKind::MF_MEDIA_ENGINE_CDM
+#  endif
+  ) {
+    UtilityAudioDecoderParent::WMFPreloadForSandbox();
+  }
+
+  // Go for it
+  mozilla::SandboxTarget::Instance()->StartSandbox();
+#elif defined(__OpenBSD__) && defined(MOZ_SANDBOX)
+  if (*sandboxingKind != SandboxingKind::GENERIC_UTILITY) {
+    StartOpenBSDSandbox(GeckoProcessType_Utility,
+                        (SandboxingKind)*sandboxingKind);
+  }
+#endif
+
+  Maybe<const char*> parentBuildID =
+      geckoargs::sParentBuildID.Get(aArgc, aArgv);
+  if (parentBuildID.isNothing()) {
+    return false;
+  }
+
+  if (!ProcessChild::InitPrefs(aArgc, aArgv)) {
+    return false;
+  }
+
+  return mUtility->Init(TakeInitialEndpoint(), nsCString(*parentBuildID),
+                        *sandboxingKind);
+}
+
+void UtilityProcessImpl::CleanUp() { NS_ShutdownXPCOM(nullptr); }
+
+}  // namespace mozilla::ipc

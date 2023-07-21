@@ -1,0 +1,23 @@
+[package]
+name = "jsrust"
+version = "0.1.0"
+authors = ["The Spidermonkey developers"]
+license = "MPL-2.0"
+
+[lib]
+name = "jsrust"
+crate-type = ["staticlib"]
+path = "lib.rs"
+
+[features]
+moz_memory = ['mozglue-static/moz_memory']
+simd-accel = ['jsrust_shared/simd-accel']
+smoosh = ['jsrust_shared/smoosh']
+gluesmith = ['jsrust_shared/gluesmith']
+
+[dependencies]
+mozilla-central-workspace-hack = { version = "0.1", features = ["jsrust"], optional = true }
+jsrust_shared = { path = "./shared" }
+# Workaround for https://github.com/rust-lang/rust/issues/58393
+mozglue-static = { path = "../../../mozglue/static/rust" }
+wast = "60.0.0"

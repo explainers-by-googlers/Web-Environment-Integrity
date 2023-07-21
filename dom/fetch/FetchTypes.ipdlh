@@ -1,0 +1,127 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+include IPCStream;
+include PBackgroundSharedTypes;
+include PerformanceTimingTypes;
+include NeckoChannelParams;
+
+include "mozilla/dom/FetchIPCTypes.h";
+include "mozilla/ipc/TransportSecurityInfoUtils.h";
+
+using mozilla::dom::HeadersGuardEnum from "mozilla/dom/HeadersBinding.h";
+using mozilla::dom::ReferrerPolicy from "mozilla/dom/ReferrerPolicyBinding.h";
+using mozilla::dom::RequestCache from "mozilla/dom/RequestBinding.h";
+using mozilla::dom::RequestCredentials from "mozilla/dom/RequestBinding.h";
+using mozilla::dom::RequestRedirect from "mozilla/dom/RequestBinding.h";
+using mozilla::dom::ResponseType from "mozilla/dom/ResponseBinding.h";
+using struct nsID from "nsID.h";
+using mozilla::dom::FetchDriverObserver::EndReason from "mozilla/dom/FetchDriver.h";
+using nsILoadInfo::CrossOriginEmbedderPolicy from "nsILoadInfo.h";
+[RefCounted] using class mozilla::RemoteLazyInputStream from "mozilla/RemoteLazyInputStream.h";
+[RefCounted] using class nsITransportSecurityInfo from "nsITransportSecurityInfo.h";
+
+namespace mozilla {
+namespace dom {
+
+struct HeadersEntry {
+  nsCString name;
+  nsCString value;
+};
+
+struct ParentToParentStream {
+  // Used as a key for RemoteLazyInputStreamStorage
+  nsID uuid;
+};
+
+union ParentToChildStream {
+  nullable RemoteLazyInputStream;
+  IPCStream;
+};
+
+struct ChildToParentStream {
+  IPCStream stream;
+};
+
+union BodyStreamVariant {
+  ParentToParentStream;
+  ParentToChildStream;
+  ChildToParentStream;
+};
+
+struct IPCInternalRequest {
+  nsCString method;
+  nsCString[] urlList;
+  HeadersGuardEnum headersGuard;
+  HeadersEntry[] headers;
+  BodyStreamVariant? body;
+  int64_t bodySize;
+  nsCString preferredAlternativeDataType;
+  uint32_t contentPolicyType;
+  nsString referrer;
+  ReferrerPolicy referrerPolicy;
+  ReferrerPolicy environmentReferrerPolicy;
+  RequestMode requestMode;
+  RequestCredentials requestCredentials;
+  RequestCache cacheMode;
+  RequestRedirect requestRedirect;
+  nsString integrity;
+  nsCString fragment;
+  PrincipalInfo? principalInfo;
+  PrincipalInfo? interceptionTriggeringPrincipalInfo;
+  uint32_t interceptionContentPolicyType;
+  RedirectHistoryEntryInfo[] interceptionRedirectChain;
+  bool interceptionFromThirdParty;
+  CrossOriginEmbedderPolicy embedderPolicy;
+};
+
+struct InternalResponseMetadata {
+  ResponseType type;
+  nsCString[] urlList;
+  uint16_t status;
+  nsCString statusText;
+  HeadersGuardEnum headersGuard;
+  HeadersEntry[] headers;
+  nsresult errorCode;
+  nsCString alternativeDataType;
+  nullable nsITransportSecurityInfo securityInfo;
+  PrincipalInfo? principalInfo;
+  nsCString bodyBlobURISpec;
+  nsString bodyLocalPath;
+  RequestCredentials credentialsMode;
+};
+
+struct ParentToParentInternalResponse {
+  InternalResponseMetadata metadata;
+  ParentToParentStream? body;
+  int64_t bodySize;
+  ParentToParentStream? alternativeBody;
+};
+
+struct ParentToChildInternalResponse {
+  InternalResponseMetadata metadata;
+  ParentToChildStream? body;
+  int64_t bodySize;
+  ParentToChildStream? alternativeBody;
+};
+
+struct ChildToParentInternalResponse {
+  InternalResponseMetadata metadata;
+  ChildToParentStream? body;
+  int64_t bodySize;
+  ChildToParentStream? alternativeBody;
+};
+
+struct ResponseTiming {
+  IPCPerformanceTimingData timingData;
+  nsString initiatorType;
+  nsString entryName;
+};
+
+struct ResponseEndArgs {
+  EndReason endReason;
+};
+
+} // namespace ipc
+} // namespace mozilla

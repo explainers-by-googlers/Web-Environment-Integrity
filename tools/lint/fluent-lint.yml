@@ -1,0 +1,13 @@
+---
+fluent-lint:
+    description: Linter for Fluent files
+    exclude:
+        - dom/l10n/tests/mochitest/document_l10n/non-system-principal/localization/test.ftl
+    extensions: ['ftl']
+    support-files:
+        - 'tools/lint/fluent-lint**'
+    brand-files:
+        - 'browser/branding/official/locales/en-US/brand.ftl'
+        - 'toolkit/locales/en-US/toolkit/branding/brandings.ftl'
+    type: external
+    payload: fluent-lint:lint

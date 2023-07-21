@@ -1,0 +1,42 @@
+<html>
+<head>
+  <title>test</title>
+  <script type="application/javascript">
+
+  </script>
+  <style>
+    div {
+      width: 1000px;
+      height: 100px;
+      background-color: #f00;
+    }
+
+    @media screen and (min-width: 1px) {
+      div {
+        width: 200px;
+        background-color: yellow;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      div {
+        background-color: darkblue;
+      }
+    }
+  </style>
+  <script>
+    "use strict";
+    if (window.location.search == "?constructed") {
+      const sheet = new CSSStyleSheet();
+      sheet.replaceSync(`div { z-index: 0 }`);
+      document.adoptedStyleSheets.push(sheet);
+    }
+  </script>
+</head>
+<body>
+<div></div>
+<iframe
+  src='https://example.org/document-builder.sjs?html=<style>html { background: cyan;} @media (prefers-color-scheme: dark) {html {background: darkred;}}'>
+</iframe>
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Satchel Test for Form Submisstion</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script type="text/javascript" src="satchel_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<p id="display"></p>
+<iframe id="iframe" src="https://example.com/tests/toolkit/components/satchel/test/subtst_form_submission_1.html"></iframe>
+<div id="content" style="display: none">
+
+  <!-- ===== Things that should not be saved. ===== -->
+
+  <form purpose="nothing stored for input autocomplete=off (case-insensitive token)"
+        id="form1">
+    <input type="text" name="test1" autocomplete=" oFf ">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for form autocomplete=off"
+        id="form2" autocomplete="oFf">
+    <input type="text" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for type=hidden"
+        id="form3">
+    <input type="hidden" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for type=checkbox"
+        id="form4">
+    <input type="checkbox" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for empty values."
+        id="form5">
+    <input type="text" name="test1" value="originalValue">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for unchanged values when set by a script."
+        id="form6">
+    <input type="text" name="test1" value="dontSaveThis">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for unchanged values. (.value not touched)"
+        id="form7">
+    <input type="text" name="test1" value="dontSaveThis">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for no field name or ID"
+        id="form8">
+    <input type="text">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for nothing to save"
+        id="form9">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input with name too long (300 chars.)"
+        id="form10">
+    <input type="text" name="12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input with value too long (300 chars.)"
+        id="form11">
+    <input type="text" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input with value of one space (which should be trimmed)"
+        id="form12">
+    <input type="text" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for password field"
+        id="form13">
+    <input type="password" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for password field (type toggled to password and back after pageload)"
+        id="form14">
+    <input type="text" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input with sensitive data (16 digit credit card number)"
+        id="form15">
+    <script type="text/javascript">
+      let form = document.getElementById("form15");
+      for (let i = 0; i < 10; i++) {
+        const input = form.appendChild(document.createElement("input"));
+        input.type = "text";
+        input.name = "test" + (i + 1);
+      }
+    </script>
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input with sensitive data (15 digit credit card number)"
+        id="form16">
+    <script type="text/javascript">
+      form = document.getElementById("form16");
+      for (let i = 0; i < 10; i++) {
+        const input = form.appendChild(document.createElement("input"));
+        input.type = "text";
+        input.name = "test" + (i + 1);
+      }
+    </script>
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input with sensitive data (19 digit credit card number)"
+        id="form17">
+    <input type="text" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input with sensitive data (16 digit hyphenated credit card number)"
+        id="form18">
+    <input type="text" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input with sensitive data (15 digit whitespace-separated credit card number)"
+        id="form19">
+    <input type="text" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for the invalid form"
+        id="form20">
+    <input type='email' name='test1'>
+    <button type='submit'>Submit</button>
+  </form>
+
+  <form purpose="nothing stored for the invalid form"
+        id="form21">
+    <input type='email' value='foo'>
+    <input type='text' name='test1'>
+    <button type='submit'>Submit</button>
+  </form>
+
+  <form purpose="nothing stored for the input with name 'searchbar-history'"
+        id="form22">
+    <input type='text' name='searchbar-history'>
+    <button type='submit'>Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input autocomplete=cc-csc (case-insensitive token)"
+        id="form23">
+    <input type="text" name="test1" autocomplete="  cc-CSC  ">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input autocomplete=new-password (case-insensitive token)"
+        id="form24">
+    <input type="text" name="test1" autocomplete="  NEW-password  ">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored after user input followed by reset button click"
+        id="form25">
+    <input type="text" name="test1" defaultValue="do not save me" value="do not save me either">
+    <button type="submit">Submit</button>
+    <button type="reset">Reset</button>
+  </form>
+
+  <form purpose="nothing stored after user input changed by a script"
+        id="form26">
+    <input type="text" name="test1" defaultValue="do not save me" value="do not save me either">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="nothing stored for input autocomplete=one-time-code"
+        id="form27">
+    <input type="text" name="test1" autocomplete="one-time-code">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- ===== Things that should be saved ===== -->
+
+  <!-- Form 100 is submitted into an iframe, not declared here. -->
+
+  <form purpose="saved input with no default value"
+        id="form101">
+    <input type="text" name="test1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="saved input with a default value"
+        id="form102">
+    <input type="text" name="test2" value="originalValue">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="saved input with id and not name"
+        id="form103">
+    <input type="text" name="test3">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="saved input with leading and trailing space"
+        id="form104">
+    <input type="text" name="test4">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="saved input with leading and trailing whitespace"
+        id="form105">
+    <input type="text" name="test5">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="saved input that looks like sensitive data but doesn't satisfy the requirements (incorrect length)"
+        id="form106">
+    <input type="text" name="test6">
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="input that looks like sensitive data but doesn't satisfy the requirements (Luhn check fails for 16 chars)"
+        id="form107">
+    <script type="text/javascript">
+      form = document.getElementById("form107");
+      for (let i = 0; i < 10; i++) {
+        let input = form.appendChild(document.createElement("input"));
+        input.type = "text";
+        input.name = "test7_" + (i + 1);
+      }
+    </script>
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="input that looks like sensitive data but doesn't satisfy the requirements (Luhn check fails for 15 chars)"
+        id="form108">
+    <script type="text/javascript">
+      form = document.getElementById("form108");
+      for (let i = 0; i != 10; i++) {
+        let input = form.appendChild(document.createElement("input"));
+        input.type = "text";
+        input.name = "test8_" + (i + 1);
+      }
+    </script>
+    <button type="submit">Submit</button>
+  </form>
+
+  <form purpose="form data submitted through HTTPS, when browser.formfill.saveHttpsForms is true"
+        id="form109" action="https://www.example.com/">
+    <input type="text" name="test9">
+    <button type="submit">Submit</button>
+  </form>
+
+</div>
+<script>
+/* eslint-disable complexity */
+
+const ccNumbers = {
+  valid15: [
+    "930771457288760", "474915027480942",
+    "924894781317325", "714816113937185",
+    "790466087343106", "474320195408363",
+    "219211148122351", "633038472250799",
+    "354236732906484", "095347810189325",
+  ],
+  valid16: [
+    "3091269135815020", "5471839082338112",
+    "0580828863575793", "5015290610002932",
+    "9465714503078607", "4302068493801686",
+    "2721398408985465", "6160334316984331",
+    "8643619970075142", "0218246069710785",
+  ],
+  invalid15: [
+    "526931005800649", "724952425140686",
+    "379761391174135", "030551436468583",
+    "947377014076746", "254848023655752",
+    "226871580283345", "708025346034339",
+    "917585839076788", "918632588027666",
+  ],
+  invalid16: [
+    "9946177098017064", "4081194386488872",
+    "3095975979578034", "3662215692222536",
+    "6723210018630429", "4411962856225025",
+    "8276996369036686", "4449796938248871",
+    "3350852696538147", "5011802870046957",
+  ],
+};
+
+function setUserInput(formNumber, inputName, value) {
+  const input = SpecialPowers.wrap(getFormElementByName(formNumber, inputName));
+  input.setUserInput(value);
+}
+
+function setScriptInput(formNumber, inputName, value) {
+  getFormElementByName(formNumber, inputName).value = value;
+}
+
+function checkSubmitDoesNotSave(formNumber, inputName, value) {
+  return new Promise((resolve, reject) => {
+    const form = document.getElementById("form" + formNumber);
+    form.addEventListener("submit", async e => {
+      const historyEntriesCount = await countEntries(null, null);
+      ok(!historyEntriesCount, form.getAttribute("purpose"));
+      resolve();
+    }, { once: true });
+
+    getFormSubmitButton(formNumber).click();
+  });
+}
+
+function checkInvalidFirstInputDoesNotSave(formNumber, value) {
+  return new Promise((resolve, reject) => {
+    const form = document.getElementById("form" + formNumber);
+    const input = form.querySelector("input");
+    input.addEventListener("invalid", async e => {
+      const historyEntriesCount = await countEntries(null, null);
+      ok(!historyEntriesCount, form.getAttribute("purpose"));
+      resolve();
+    }, { once: true});
+
+    getFormSubmitButton(formNumber).click();
+  });
+}
+
+async function checkSubmitSaves(formNumber, inputName, interactiveValue, savedValue, storageEventData = "formhistory-add") {
+  setUserInput(formNumber, inputName, interactiveValue);
+  const form = document.getElementById("form" + formNumber);
+  const storageEventPromise = promiseNextStorageEvent();
+
+  getFormSubmitButton(formNumber).click();
+
+  const storageEvent = await storageEventPromise;
+  isDeeply(storageEvent, {
+    subject: null,
+    topic: "satchel-storage-changed",
+    data: storageEventData
+  }, "expected storage event");
+
+  const historyEntriesCount = await countEntries(inputName, savedValue);
+  is(historyEntriesCount, 1, form.getAttribute("purpose"));
+}
+
+preventSubmitOnForms();
+
+add_setup(async () => {
+  await updateFormHistory([
+    { op: "remove" },
+  ]);
+  const historyEntriesCount = await countEntries(null, null);
+  ok(!historyEntriesCount, "checking for initially empty storage");
+});
+
+add_task(async function form1_does_not_save() {
+  setUserInput(1, "test1", "dontSaveThis");
+  await checkSubmitDoesNotSave(1);
+});
+
+add_task(async function form2_does_not_save() {
+  setUserInput(2, "test1", "dontSaveThis");
+  await checkSubmitDoesNotSave(2);
+});
+
+add_task(async function form3_does_not_save() {
+  setUserInput(3, "test1", "dontSaveThis");
+  await checkSubmitDoesNotSave(3);
+});
+
+add_task(async function form4_does_not_save() {
+  setUserInput(4, "test1", "dontSaveThis");
+  await checkSubmitDoesNotSave(4);
+});
+
+add_task(async function form5_does_not_save() {
+  setUserInput(5, "test1", "");
+  await checkSubmitDoesNotSave(5);
+});
+
+add_task(async function form6_does_not_save() {
+  setScriptInput(6, "test1", "dontSaveThis");
+  await checkSubmitDoesNotSave(6);
+});
+
+add_task(async function form7_does_not_save() {
+  // Form 7 deliberately left untouched.
+  await checkSubmitDoesNotSave(7);
+});
+
+add_task(async function form8_does_not_save() {
+  // Form 8 has an input with no name or input attribute.
+  const input = SpecialPowers.wrap(document.getElementById("form8").elements[0]);
+  is(input.type, "text", "checking we got unidentified input");
+  input.setUserInput("dontSaveThis");
+  await checkSubmitDoesNotSave(8);
+});
+
+add_task(async function form9_does_not_save() {
+  // Form 9 has nothing to modify.
+  await checkSubmitDoesNotSave(9);
+});
+
+add_task(async function form10_does_not_save() {
+  setUserInput(10,
+    "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456" +
+    "789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456" +
+    "789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+    "dontSaveThis");
+  await checkSubmitDoesNotSave(10);
+});
+
+add_task(async function form11_does_not_save() {
+  setUserInput(11, "test1",
+      "123456789012345678901234567890123456789012345678901234567890123456789" +
+      "012345678901234567890123456789012345678901234567890123456789012345678" +
+      "901234567890123456789012345678901234567890123456789012345678901234567" +
+      "89012345678901234567890123456789012345678901234567890");
+  await checkSubmitDoesNotSave(11);
+});
+
+add_task(async function form12_does_not_save() {
+  setUserInput(12, "test1", " ");
+  await checkSubmitDoesNotSave(12);
+});
+
+add_task(async function form13_does_not_save() {
+  setUserInput(13, "test1", "dontSaveThis");
+  await checkSubmitDoesNotSave(13);
+});
+
+add_task(async function form14_does_not_save() {
+  const input = SpecialPowers.wrap(document.getElementById("form14").elements[0]);
+  input.type  = "password";
+  input.setUserInput("dontSaveThis");
+  // Set it back to type=text to simulate a password visibility toggle.
+  input.type  = "text";
+  await checkSubmitDoesNotSave(14);
+});
+
+add_task(async function form15_does_not_save() {
+  const testData = ccNumbers.valid16;
+  for (let i = 0; i < testData.length; i++) {
+    setUserInput(15, "test" + (i + 1), testData[i]);
+  }
+  await checkSubmitDoesNotSave(15);
+});
+
+add_task(async function form16_does_not_save() {
+  const testData = ccNumbers.valid15;
+  for (let i = 0; i < testData.length; i++) {
+    setUserInput(16, "test" + (i + 1), testData[i]);
+  }
+  await checkSubmitDoesNotSave(16);
+});
+
+add_task(async function form17_does_not_save() {
+  setUserInput(17, "test1", "6799990100000000019");
+  await checkSubmitDoesNotSave(17);
+});
+
+add_task(async function form18_does_not_save() {
+  setUserInput(18, "test1", "0000-0000-0080-4609");
+  await checkSubmitDoesNotSave(18);
+});
+
+add_task(async function form19_does_not_save() {
+  setUserInput(19, "test1", "0000 0000 0222 331");
+  await checkSubmitDoesNotSave(19);
+});
+
+add_task(async function form20_does_not_save() {
+  setUserInput(20, "test1", "dontSaveThis");
+  await checkInvalidFirstInputDoesNotSave(20, "invalid");
+});
+
+add_task(async function form21_does_not_save() {
+  setUserInput(21, "test1", "dontSaveThis");
+  await checkInvalidFirstInputDoesNotSave(21, "invalid");
+});
+
+add_task(async function form22_does_not_save() {
+  setUserInput(22, "searchbar-history", "dontSaveThis");
+  await checkSubmitDoesNotSave(22);
+});
+
+add_task(async function form23_does_not_save() {
+  setUserInput(23, "test1", "987");
+  await checkSubmitDoesNotSave(23);
+});
+
+add_task(async function form24_does_not_save() {
+  setUserInput(24, "test1", "s3cr3t");
+  await checkSubmitDoesNotSave(24);
+});
+
+add_task(async function form25_does_not_save() {
+  setUserInput(25, "test1", "s3cr3t");
+  document.querySelector("form[id=form25] button[type=reset]").click();
+  await checkSubmitDoesNotSave(25);
+});
+
+add_task(async function form26_does_not_save() {
+  setUserInput(26, "test1", "s3cr3t");
+  document.querySelector("form[id=form26] input[name=test1]").value = "script changed me";
+  await checkSubmitDoesNotSave(26);
+});
+
+add_task(async function form27_does_not_save() {
+  setUserInput(27, "test1", "123456");
+  await checkSubmitDoesNotSave(27);
+});
+
+add_task(async function form100_saves() {
+  const iframe = SpecialPowers.wrap(document.getElementById("iframe"));
+  const browsingContext = SpecialPowers.unwrap(iframe.browsingContext);
+  const storageEventPromise = promiseNextStorageEvent();
+  await SpecialPowers.spawn(browsingContext, [], () => {
+    /* eslint-disable no-undef */
+    const input = SpecialPowers.wrap(content.document.getElementById("subtest2"));
+    input.setUserInput("subtestValue");
+    // This will prevent endless loop of tests
+    for (const form of content.document.forms) {
+      /* eslint-disable-next-line mozilla/balanced-listeners */
+      form.addEventListener("submit", e => e.preventDefault());
+    }
+    content.document.querySelector("button").click();
+    /* eslint-enable no-undef */
+  });
+
+  const storageEvent = await storageEventPromise;
+  isDeeply(storageEvent, {
+    subject: null,
+    topic: "satchel-storage-changed",
+    data: "formhistory-add"
+  }, "expected storage event");
+
+  const historyEntriesCount = await countEntries("subtest2", "subtestValue");
+  is(historyEntriesCount, 1, "saved from iframe");
+});
+
+add_task(async function form101_saves() {
+  await checkSubmitSaves(101, "test1", "savedValue", "savedValue");
+});
+
+add_task(async function form102_saves() {
+  await checkSubmitSaves(102, "test2", "savedValue", "savedValue");
+});
+
+add_task(async function form103_saves() {
+  await checkSubmitSaves(103, "test3", "savedValue", "savedValue");
+});
+
+add_task(async function form104_saves() {
+  await checkSubmitSaves(104, "test4", " trimTrailingAndLeadingSpace ", "trimTrailingAndLeadingSpace");
+});
+
+add_task(async function form105_saves() {
+  await checkSubmitSaves(105, "test5", "\t trimTrailingAndLeadingWhitespace\t ", "trimTrailingAndLeadingWhitespace");
+});
+
+add_task(async function form106_saves() {
+  // passes luhn but too long
+  await checkSubmitSaves(106, "test6", "55555555555544445553", "55555555555544445553");
+});
+
+add_task(async function form107_saves() {
+  for (let i = 0; i != ccNumbers.invalid16.length; i++) {
+    const name = "test7_" + (i + 1);
+    const value = ccNumbers.invalid16[i];
+    await checkSubmitSaves(107, name, value, value, i != 0 ? "formhistory-update" : "formhistory-add");
+  }
+});
+
+add_task(async function form108_saves() {
+  for (let i = 0; i != ccNumbers.invalid15.length; i++) {
+    const name = "test8_" + (i + 1);
+    const value = ccNumbers.invalid15[i];
+    await checkSubmitSaves(108, name, value, value, i != 0 ? "formhistory-update" : "formhistory-add");
+  }
+});
+
+add_task(async function form109_saves() {
+  setUserInput(109, "test9", "savedValue");
+  await checkSubmitSaves(109, "test9", "savedValue", "savedValue");
+});
+
+</script>
+</body>
+</html>

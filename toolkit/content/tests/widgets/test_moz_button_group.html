@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>moz-button-group tests</title>
+    <script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"></script>
+    <script src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"></script>
+    <link rel="stylesheet" href="chrome://mochikit/content/tests/SimpleTest/test.css"/>
+    <!-- TODO: Bug 1798404 - in-content/common.css can be removed once we have a better
+      solution for token variables for the new widgets -->
+      <link rel="stylesheet" href="chrome://global/skin/in-content/common.css">
+      <script type="module" src="chrome://global/content/elements/moz-button-group.mjs"></script>
+  </head>
+  <body>
+    <p id="display"></p>
+    <div id="content">
+      <button id="before-button">Before</button>
+      <div id="render"></div>
+      <button id="after-button">After</button>
+    </div>
+    <!-- This is here to ensure the stylesheet is loaded. It gets removed in setup. -->
+    <moz-button-group></moz-button-group>
+    <pre id="test">
+    </pre>
+
+    <script>
+      let html;
+      let render;
+
+      let renderArea = document.getElementById("render");
+      let beforeButton = document.getElementById("before-button");
+      let afterButton = document.getElementById("after-button");
+
+      async function checkButtons(...buttons) {
+        const checkOrder = (a, b) => {
+          let firstBounds = a.getBoundingClientRect();
+          let secondBounds = b.getBoundingClientRect();
+
+          ok(firstBounds.x < secondBounds.x, `First button comes first`);
+          let locationDiff = Math.abs(secondBounds.x - firstBounds.x - firstBounds.width - 8);
+          ok(locationDiff < 1, `Second button is 8px after first (${locationDiff})`);
+        };
+
+        ok(buttons.length >= 2, "There are at least 2 buttons to check");
+
+        // Verify tab order is correct.
+        beforeButton.focus();
+        is(document.activeElement, beforeButton, "Before button is focused");
+
+        synthesizeKey("VK_TAB");
+        is(document.activeElement, buttons[0], "Next button is focused");
+
+        for (let i = 1; i < buttons.length; i++) {
+          // Confirm button order in DOM
+          checkOrder(buttons[i - 1], buttons[i]);
+
+          synthesizeKey("VK_TAB");
+          is(document.activeElement, buttons[i], "Next button is focused");
+        }
+
+        synthesizeKey("VK_TAB");
+        is(document.activeElement, afterButton, "After button is at the end in tab order");
+
+        // Verify light DOM order is correct, in case of manual tab management in JS.
+        let { parentElement } = buttons[0];
+        let parentChildren = parentElement.children;
+        is(parentChildren.length, buttons.length, "Expected number of children");
+        for (let i = 0; i < parentChildren.length; i++) {
+          is(parentChildren[i], buttons[i], `Button ${i} is in correct light DOM spot`);
+        }
+      }
+
+
+      add_setup(async function setup() {
+        ({ html, render} = await import("chrome://global/content/vendor/lit.all.mjs"));
+        document.querySelector("moz-button-group").remove();
+      });
+
+      add_task(async function testButtonOrderingSlot() {
+        render(
+          html`
+            <moz-button-group>
+              <button slot="primary" id="primary-button">Primary</button>
+              <button id="secondary-button">Secondary</button>
+            </moz-button-group>
+          `,
+          renderArea
+        );
+
+        let buttonGroup = document.querySelector("moz-button-group");
+        let primaryButton = document.getElementById("primary-button");
+        let secondaryButton = document.getElementById("secondary-button");
+
+        buttonGroup.platform = "win";
+        await buttonGroup.updateComplete;
+        await checkButtons(primaryButton, secondaryButton);
+
+        buttonGroup.platform = "macosx";
+        await buttonGroup.updateComplete;
+        await checkButtons(secondaryButton, primaryButton);
+      });
+
+      add_task(async function testPrimaryButtonAutoSlotting() {
+        render(
+          html`
+            <moz-button-group>
+              <button class="primary">Primary</button>
+              <button class="secondary">Secondary</button>
+            </moz-button-group>
+          `,
+          renderArea
+        );
+
+        let buttonGroup = document.querySelector("moz-button-group");
+        let primaryButton = buttonGroup.querySelector(".primary");
+        let secondaryButton = buttonGroup.querySelector(".secondary");
+        buttonGroup.platform = "win";
+        await buttonGroup.updateComplete;
+        is(primaryButton.slot, "primary", "primary button was auto-slotted")
+        await checkButtons(primaryButton, secondaryButton);
+
+        buttonGroup.platform = "macosx";
+        await buttonGroup.updateComplete;
+        await checkButtons(secondaryButton, primaryButton);
+      });
+
+      add_task(async function testSubmitButtonAutoSlotting() {
+        render(
+          html`
+            <moz-button-group>
+              <button type="submit">Submit</button>
+              <button class="secondary">Secondary</button>
+            </moz-button-group>
+          `,
+          renderArea
+        );
+
+        let buttonGroup = document.querySelector("moz-button-group");
+        let submitButton = buttonGroup.querySelector("[type=submit]");
+        let secondaryButton = buttonGroup.querySelector(".secondary");
+        buttonGroup.platform = "win";
+        await buttonGroup.updateComplete;
+        is(submitButton.slot, "primary", "submit button was auto-slotted")
+        await checkButtons(submitButton, secondaryButton);
+
+        buttonGroup.platform = "macosx";
+        await buttonGroup.updateComplete;
+        await checkButtons(secondaryButton, submitButton);
+      });
+
+      add_task(async function testAutofocusButtonAutoSlotting() {
+        render(
+          html`
+            <moz-button-group>
+              <button autofocus>First</button>
+              <button class="secondary">Secondary</button>
+            </moz-button-group>
+          `,
+          renderArea
+        );
+
+        let buttonGroup = document.querySelector("moz-button-group");
+        let autofocusButton = buttonGroup.querySelector("[autofocus]");
+        let secondaryButton = buttonGroup.querySelector(".secondary");
+        buttonGroup.platform = "win";
+        await buttonGroup.updateComplete;
+        is(autofocusButton.slot, "primary", "autofocus button was auto-slotted")
+        await checkButtons(autofocusButton, secondaryButton);
+
+        buttonGroup.platform = "macosx";
+        await buttonGroup.updateComplete;
+        await checkButtons(secondaryButton, autofocusButton);
+      });
+
+      add_task(async function testDefaultButtonAutoSlotting() {
+        render(
+          html`
+            <moz-button-group>
+              <button default>First</button>
+              <button class="secondary">Secondary</button>
+            </moz-button-group>
+          `,
+          renderArea
+        );
+
+        let buttonGroup = document.querySelector("moz-button-group");
+        let defaultButton = buttonGroup.querySelector("[default]");
+        let secondaryButton = buttonGroup.querySelector(".secondary");
+        buttonGroup.platform = "win";
+        await buttonGroup.updateComplete;
+        is(defaultButton.slot, "primary", "default button was auto-slotted")
+        await checkButtons(defaultButton, secondaryButton);
+
+        buttonGroup.platform = "macosx";
+        await buttonGroup.updateComplete;
+        await checkButtons(secondaryButton, defaultButton);
+      });
+
+      add_task(async function testInitialButtonLightDomReordering() {
+        const renderPlatform = platform => render(
+          html`
+            <moz-button-group .platform=${platform}>
+              <button class="primary">First</button>
+              <button class="secondary">Secondary</button>
+              <button default>Default</button>
+            </moz-button-group>
+          `,
+          renderArea
+        );
+
+        renderPlatform("win");
+        let buttonGroup = document.querySelector("moz-button-group");
+        await buttonGroup.updateComplete;
+        let primaryButton = buttonGroup.querySelector(".primary");
+        let defaultButton = buttonGroup.querySelector("[default]");
+        let secondaryButton = buttonGroup.querySelector(".secondary");
+
+        is(primaryButton.slot, "primary", "primary button was auto-slotted");
+        is(defaultButton.slot, "primary", "default button was auto-slotted");
+        await checkButtons(primaryButton, defaultButton, secondaryButton);
+
+        renderPlatform("macosx");
+        buttonGroup = document.querySelector("moz-button-group");
+        await buttonGroup.updateComplete;
+        primaryButton = buttonGroup.querySelector(".primary");
+        defaultButton = buttonGroup.querySelector("[default]");
+        secondaryButton = buttonGroup.querySelector(".secondary");
+
+        is(primaryButton.slot, "primary", "primary button was auto-slotted");
+        is(defaultButton.slot, "primary", "default button was auto-slotted");
+        await checkButtons(secondaryButton, primaryButton, defaultButton);
+      });
+    </script>
+  </body>
+</html>

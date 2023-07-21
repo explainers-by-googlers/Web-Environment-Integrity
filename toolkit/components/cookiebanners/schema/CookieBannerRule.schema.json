@@ -1,0 +1,158 @@
+{
+  "type": "object",
+  "definitions": {
+    "cookie": {
+      "type": "object",
+      "required": ["name", "value"],
+      "description": "JSON representation of a cookie to inject.",
+      "properties": {
+        "name": {
+          "title": "Name / Key",
+          "type": "string",
+          "description": "The name of the cookie."
+        },
+        "value": {
+          "title": "Value",
+          "type": "string",
+          "description": "The cookie value."
+        },
+        "host": {
+          "title": "Host",
+          "type": "string",
+          "description": "Host to set cookie for. Defaults to .<domain> if unset."
+        },
+        "path": {
+          "title": "Path",
+          "type": "string",
+          "description": "The path pertaining to the cookie."
+        },
+        "expiryRelative": {
+          "title": "Relative Expiry Time",
+          "type": "number",
+          "description": "Expiry time of the cookie in seconds relative to the injection time. Defaults to pref value for cookiebanners.cookieInjector.defaultExpiryRelative."
+        },
+        "unsetValue": {
+          "title": "Unset Value",
+          "type": "string",
+          "description": "If an existing cookie of the same name sets this value it may be overwritten by this rule."
+        },
+        "isSecure": {
+          "title": "Secure Cookie",
+          "type": "boolean",
+          "description": "true if the cookie was transmitted over ssl, false otherwise."
+        },
+        "sameSite": {
+          "title": "SameSite",
+          "type": "number",
+          "enum": [0, 1, 2],
+          "description": "The SameSite attribute. See nsICookie.idl."
+        },
+        "isSession": {
+          "title": "Session Cookie",
+          "type": "boolean",
+          "description": "true if the cookie is a session cookie."
+        },
+        "schemeMap": {
+          "title": "Scheme Map",
+          "type": "number",
+          "description": "Bitmap of schemes."
+        },
+        "isHTTPOnly": {
+          "title": "HTTP-Only",
+          "type": "boolean",
+          "description": "true if the cookie is an http only cookie."
+        }
+      }
+    }
+  },
+  "title": "Cookie Banner Rule",
+  "required": ["id", "domains"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "title": "ID",
+      "type": "string",
+      "description": "Unique identifier of the rule."
+    },
+    "domains": {
+      "title": "Domains",
+      "type": ["array"],
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "description": "List of domains of the sites the rule describes. Leave empty for global rules which should apply to every site."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Cookie banner related cookies to be injected when the side loads.",
+      "type": "object",
+      "properties": {
+        "optIn": {
+          "title": "Opt-in cookies",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cookie"
+          },
+          "description": "Cookies to be set to signal opt-in state."
+        },
+        "optOut": {
+          "title": "Opt-out cookies",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cookie"
+          },
+          "description": "Cookies to be set to signal opt-out state."
+        }
+      }
+    },
+    "click": {
+      "title": "Click",
+      "description": "Rules for detection of the cookie banner and simulated clicks.",
+      "type": "object",
+      "properties": {
+        "presence": {
+          "title": "Presence Selector",
+          "type": "string",
+          "description": "Query selector to detect cookie banner element."
+        },
+        "skipPresenceVisibilityCheck": {
+          "title": "Skip Presence Visibility Check",
+          "type": "boolean",
+          "description": "Whether to skip checking if the banner is visible before clicking it."
+        },
+        "runContext": {
+          "title": "Run Context",
+          "type": "string",
+          "enum": ["top", "child", "all"],
+          "description": "Where the click rule should be executed. Defaults to only top window. top: Only in the top window; child: Only in child frames; all: Both top window and child frames."
+        },
+        "hide": {
+          "title": "Hide Selector",
+          "type": "string",
+          "description": "Query selector for element to hide while handling cookie banner. Defaults to 'presence' selector."
+        },
+        "optOut": {
+          "title": "Opt-out Selector",
+          "type": "string",
+          "description": "Query selector for opt-out / reject all button"
+        },
+        "optIn": {
+          "title": "Opt-in Selector",
+          "type": "string",
+          "description": "Query selector for opt-in / accept all button"
+        }
+      },
+      "dependencies": {
+        "hide": ["presence"],
+        "optOut": ["presence"],
+        "optIn": ["presence"]
+      }
+    },
+    "filter_expression": {
+      "type": "string",
+      "description": "This is NOT used by the cookie banner handling feature, but has special functionality in Remote Settings. See https://remote-settings.readthedocs.io/en/latest/target-filters.html#how"
+    }
+  },
+  "description": "Rule containing instructions on how to handle a cookie banner on a specific site."
+}

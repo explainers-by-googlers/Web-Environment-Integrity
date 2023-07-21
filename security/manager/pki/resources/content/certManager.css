@@ -1,0 +1,28 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/* Good enough support for equalsize=always for the cert manager use cases.
+ * You probably shouldn't use this as-is elsewhere, this selector is somewhat
+ * slow, it relies on stuff having display: flex, and you probably can use
+ * something simpler if you need this */
+[equalsize="always"] > * {
+  flex: 1;
+  contain: inline-size;
+}
+
+#certmanager {
+  /* This prevents horizontal scrollbars due to <tree> and non-XUL layout
+   * interactions */
+  padding: 0;
+}
+
+/* This matches the <tree> height from dialog.css */
+richlistbox {
+  height: 15em;
+}
+
+richlistbox,
+richlistitem {
+  min-height: 30px;
+}

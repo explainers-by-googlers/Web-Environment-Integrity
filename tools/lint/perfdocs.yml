@@ -1,0 +1,17 @@
+---
+perfdocs:
+    description: Performance Documentation linter
+    # This task handles its own search, so just include cwd
+    include: [
+        'python/mozperftest',
+        'testing/awsy',
+        'testing/raptor',
+        'testing/talos',
+        'testing/performance/fxrecord',
+        'testing/performance/mach-try-perf',
+    ]
+    exclude: []
+    extensions: ['rst', 'ini', 'yml']
+    support-files: []
+    type: structured_log
+    payload: perfdocs:lint

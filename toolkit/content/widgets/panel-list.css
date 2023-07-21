@@ -1,0 +1,51 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+:host([showing]) {
+  visibility: hidden;
+}
+
+:host(:not([open])) {
+  display: none;
+}
+
+:host {
+  position: absolute;
+  font: menu;
+  background-color: var(--in-content-box-background);
+  border-radius: 4px;
+  padding: 6px 0;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-30);
+  min-width: 12em;
+  z-index: var(--z-index-popup, 10);
+  white-space: nowrap;
+  cursor: default;
+  overflow-y: auto;
+  max-height: 100%;
+  box-sizing: border-box;
+}
+
+:host([inxulpanel]) {
+  position: static;
+  margin: 0;
+}
+
+:host(:not([inxulpanel])) {
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+}
+
+::slotted(hr:not([hidden])) {
+  display: block !important;
+  height: 1px !important;
+  background: var(--in-content-box-border-color) !important;
+  padding: 0 !important;
+  margin: 6px 0 !important;
+  border: none !important;
+}

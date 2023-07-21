@@ -1,0 +1,59 @@
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+include protocol PGMPContent;
+include protocol PGMPTimer;
+include protocol PGMPStorage;
+include protocol PProfiler;
+
+include "mozilla/ipc/ByteBufUtils.h";
+include "GMPParent.h";
+include "GMPChild.h";
+
+using mozilla::dom::NativeThreadId from "mozilla/dom/NativeThreadId.h";
+
+namespace mozilla {
+namespace gmp {
+
+[NeedsOtherPid, NestedUpTo=inside_sync, ChildImpl="GMPChild", ParentImpl="GMPParent"]
+sync protocol PGMP
+{
+  manages PGMPTimer;
+  manages PGMPStorage;
+
+parent:
+  async InitCrashReporter(NativeThreadId threadId);
+  async PGMPTimer();
+  async PGMPStorage();
+
+  async PGMPContentChildDestroyed();
+
+  // Sent from time-to-time to limit the amount of telemetry vulnerable to loss
+  // Buffer contains bincoded Rust structs.
+  // https://firefox-source-docs.mozilla.org/toolkit/components/glean/dev/ipc.html
+  async FOGData(ByteBuf buf);
+
+child:
+  async CrashPluginNow();
+  [Nested=inside_sync] sync StartPlugin(nsString adapter);
+  async ProvideStorageId(nsCString storageId);
+  async PreloadLibs(nsCString libs);
+  async CloseActive();
+  async InitGMPContentChild(Endpoint<PGMPContentChild> endpoint);
+  async InitProfiler(Endpoint<PProfilerChild> endpoint);
+
+  // Tells the GMP process to flush any pending telemetry.
+  // Used in tests and ping assembly. Buffer contains bincoded Rust structs.
+  // https://firefox-source-docs.mozilla.org/toolkit/components/glean/dev/ipc.html
+  async FlushFOGData() returns (ByteBuf buf);
+
+  // Test-only method.
+  // Asks the GMP process to trigger test-only instrumentation.
+  // The unused returned value is to have a promise we can await.
+  async TestTriggerMetrics() returns (bool unused);
+};
+
+} // namespace gmp
+} // namespace mozilla

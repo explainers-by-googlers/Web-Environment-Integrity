@@ -1,0 +1,205 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+
+.sources-panel .outline {
+  display: flex;
+  height: 100%;
+}
+
+.source-outline-tabs {
+  font-size: 12px;
+  width: 100%;
+  background: var(--theme-body-background);
+  display: flex;
+  user-select: none;
+  box-sizing: border-box;
+  height: var(--editor-header-height);
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--theme-splitter-color);
+}
+
+.source-outline-tabs .tab {
+  align-items: center;
+  background-color: var(--theme-toolbar-background);
+  color: var(--theme-toolbar-color);
+  cursor: default;
+  display: inline-flex;
+  flex: 1;
+  justify-content: center;
+  overflow: hidden;
+  padding: 4px 8px;
+  position: relative;
+}
+
+.source-outline-tabs .tab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--tab-line-color, transparent);
+  transition: transform 250ms var(--animation-curve),
+    opacity 250ms var(--animation-curve);
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.source-outline-tabs .tab.active {
+  --tab-line-color: var(--tab-line-selected-color);
+  color: var(--theme-toolbar-selected-color);
+  border-bottom-color: transparent;
+}
+
+.source-outline-tabs .tab:not(.active):hover {
+  --tab-line-color: var(--tab-line-hover-color);
+  background-color: var(--theme-toolbar-hover);
+}
+
+.source-outline-tabs .tab:hover::before,
+.source-outline-tabs .tab.active::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.source-outline-panel {
+  flex: 1;
+  overflow: auto;
+}
+
+.outline {
+  overflow-y: hidden;
+}
+
+.outline > div {
+  width: 100%;
+  position: relative;
+}
+
+.outline-pane-info {
+  padding: 0.5em;
+  width: 100%;
+  font-style: italic;
+  text-align: center;
+  user-select: none;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.outline-list {
+  margin: 0;
+  padding: 4px 0;
+  position: absolute;
+  top: 25px;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+  list-style-type: none;
+  overflow: auto;
+}
+
+.outline-list__class-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.outline-list__class-list > .outline-list__element {
+  padding-inline-start: 2rem;
+}
+
+.outline-list__class-list .function-signature .function-name {
+  color: var(--theme-highlight-green);
+}
+
+.outline-list .function-signature .paren {
+  color: inherit;
+}
+
+.outline-list__class h2 {
+  font-weight: normal;
+  font-size: 1em;
+  padding: 3px 0;
+  padding-inline-start: 10px;
+  color: var(--blue-55);
+  margin: 0;
+}
+
+.outline-list__class:not(:first-child) h2 {
+  margin-top: 12px;
+}
+
+.outline-list h2:hover {
+  background: var(--theme-toolbar-background-hover);
+}
+
+.theme-dark .outline-list h2 {
+  color: var(--theme-highlight-blue);
+}
+
+.outline-list h2 .keyword {
+  color: var(--theme-highlight-red);
+}
+
+.outline-list__class h2.focused {
+  background: var(--theme-selection-background);
+}
+
+.outline-list__class h2.focused,
+.outline-list__class h2.focused .keyword {
+  color: var(--theme-selection-color);
+}
+
+.outline-list__element {
+  padding: 3px 10px 3px 10px;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.outline-list > .outline-list__element {
+  padding-inline-start: 1rem;
+}
+
+.outline-list__element-icon {
+  padding-inline-end: 0.4rem;
+}
+
+.outline-list__element:hover {
+  background: var(--theme-toolbar-background-hover);
+}
+
+.outline-list__element.focused {
+  background: var(--theme-selection-background);
+}
+
+.outline-list__element.focused .outline-list__element-icon,
+.outline-list__element.focused .function-signature * {
+  color: var(--theme-selection-color);
+}
+
+.outline-footer {
+  display: flex;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25px;
+  background: var(--theme-body-background);
+  border-top: 1px solid var(--theme-splitter-color);
+  opacity: 1;
+  z-index: 1;
+  user-select: none;
+}
+
+.outline-footer button {
+  color: var(--theme-body-color);
+}
+
+.outline-footer button.active {
+  background: var(--theme-selection-background);
+  color: var(--theme-selection-color);
+}

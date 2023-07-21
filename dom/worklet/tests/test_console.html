@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for Worklet - Console</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
+  <script type="application/javascript" src="common.js"></script>
+</head>
+<body>
+
+<script type="application/javascript">
+const WORKLET_SCRIPT = "worklet_console.js";
+
+function configureTest() {
+  const ConsoleAPIStorage = SpecialPowers.Cc[
+    "@mozilla.org/consoleAPI-storage;1"
+  ].getService(SpecialPowers.Ci.nsIConsoleAPIStorage);
+
+  function consoleListener() {
+    this.observe = this.observe.bind(this);
+    ConsoleAPIStorage.addLogEventListener(this.observe, SpecialPowers.wrap(document).nodePrincipal);
+  }
+
+  consoleListener.prototype  = {
+    observe(aSubject) {
+      var obj = aSubject.wrappedJSObject;
+      if (obj.arguments[0] == "Hello world from a worklet") {
+        ok(true, "Message received \\o/");
+        is(obj.filename,
+           new URL(WORKLET_SCRIPT, document.baseURI).toString());
+
+        ConsoleAPIStorage.removeLogEventListener(this.observe);
+        SimpleTest.finish();
+        return;
+      }
+    }
+  }
+
+  var cl = new consoleListener();
+}
+
+// This function is called into an iframe.
+function runTestInIframe() {
+  var audioContext = new AudioContext();
+  audioContext.audioWorklet.addModule(WORKLET_SCRIPT);
+}
+
+</script>
+</body>
+</html>

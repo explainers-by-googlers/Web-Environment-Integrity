@@ -1,0 +1,92 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+#include "nsIClickRule.idl"
+#include "nsICookieRule.idl"
+
+/**
+ * A rule containing instructions on how to handle a cookie banner for a specific
+ * domain.
+ */
+
+[builtinclass, scriptable, uuid(eb1904db-e0d1-4760-a721-db76b1ca3e94)]
+interface nsICookieBannerRule : nsISupports {
+    // Unique identifier for the rule. This is usually a UUID.
+    attribute ACString id;
+
+    // Domains of sites to handle the cookie banner for.
+    // An empty array means this is a global rule that should apply to every site.
+    attribute Array<ACString> domains;
+
+    // Cookies that reflect the opt-out or "reject all" state for the cookie baner.
+    readonly attribute Array<nsICookieRule> cookiesOptOut;
+    // Cookies that reflect the opt-in or "accept all" state for the cookie banner.
+    readonly attribute Array<nsICookieRule> cookiesOptIn;
+
+    /**
+     * Get the list of cookies associated with this rule.
+     * aIsOptOut - Whether to return opt-out cookies (true) or opt-in cookies
+     * (false).
+     * aDomain - Optional, when passed returns a copy of each rule with cookie
+     * host set to .<domain>. See nsICookieRule::copyForDomain.
+     */
+    [noscript]
+    Array<nsICookieRule> getCookies(in boolean aIsOptOut, [optional] in ACString aDomain);
+
+    /**
+     * Clear both lists of opt-in and opt-out cookies.
+     */
+    void clearCookies();
+
+    /**
+     * Add an opt-in or opt-out cookie to the rule.
+
+     * aIsOptOut - Whether this is an opt-out cookie (true) or opt-in cookie (false).
+     * aExpiryRelative - See nsICookieRule.
+     * aUnsetValue - See nsICookieRule.
+     * For a description of the other fields see nsICookieManager#addNative.
+     */
+    void addCookie(in boolean     aIsOptOut,
+                   in ACString    aName,
+                   in AUTF8String aValue,
+                   in AUTF8String aHost,
+                   in AUTF8String aPath,
+                   in int64_t     aExpiryRelative,
+                   in AUTF8String aUnsetValue,
+                   in boolean     aIsSecure,
+                   in boolean     aIsHttpOnly,
+                   in boolean     aIsSession,
+                   in int32_t     aSameSite,
+                   in nsICookie_schemeType aSchemeMap);
+
+    // The clicking rule that associates with this rule. The banner auto
+    // clicking will use this rule to detect and click the banner.
+    readonly attribute nsIClickRule clickRule;
+
+    /**
+     * Add a click rule to the rule.
+     *
+     * aPresence - The CSS selector for detecting the presence of the cookie
+     * banner
+     * aSkipPresenceVisibilityCheck - Whether to skip checking if the banner is
+     * visible before clicking it.
+     * aHide - The CSS selector for hiding the cookie banner
+     * aOptOut - The CSS selector for selecting the opt-out banner button
+     * aOptIn - The CSS selector for selecting the opt-in banner button
+     */
+    void addClickRule(in ACString aPresence,
+                      [optional] in bool aSkipPresenceVisibilityCheck,
+                      [optional] in nsIClickRule_RunContext aRunContext,
+                      [optional] in ACString aHide,
+                      [optional] in ACString aOptOut,
+                      [optional] in ACString aOptIn);
+
+    /**
+     * Clear the click rule.
+     */
+    void clearClickRule();
+};

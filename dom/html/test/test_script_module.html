@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for HTMLScriptElement with nomodule attribute</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+
+<body>
+  <script>
+onmessage = (e) => {
+  if ("done" in e.data) {
+    SimpleTest.finish();
+  } else if ("check" in e.data) {
+    ok(e.data.check, e.data.msg);
+  } else {
+    ok(false, "Unknown message");
+  }
+}
+
+
+var ifr = document.createElement('iframe');
+ifr.src = "file_script_module.html";
+document.body.appendChild(ifr);
+
+
+SimpleTest.waitForExplicitFinish();
+  </script>
+
+</body>
+</html>

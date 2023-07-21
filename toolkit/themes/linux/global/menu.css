@@ -1,0 +1,145 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@import url("chrome://global/skin/menu-shared.css");
+
+/* ===== menu.css =======================================================
+  == Styles used by XUL menu-related elements.
+  ======================================================================= */
+
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+/* ::::: menu/menuitem ::::: */
+
+menupopup,
+menubar {
+  font: menu;
+}
+
+menu,
+menuitem,
+menucaption {
+  border-radius: calc(var(--panel-border-radius) / 2);
+  align-items: center;
+  flex-shrink: 0;
+  padding: 4px 6px;
+  max-width: 42em;
+  list-style-image: none;
+}
+
+menu:where([_moz-menuactive]:not([disabled="true"])),
+menuitem:where([_moz-menuactive]:not([disabled="true"])) {
+  color: -moz-menuhovertext;
+  background-color: -moz-menuhover;
+}
+
+menu:where([disabled="true"]),
+menuitem:where([disabled="true"]),
+menucaption:where([disabled="true"]) {
+  color: GrayText;
+}
+
+menubar > menu {
+  color: inherit;
+  background-color: transparent;
+  border-radius: 0;
+  padding-bottom: 1px;
+  border-bottom: 3px solid transparent;
+}
+
+menubar > menu[open] {
+  border-bottom-color: AccentColor;
+}
+
+menuitem[default="true"],
+menuitem.spell-suggestion,
+menucaption {
+  font-weight: bold;
+}
+
+/* ::::: menu/menuitems in menulist popups ::::: */
+
+menulist > menupopup {
+  font: inherit;
+}
+
+menulist > menupopup > :is(menuitem, menucaption, menu) {
+  max-width: none;
+}
+
+/* ..... internal content .... */
+
+.menu-text,
+.menu-iconic-left,
+.menu-iconic-text {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 2px !important;
+}
+
+.menu-text {
+  /* This is (18 + the size of end-padding on .menu-iconic-left)px */
+  margin-inline-start: 21px !important;
+}
+
+.menu-accel,
+.menu-iconic-accel {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-inline-start: 7px !important;
+}
+
+.menu-accel-container {
+  justify-content: flex-end;
+}
+
+.menu-iconic-left {
+  min-width: 16px;
+  /* We can only hardcode this, to make the default GTK icon<->label spacing */
+  padding-inline-end: 3px !important;
+}
+
+.menu-iconic-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.menu-right {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-inline-start: 6px;
+  margin-inline-end: 0;
+  width: 1ex;
+  height: 1ex;
+  /* These next two rules are needed to prevent inheritance and thus ugliness */
+  list-style-image: none;
+  appearance: auto;
+  -moz-default-appearance: menuarrow;
+}
+
+.menubar-left {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 2px;
+}
+
+.menubar-text {
+  margin: 0 1px !important;
+}
+
+menulist > menupopup > :is(menuitem, menucaption, menu) > .menu-iconic-left {
+  display: none;
+}
+
+menuitem:is([type="checkbox"], [checked="true"]) .menu-iconic-icon {
+  appearance: auto;
+  -moz-default-appearance: checkbox;
+}
+
+menuitem[type="radio"] .menu-iconic-icon {
+  appearance: auto;
+  -moz-default-appearance: radio;
+}

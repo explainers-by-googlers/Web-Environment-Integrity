@@ -1,0 +1,24 @@
+<script>
+function onLoad() {
+  const shadow = document.querySelector("shadow");
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // <shadow> which is the deepest last child of the <body>.
+  getSelection().collapse(shadow, shadow.childNodes.length);
+  try {
+    document.querySelector("dd[contenteditable]").addEventListener(
+      "DOMNodeInserted",
+      () => {
+        try {
+          shadow.replaceWith("1");
+        } catch(e) {}
+      }
+    );
+  } catch(e) {}
+  try {
+    document.execCommand("justifyFull");
+  } catch(e) {}
+}
+</script>
+<body onload="onLoad();">
+<dd contenteditable>
+<shadow></body>

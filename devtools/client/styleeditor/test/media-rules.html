@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="simple.css"/>
+  <link rel="stylesheet" href="media-rules.css"/>
+  <!-- This stylesheet is needed to ensure we cover the fix for Bug 1779043 -->
+  <style>
+    div {
+      color: salmon;
+    }
+  </style>
+  <style>
+    @media screen {
+      div {
+        outline: 1px solid tomato;
+      }
+
+      @supports (display: flex) {
+        @media (1px < height < 10000px) {
+          div {
+            display: flex;
+          }
+        }
+      }
+    }
+
+    @layer myLayer {}
+    @container (min-width: 1px) {
+      body {
+        div {
+          color: gold;
+          @supports selector(&) {
+            &:hover {
+              color: yellowgreen;
+            }
+          }
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <div>
+    Testing style editor media sidebar
+  </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* vim: set sw=2 ts=8 et tw=80 ft=cpp : */
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+include IPCServiceWorkerDescriptor;
+include NeckoChannelParams;
+include IPCStream;
+
+include "mozilla/dom/ReferrerInfoUtils.h";
+include "mozilla/ipc/TransportSecurityInfoUtils.h";
+include "mozilla/net/NeckoMessageUtils.h";
+
+using class mozilla::net::nsHttpHeaderArray from "nsHttpHeaderArray.h";
+using mozilla::net::NetAddr from "mozilla/net/DNS.h";
+using nsILoadInfo::CrossOriginOpenerPolicy from "nsILoadInfo.h";
+[RefCounted] using class nsIReferrerInfo from "nsIReferrerInfo.h";
+[RefCounted] using class nsITransportSecurityInfo from "nsITransportSecurityInfo.h";
+using nsIRequest::TRRMode from "nsIRequest.h";
+using mozilla::net::TRRSkippedReason from "nsITRRSkipReason.h";
+
+namespace mozilla {
+namespace net {
+
+struct HttpChannelOnStartRequestArgs
+{
+  nullable nsITransportSecurityInfo securityInfo;
+  nullable nsIReferrerInfo overrideReferrerInfo;
+  uint64_t cacheEntryId;
+  int64_t altDataLength;
+  nsCString altDataType;
+  nsCString cookie;
+  NetAddr selfAddr;
+  NetAddr peerAddr;
+  ResourceTimingStructArgs timing;
+  ParentLoadInfoForwarderArgs loadInfoForwarder;
+  nsresult channelStatus;
+  TRRMode effectiveTRRMode;
+  TRRSkippedReason trrSkipReason;
+  uint32_t cacheFetchCount;
+  uint32_t cacheExpirationTime;
+  uint32_t cacheKey;
+  uint32_t? multiPartID;
+  bool isFromCache;
+  bool isRacing;
+  bool cacheEntryAvailable;
+  bool deliveringAltData;
+  bool applyConversion;
+  bool isResolvedByTRR;
+  bool allRedirectsSameOrigin;
+  bool isFirstPartOfMultiPart;
+  bool isLastPartOfMultiPart;
+  CrossOriginOpenerPolicy openerPolicy;
+  bool shouldWaitForOnStartRequestSent;
+  bool dataFromSocketProcess;
+  bool hasHTTPSRR;
+  bool isProxyUsed;
+  uint8_t redirectCount;
+};
+
+struct HttpChannelAltDataStream
+{
+  IPCStream? altDataInputStream;
+};
+
+} // namespace ipc
+} // namespace mozilla

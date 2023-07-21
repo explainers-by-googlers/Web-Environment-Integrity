@@ -1,0 +1,65 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    description: "cbindgen toolchain build"
+    attributes:
+        local-toolchain: true
+    worker-type: b-linux-gcp
+    worker:
+        max-run-time: 3600
+    run:
+        script: build-rust-based-toolchain.sh
+        toolchain-artifact: public/build/cbindgen.tar.zst
+    fetches:
+        fetch:
+            # If you update this, make sure to update the minimum version in
+            # build/moz.configure/bindgen.configure as well.
+            - cbindgen-0.24.3
+
+linux64-cbindgen:
+    treeherder:
+        symbol: TL(cbindgen)
+    worker:
+        max-run-time: 1800
+    run:
+        arguments: ['x86_64-unknown-linux-gnu']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-toolchain
+            - sysroot-x86_64-linux-gnu
+
+macosx64-cbindgen:
+    treeherder:
+        symbol: TM(cbindgen)
+    run:
+        arguments: ['x86_64-apple-darwin']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-macos-toolchain
+            - macosx64-sdk-toolchain
+
+macosx64-aarch64-cbindgen:
+    treeherder:
+        symbol: TM(cbindgen-arm64)
+    run:
+        arguments: ['aarch64-apple-darwin']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-macos-toolchain
+            - macosx64-sdk-toolchain
+
+win64-cbindgen:
+    treeherder:
+        symbol: TW64(cbindgen)
+    run:
+        arguments: ['x86_64-pc-windows-msvc']
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-windows-toolchain
+            - vs-toolchain

@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin" type="text/css"?>
+<?xml-stylesheet href="chrome://mochikit/content/tests/SimpleTest/test.css" type="text/css"?>
+
+<window title="Window Minimum and Maximum Size Tests" onload="nextTest()"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml">
+
+  <script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"/>
+  <script src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"/>
+
+<html:style>
+<![CDATA[
+  panel::part(content) {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+]]>
+</html:style>
+
+<panel id="panel" onpopupshown="doPanelTest(this)" onpopuphidden="nextPopupTest(this)"
+       orient="vertical"
+       align="start" pack="start" style="appearance: none; margin: 0; border: 0; padding: 0;">
+  <hbox id="popupresizer" dir="bottomright"
+           style="width: 60px; height: 60px; appearance: none; margin: 0; border: 0; padding: 0;"/>
+</panel>
+
+<script>
+<![CDATA[
+
+SimpleTest.waitForExplicitFinish();
+
+var gTestId = -1;
+
+// width and height in the tests below specify the expected size of the window.
+// note, win8 has a minimum inner window size of around 122 pixels. Don't go below this on min-width tests.
+var tests = [
+  { testname: "unconstrained",
+    src: "windowminmaxsize1.xhtml",
+    width: 150, height: 150 },
+  { testname: "constraint min style",
+    src: "windowminmaxsize2.xhtml",
+    width: 180, height: 210 },
+  { testname: "constraint max style",
+    src: "windowminmaxsize3.xhtml",
+    width: 125, height: 140 },
+  { testname: "constraint min attributes",
+    src: "windowminmaxsize4.xhtml",
+    width: 240, height: 220 },
+  { testname: "constraint min attributes with width and height set",
+    src: "windowminmaxsize5.xhtml",
+    width: 215, height: 235 },
+  { testname: "constraint max attributes",
+    src: "windowminmaxsize6.xhtml",
+    width: 125, height: 95 },
+  // this gets the inner width as <window minwidth='210'> makes the box 210 pixels wide
+  { testname: "constraint min width attribute only",
+    src: "windowminmaxsize7.xhtml",
+    width: 210, height: 150 },
+  { testname: "constraint max width attribute only",
+    src: "windowminmaxsize8.xhtml",
+    width: 128, height: 150 },
+  { testname: "constraint max width attribute with minheight",
+    src: "windowminmaxsize9.xhtml",
+    width: 195, height: 180 },
+  { testname: "constraint minwidth, minheight, maxwidth and maxheight set",
+    src: "windowminmaxsize10.xhtml",
+    width: 150, height: 150 }
+];
+
+var popupTests = [
+  { testname: "popup unconstrained",
+    width: 60, height: 60
+  },
+  { testname: "popup with minimum size",
+    minWidth: 150, minHeight: 180,
+    width: 150, height: 180
+  },
+  { testname: "popup with maximum size",
+    maxWidth: 50, maxHeight: 45,
+    width: 50, height: 45,
+  }
+];
+
+function nextTest()
+{
+  info(`Running test ${gTestId}`);
+  // Run through each of the tests above by opening a simple window with
+  // the attributes or style defined for that test. The comparisons will be
+  // done by windowOpened. gTestId holds the index into the tests array.
+  if (++gTestId >= tests.length) {
+    // Now do the popup tests
+    gTestId = -1;
+    SimpleTest.waitForFocus(function () { nextPopupTest(document.getElementById("panel")) } );
+  }
+  else {
+    info(`opening ${tests[gTestId].src}`);
+    tests[gTestId].window = window.browsingContext.topChromeWindow.open(tests[gTestId].src, "_blank", "chrome,resizable=yes");
+    SimpleTest.waitForFocus(windowOpened, tests[gTestId].window);
+  }
+}
+
+function windowOpened(otherWindow)
+{
+  // Check the width and the width plus one due to bug 696746.
+  ok(otherWindow.innerWidth == tests[gTestId].width ||
+     otherWindow.innerWidth == tests[gTestId].width + 1,
+    tests[gTestId].testname + " width of " + otherWindow.innerWidth + " matches " + tests[gTestId].width);
+  is(otherWindow.innerHeight, tests[gTestId].height, tests[gTestId].testname + " height");
+
+  otherWindow.close();
+  nextTest();
+}
+
+function doPanelTest(panel)
+{
+  var rect = panel.getBoundingClientRect();
+  is(rect.width, popupTests[gTestId].width, popupTests[gTestId].testname + " width");
+  is(rect.height, popupTests[gTestId].height, popupTests[gTestId].testname + " height");
+
+  panel.hidePopup();
+}
+
+function nextPopupTest(panel)
+{
+  if (++gTestId >= popupTests.length) {
+    // Next, check a panel that has a titlebar to ensure that it is accounted for
+    // properly in the size.
+    var titledPanelWindow = window.browsingContext.topChromeWindow.open("titledpanelwindow.xhtml", "_blank", "chrome,resizable=yes");
+    SimpleTest.waitForFocus(titledPanelWindowOpened, titledPanelWindow);
+  }
+  else {
+    function setStyle(attr) {
+      if (attr in popupTests[gTestId])
+        panel.style[attr] = popupTests[gTestId][attr] + "px";
+      else
+        panel.style[attr] = "";
+    }
+    setStyle("minWidth");
+    setStyle("minHeight");
+    setStyle("maxWidth");
+    setStyle("maxHeight");
+
+    // Prevent event loop starvation as a result of popup events being
+    // synchronous. See bug 1131576.
+    SimpleTest.executeSoon(() => {
+      // Non-chrome shells require focus to open a popup.
+      SimpleTest.waitForFocus(() => { panel.openPopup() });
+    });
+  }
+}
+
+function titledPanelWindowOpened(panelwindow)
+{
+  info("titledPanelWindowOpened");
+  var panel = panelwindow.document.documentElement.firstChild;
+  panel.addEventListener("popupshown", () => doTitledPanelTest(panel));
+  panel.addEventListener("popuphidden", () => done(panelwindow));
+  // See above as for why.
+  SimpleTest.executeSoon(() => {
+    SimpleTest.waitForFocus(() => { panel.openPopup() }, panelwindow);
+  });
+}
+
+function doTitledPanelTest(panel)
+{
+  info("doTitledPanelTest");
+  var rect = panel.getBoundingClientRect();
+  is(rect.width, 120, "panel with titlebar width");
+  is(rect.height, 140, "panel with titlebar height");
+  panel.hidePopup();
+}
+
+function done(panelwindow)
+{
+  panelwindow.close();
+  SimpleTest.finish();
+}
+
+]]>
+</script>
+
+<body xmlns="http://www.w3.org/1999/xhtml">
+<p id="display">
+</p>
+<div id="content" style="display: none">
+</div>
+<pre id="test">
+</pre>
+</body>
+
+</window>

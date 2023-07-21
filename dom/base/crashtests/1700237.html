@@ -1,0 +1,31 @@
+
+<style>
+:not(cursor) {
+  column-count: 1;
+  user-select: none;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  window.getSelection().modify("move", "backward", "line")
+  const interval = setInterval(() => {
+    const m = new MutationObserver(() => {
+      let x = document.getSelection().getRangeAt(0)
+      a.appendChild(document.createElement("optgroup"))
+      try {
+        x.comparePoint(document.activeElement, 1)
+      } catch (error) {
+        clearInterval(interval)
+        return
+      }
+
+    })
+    m.observe(b, {attributes: true})
+    b.setAttribute("x", "false")
+  }, 100)
+})
+</script>
+<hr contenteditable="true">
+<shadow id="a">
+<select autofocus="autofocus">a</select>
+<div id="b">a</div>

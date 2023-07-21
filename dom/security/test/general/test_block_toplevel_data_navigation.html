@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Bug 1331351 - Block top level window data: URI navigations</title>
+  <!-- Including SimpleTest.js so we can use waitForExplicitFinish !-->
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<script class="testbody" type="text/javascript">
+
+async function expectBlockedToplevelData() {
+  await SpecialPowers.spawnChrome([], async () => {
+    let progressListener;
+    let bid = await new Promise(resolve => {
+      let bcs = [];
+      progressListener = {
+        QueryInterface: ChromeUtils.generateQI(["nsIWebProgressListener", "nsISupportsWeakReference"]),
+        onStateChange(webProgress, request, stateFlags, status) {
+          if (!(request instanceof Ci.nsIChannel) || !webProgress.isTopLevel ||
+              !(stateFlags & Ci.nsIWebProgressListener.STATE_IS_WINDOW) ||
+              !(stateFlags & Ci.nsIWebProgressListener.STATE_STOP)) {
+            return;
+          }
+
+          if (!["NS_ERROR_DOM_BAD_URI", "NS_ERROR_CORRUPTED_CONTENT"].includes(ChromeUtils.getXPCOMErrorName(status))) {
+            info(ChromeUtils.getXPCOMErrorName(status));
+            isnot(request.URI.scheme, "data");
+            return;
+          }
+
+          // We can't check for the scheme to be "data" because in the case of a
+          // redirected load, we'll get a `NS_ERROR_DOM_BAD_URI` load error
+          // before observing the redirect, cancelling the load. Instead we just
+          // wait for any load to error with `NS_ERROR_DOM_BAD_URI`.
+          for (let bc of bcs) {
+            try {
+              bc.webProgress.removeProgressListener(progressListener);
+            } catch(e) { }
+          }
+          bcs = [];
+          Services.obs.removeObserver(observer, "browsing-context-attached");
+          resolve(webProgress.browsingContext.browserId);
+        }
+      };
+
+      function observer(subject, topic) {
+        if (!bcs.includes(subject.webProgress)) {
+          bcs.push(subject.webProgress);
+          subject.webProgress.addProgressListener(progressListener, Ci.nsIWebProgress.NOTIFY_ALL);
+        }
+      }
+      Services.obs.addObserver(observer, "browsing-context-attached");
+    });
+    return bid;
+  });
+}
+
+async function expectBlockedURIWarning() {
+  await SpecialPowers.spawnChrome([], async () => {
+    return new Promise(resolve => {
+      Services.console.registerListener(function onConsoleMessage(msg) {
+        info("Seeing console message: " + msg.message);
+        if (!(msg instanceof Ci.nsIScriptError)) {
+          return;
+        }
+        if (msg.category != "DATA_URI_BLOCKED") {
+          return;
+        }
+
+        Services.console.unregisterListener(onConsoleMessage);
+        resolve();
+      });
+    });
+  });
+}
+
+async function expectBrowserDiscarded(browserId) {
+  await SpecialPowers.spawnChrome([browserId], async (browserId) => {
+    return new Promise(resolve => {
+      function check() {
+        if (!BrowsingContext.getCurrentTopByBrowserId(browserId)) {
+          ok(true, `BrowserID ${browserId} discarded`);
+          resolve();
+          Services.obs.removeObserver(check, "browsing-context-discarded");
+        }
+      }
+      Services.obs.addObserver(check, "browsing-context-discarded");
+      check();
+    });
+  });
+}
+
+async function popupTest(uri, expectClose) {
+  info(`Running expect blocked test for ${uri}`);
+  let reqBlockedPromise = expectBlockedToplevelData();
+  let warningPromise = expectBlockedURIWarning();
+  let win = window.open(uri);
+  let browserId = await reqBlockedPromise;
+  await warningPromise;
+  if (expectClose) {
+    await expectBrowserDiscarded(browserId);
+  }
+  win.close();
+}
+
+add_task(async function() {
+  await SpecialPowers.pushPrefEnv({
+    set: [["security.data_uri.block_toplevel_data_uri_navigations", true]],
+  });
+
+  // simple data: URI click navigation should be prevented
+  await popupTest("file_block_toplevel_data_navigation.html", false);
+
+  // data: URI in iframe which opens data: URI in _blank should be blocked
+  await popupTest("file_block_toplevel_data_navigation2.html", false);
+
+  // navigating to a data: URI using window.location.href should be blocked
+  await popupTest("file_block_toplevel_data_navigation3.html", false);
+
+  // navigating to a data: URI using window.open() should be blocked
+  await popupTest("data:text/html,<body>toplevel data: URI navigations should be blocked</body>", false);
+
+  // navigating to a URI which redirects to a data: URI using window.open() should be blocked
+  await popupTest("file_block_toplevel_data_redirect.sjs", false);
+
+  // navigating to a data: URI without a Content Type should be blocked
+  await popupTest("data:,DataURIsWithNoContentTypeShouldBeBlocked", false);
+});
+
+</script>
+</body>
+</html>

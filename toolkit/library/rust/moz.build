@@ -1,0 +1,58 @@
+# -*- Mode: python; c-basic-offset: 4; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+include("gkrust-features.mozbuild")
+
+RustLibrary("gkrust", gkrust_features, is_gkrust=True)
+
+for feature in gkrust_features:
+    # We don't want to enable refcount logging during rusttests, since the
+    # relevant FFI symbols wouldn't be found.
+    # Nor do we want Glean to assume there are Gecko symbols.
+    if feature not in (
+        "gkrust-shared/gecko_refcount_logging",
+        "gkrust-shared/glean_with_gecko",
+    ):
+        RUST_TEST_FEATURES.append(feature)
+
+# Target directory doesn't matter a lot here, since we can't share panic=abort
+# compilation artifacts with gkrust.
+RUST_TESTS = [
+    "firefox-on-glean",
+    "l10nregistry",
+    "selectors",
+    "servo_arc",
+    "qcms",
+    # this does nothing, but is needed so that `gkrust_features` are recognized
+    # also see: https://github.com/rust-lang/cargo/issues/9856
+    "gkrust",
+]
+
+# Code coverage builds link a bunch of Gecko bindings code from the style
+# crate, which is not used by our tests but would cause link errors.
+#
+# Bug 1768874 tracks improving the setup to potentially remove these
+# altogether.
+if not CONFIG["MOZ_CODE_COVERAGE"]:
+    RUST_TESTS += ["stylo_tests"]
+    # Same happens for the style tests, except the windows linker is not great
+    # at eliminating dead code, so we end up with some missing symbols too.
+    if CONFIG["OS_TARGET"] != "WINNT":
+        RUST_TESTS += ["style"]
+
+if CONFIG["CPU_ARCH"] != "x86":
+    # malloc_size_of_derive is a build dependency, so if we are doing
+    # cross-compile for x86, this may not run correctly.
+    RUST_TESTS += ["malloc_size_of_derive"]
+
+if CONFIG["MOZ_BITS_DOWNLOAD"]:
+    RUST_TESTS += ["bits_client"]
+
+# Export the `rure` crate's included .h file. The symbols defined in that file
+# will be exported from the `gkrust-shared` crate.
+EXPORTS += [
+    "/third_party/rust/rure/include/rure.h",
+]

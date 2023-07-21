@@ -1,0 +1,20 @@
+[package]
+name = "l10nregistry"
+version = "0.3.0"
+authors = ["Zibi Braniecki <gandalf@mozilla.com>"]
+license = "Apache-2.0/MIT"
+edition = "2018"
+
+[dependencies]
+async-trait = "0.1"
+fluent-bundle = "0.15.2"
+fluent-fallback = "0.7.0"
+futures = "0.3"
+pin-project-lite = "0.2"
+replace_with = "0.1"
+rustc-hash = "1"
+unic-langid = "0.9"
+
+[features]
+default = []
+test-fluent = []

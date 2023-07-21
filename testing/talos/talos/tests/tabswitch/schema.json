@@ -1,0 +1,14 @@
+[
+  {
+    "namespace": "tabswitch",
+    "description": "Special powers for the tabswitch Talos test",
+    "functions": [
+      {
+        "name": "setup",
+        "type": "function",
+        "description": "Prepares the tabswitch test to be run by the Talos framework.",
+        "parameters": []
+      }
+    ]
+  }
+]

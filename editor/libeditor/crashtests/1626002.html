@@ -1,0 +1,27 @@
+<html>
+<head>
+<script>
+addEventListener("load", () => {
+  const anchor = document.createElement("a");
+  const b = document.createElement("b");
+  const c = document.createElement("c");
+  document.documentElement.appendChild(anchor);
+  anchor.appendChild(b);
+  b.setAttribute("contenteditable", "true");
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // <body> which must be empty because this test appends the new elements after
+  // the <body>.
+  const selection = self.getSelection();
+  selection.collapse(document.body, document.body.childNodes.length);
+  b.appendChild(c);
+  c.outerHTML = '<s contenteditable="false"><b contenteditable="true">';
+  selection.setBaseAndExtent(document, 0, document.documentElement, 0);
+  const range = selection.getRangeAt((260523900 % selection.rangeCount));
+  selection.selectAllChildren(b);
+  range.collapse(false);
+  range.setEndAfter(document.documentElement);
+  range.extractContents();
+});
+</script>
+</head>
+</html>

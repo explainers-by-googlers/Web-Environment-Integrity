@@ -1,0 +1,32 @@
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+include protocol PJSOracle;
+
+using mozilla::net::OpaqueResponseBlocker::ValidatorResult from "mozilla/net/OpaqueResponseUtils.h";
+
+namespace mozilla {
+namespace dom {
+
+async protocol PJSValidator {
+  manager PJSOracle;
+
+child:
+  [ReplyPriority=control]
+  async IsOpaqueResponseAllowed() returns (Shmem? aMem, ValidatorResult aResult);
+
+  async OnDataAvailable(Shmem aData);
+
+  // aContentCharset, aHintCharset and aDocumentCharset
+  // are needed to determine the decoder for the received data
+  async OnStopRequest(nsresult aReason, nsCString aContentCharset,
+                              nsString aHintCharset,
+                              nsString aDocumentCharset);
+
+  async __delete__();
+};
+
+}  // namespace dom
+}  // namespace mozilla

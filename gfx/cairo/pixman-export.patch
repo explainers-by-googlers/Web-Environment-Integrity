@@ -1,0 +1,51 @@
+diff --git a/gfx/cairo/libpixman/src/pixman-compiler.h b/gfx/cairo/libpixman/src/pixman-compiler.h
+--- a/gfx/cairo/libpixman/src/pixman-compiler.h
++++ b/gfx/cairo/libpixman/src/pixman-compiler.h
+@@ -84,28 +84,47 @@
+ #   ifndef force_inline
+ #      define force_inline inline
+ #   endif
+ #   ifndef noinline
+ #      define noinline
+ #   endif
+ #endif
+ 
++/* In libxul builds we don't ever want to export pixman symbols */
++#if 1
++#include "prcpucfg.h"
++
++#ifdef HAVE_VISIBILITY_HIDDEN_ATTRIBUTE
++#define CVISIBILITY_HIDDEN __attribute__((visibility("hidden")))
++#elif defined(__SUNPRO_C) && (__SUNPRO_C >= 0x550)
++#define CVISIBILITY_HIDDEN __hidden
++#else
++#define CVISIBILITY_HIDDEN
++#endif
++
++/* In libxul builds we don't ever want to export cairo symbols */
++#define PIXMAN_EXPORT extern CVISIBILITY_HIDDEN
++
++#else
++
+ /* GCC visibility */
+ #if defined(__GNUC__) && __GNUC__ >= 4 && !defined(_WIN32)
+ #   define PIXMAN_EXPORT __attribute__ ((visibility("default")))
+ /* Sun Studio 8 visibility */
+ #elif defined(__SUNPRO_C) && (__SUNPRO_C >= 0x550)
+ #   define PIXMAN_EXPORT __global
+ #elif defined (_MSC_VER) || defined(__MINGW32__)
+ #   define PIXMAN_EXPORT PIXMAN_API
+ #else
+ #   define PIXMAN_EXPORT
+ #endif
+ 
++#endif
++
+ /* member offsets */
+ #define CONTAINER_OF(type, member, data)				\
+     ((type *)(((uint8_t *)data) - offsetof (type, member)))
+ 
+ /* TLS */
+ #if defined(PIXMAN_NO_TLS)
+ 
+ #   define PIXMAN_DEFINE_THREAD_LOCAL(type, name)			\

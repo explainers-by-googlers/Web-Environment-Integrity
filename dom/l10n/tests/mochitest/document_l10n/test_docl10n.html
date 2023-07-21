@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test DocumentL10n in HTML environment</title>
+  <script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="chrome://mochikit/content/tests/SimpleTest/test.css">
+  <link rel="localization" href="crashreporter/aboutcrashes.ftl"/>
+  <script>
+  "use strict";
+  SimpleTest.waitForExplicitFinish();
+
+  is(document.l10n.ready && document.l10n.ready.then !== undefined, true,
+    "document.l10n.ready exists and is a Promise");
+
+  (async function() {
+    await document.l10n.ready;
+
+    const desc = document.getElementById("main-desc");
+    is(!!desc.textContent.length, true, "initial localization is applied");
+
+    const msg = await document.l10n.formatValue("id-heading");
+    is(!!msg.length, true, "value is formatted manually");
+
+    const label = document.getElementById("label1");
+    let l10nArgs = document.l10n.getAttributes(label);
+    is(l10nArgs.id, null, "id is null if not set");
+
+    SimpleTest.doesThrow(
+      () => {
+        const bad = {};
+        bad.bad = bad;
+        document.l10n.setAttributes(label, "date-crashed-heading", bad);
+      },
+      "an error is thrown for invalid args",
+    );
+
+    l10nArgs = document.l10n.getAttributes(label);
+    is(l10nArgs.id, null, "id is not set if args are invalid");
+
+    document.l10n.setAttributes(
+      label,
+      "date-crashed-heading",
+      {
+        name: "John",
+      }
+    );
+    ok(document.hasPendingL10nMutations, "Should have pending mutations");
+    l10nArgs = document.l10n.getAttributes(label);
+    is(l10nArgs.id, "date-crashed-heading", "id is set by setAttributes");
+    is(l10nArgs.args.name, "John", "args are set by setAttributes");
+    // Test for mutations applied.
+    document.addEventListener("L10nMutationsFinished", function() {
+      ok(!!label.textContent.length, "Should've applied translation");
+      ok(!document.hasPendingL10nMutations, "Should have no more pending mutations");
+      SimpleTest.finish();
+    }, { once: true });
+  })();
+  </script>
+</head>
+<body>
+  <h1 id="main-desc" data-l10n-id="crash-reports-title"></h1>
+
+  <p id="label1"></p>
+</body>
+</html>

@@ -1,0 +1,191 @@
+/* -*- Mode: C++; c-basic-offset: 2; indent-tabs-mode: nil; tab-width: 8 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+[scriptable, uuid(98d0e975-9cad-4ce3-ae2f-f878b8be6307)]
+interface nsIFOG : nsISupports
+{
+
+  /**
+   * Initialize FOG.
+   *
+   * To be scheduled at some opportune time after the bulk of Firefox startup
+   * has completed.
+   *
+   * @param aDataPathOverride - The path of a custom Glean data path to use
+   *        instead of the profile dir.
+   * @param aAppIdOverride - The application_id to use instead of
+   *        "firefox.desktop".
+   */
+  void initializeFOG([optional] in AUTF8String aDataPathOverride, [optional] in AUTF8String aAppIdOverride);
+
+  /**
+   * Register custom pings.
+   *
+   * Ensure all custom pings are registered with Glean.
+   */
+  void registerCustomPings();
+
+  /**
+   * Enable or Disable the logging of pings in the Glean SDK.
+   * See https://firefox-source-docs.mozilla.org/toolkit/components/glean/testing.html
+   * for details.
+   *
+   * @param aEnableLogPings - true to enable logging, false to disable.
+   */
+  void setLogPings(in boolean aEnableLogPings);
+
+  /**
+   * Set the tag to be applied to pings assembled from now on.
+   * See https://firefox-source-docs.mozilla.org/toolkit/components/glean/testing.html
+   * for details.
+   *
+   * @param aDebugTag - The string tag to apply.
+   *                    If it cannot be applied (e.g it contains characters that are
+   *                    forbidden in HTTP headers) the old value will remain.
+   */
+  void setTagPings(in ACString aDebugTag);
+
+  /**
+   * Send the named ping.
+   * See https://firefox-source-docs.mozilla.org/toolkit/components/glean/testing.html
+   * for details.
+   *
+   * @param aPingName - The name of the ping to send. If no ping of that name
+   *                    exists, or the ping is known but cannot be assembled
+   *                    (e.g if it is empty), no ping will be sent.
+   */
+  void sendPing(in ACString aPingName);
+
+  /**
+   * Indicate that an experiment is running.
+   * Glean will add an experiment annotation which is sent with pings.
+   * This information is not persisted between runs.
+   *
+   * See `glean_core::Glean::set_experiment_active`.
+   *
+   * Logs on error, but does not throw.
+   *
+   * @param aExperimentId - The id/slug of the experiment.
+   * @param aBranch - The name of the active branch of the experiment.
+   * @param aExtra - Optional string -> string dictionary of extra information.
+   */
+  [implicit_jscontext]
+  void setExperimentActive(in ACString aExperimentId, in ACString aBranch, [optional] in jsval aExtra);
+
+  /**
+   * Indicate that an experiment is no longer running.
+   *
+   * See `glean_core::Glean::set_experiment_inactive`.
+   *
+   * Logs on error, but does not throw.
+   *
+   * @param aExperimentId - The id/slug of the experiment from setExperimentActive.
+   */
+  void setExperimentInactive(in ACString aExperimentId);
+
+  /**
+   * **Test-only API**
+   *
+   * If the identified experiment was set active and hasn't been set inactive,
+   * this will give you the active branch and extra information.
+   *
+   * @param aExperimentId - The id/slug of the experiment from setExperimentActive.
+   *
+   * @return an object of the form
+   *         {branch: "branch-name", extra: {extra_key1: extra_value1, ...}}
+   *         if there is an active experiment. Undefined, otherwise.
+   */
+  [implicit_jscontext]
+  jsval testGetExperimentData(in ACString aExperimentId);
+
+  /**
+   * Set remote-configuration for metrics' disabled property.
+   *
+   * See [`glean_core::Glean::set_metrics_enabled_config`]
+   *
+   * Logs on error, but does not throw.
+   *
+   * @param aJsonConfig - The stringified JSON object in the form
+   *        {metric_base_identifier: boolean,}
+   *        which may contain multiple metric object entries.
+   */
+  void setMetricsFeatureConfig(in ACString aJsonConfig);
+
+  /**
+   * ** Test-only Method **
+   *
+   * Flush all data from all child processes.
+   *
+   * @returns A promise that resolves when the data's been stored.
+   */
+  [implicit_jscontext]
+  Promise testFlushAllChildren();
+
+  /**
+   * ** Test-only Method **
+   *
+   * Reset FOG and the Glean SDK, clearing storage.
+   */
+  void testResetFOG([optional] in AUTF8String aDataPathOverride, [optional] in AUTF8String aAppIdOverride);
+
+  /**
+   * ** Test-only Method **
+   *
+   * Trigger test metric instrumentation on the GPU, RDD or Socket process.
+   *
+   * @param aProcessType - A PROCESS_TYPE_* value from the constants defined
+   *                       in the nsIXULRuntime interface.
+   *
+   * @returns A promise that resolves when the test data has been added.
+   *          The promise will be rejected if the process type is not supported
+   *          or if sending the IPC to the child process fails.
+   */
+  [implicit_jscontext]
+  Promise testTriggerMetrics(in unsigned long aProcessType);
+
+  /**
+   * ** Test-only Method **
+   *
+   * Register a metric.
+   *
+   * This function is deliberately not too friendly to use. You probably aren't
+   * supposed to use it unless you're testing metric registration itself.
+   *
+   * @param aType - The metric's type.
+   * @param aCategory - The metric's category.
+   * @param aName - The metric's name.
+   * @param aPings - The pings to send it in.
+   * @param aLifetime - The metric's lifetime.
+   * @param aDisabled - Whether the metric, though existing, isn't enabled.
+   * @param aExtraArgs - Optional JSON string of extra args.
+   */
+  uint32_t testRegisterRuntimeMetric(in ACString aType,
+                                 in ACString aCategory,
+                                 in ACString aName,
+                                 in Array<ACString> aPings,
+                                 in ACString aLifetime,
+                                 in boolean aDisabled,
+                                 [optional] in ACString aExtraArgs);
+
+  /**
+   * ** Test-only Method **
+   *
+   * Register a ping.
+   *
+   * This function is deliberately not too friendly to use. You probably aren't
+   * supposed to use it unless you're testing ping registration itself.
+   *
+   * @param aName - The ping's name.
+   * @param aIncludeClientId - Whether the ping should include the client_id.
+   * @param aSendIfEmpty - Whether the ping should send even if empty.
+   * @param aReasonCodes - The list of valid reasons for ping submission.
+   */
+  uint32_t testRegisterRuntimePing(in ACString aName,
+                                   in boolean aIncludeClientId,
+                                   in boolean aSendIfEmpty,
+                                   in Array<ACString> aReasonCodes);
+};

@@ -1,0 +1,102 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Toolkit", "Background Tasks")
+
+SPHINX_TREES["/toolkit/components/backgroundtasks"] = "docs"
+
+with Files("docs/**"):
+    SCHEDULES.exclusive = ["docs"]
+
+FINAL_LIBRARY = "xul"
+
+for var in ("MOZ_APP_VENDOR",):
+    DEFINES[var] = '"%s"' % CONFIG[var]
+
+UNIFIED_SOURCES += [
+    "BackgroundTasks.cpp",
+    "BackgroundTasksRunner.cpp",
+]
+
+EXPORTS.mozilla += [
+    "BackgroundTasks.h",
+    "BackgroundTasksRunner.h",
+]
+
+XPCOM_MANIFESTS += [
+    "components.conf",
+]
+
+XPIDL_SOURCES += [
+    "nsIBackgroundTasks.idl",
+    "nsIBackgroundTasksManager.idl",
+    "nsIBackgroundTasksRunner.idl",
+]
+
+XPIDL_MODULE = "toolkit_backgroundtasks"
+
+EXTRA_JS_MODULES += [
+    "BackgroundTasksManager.sys.mjs",
+    "BackgroundTasksUtils.sys.mjs",
+]
+
+EXTRA_JS_MODULES.backgroundtasks += [
+    "dbg-actors.js",
+]
+
+EXTRA_JS_MODULES.backgroundtasks += [
+    "BackgroundTask_exception.sys.mjs",
+    "BackgroundTask_failure.sys.mjs",
+    "BackgroundTask_message.sys.mjs",
+    "BackgroundTask_removeDirectory.sys.mjs",
+    "BackgroundTask_success.sys.mjs",
+]
+
+LOCAL_INCLUDES += [
+    "../../profile",
+]
+
+BROWSER_CHROME_MANIFESTS += ["tests/browser/browser.ini"]
+XPCSHELL_TESTS_MANIFESTS += ["tests/xpcshell/xpcshell.ini"]
+
+TESTING_JS_MODULES += [
+    "BackgroundTasksTestUtils.sys.mjs",
+]
+
+TESTING_JS_MODULES.backgroundtasks += [
+    "tests/BackgroundTask_backgroundtask_specific_pref.sys.mjs",
+    "tests/BackgroundTask_crash.sys.mjs",
+    "tests/BackgroundTask_file_exists.sys.mjs",
+    "tests/BackgroundTask_jsdebugger.sys.mjs",
+    "tests/BackgroundTask_localization.sys.mjs",
+    "tests/BackgroundTask_minruntime.sys.mjs",
+    "tests/BackgroundTask_no_output.sys.mjs",
+    "tests/BackgroundTask_not_ephemeral_profile.sys.mjs",
+    "tests/BackgroundTask_policies.sys.mjs",
+    "tests/BackgroundTask_profile_is_slim.sys.mjs",
+    "tests/BackgroundTask_shouldnotprocessupdates.sys.mjs",
+    "tests/BackgroundTask_shouldprocessupdates.sys.mjs",
+    "tests/BackgroundTask_timeout.sys.mjs",
+    "tests/BackgroundTask_unique_profile.sys.mjs",
+    "tests/BackgroundTask_update_sync_manager.sys.mjs",
+    "tests/BackgroundTask_wait.sys.mjs",
+]
+
+if CONFIG["MOZ_BUILD_APP"] == "browser":
+    # ASRouter is Firefox-only.
+    TESTING_JS_MODULES.backgroundtasks += [
+        "tests/BackgroundTask_targeting.sys.mjs",
+    ]
+
+    FINAL_TARGET_FILES.browser.defaults.backgroundtasks += [
+        "defaults/backgroundtasks_browser.js",
+    ]
+
+FINAL_TARGET_FILES.defaults.backgroundtasks += [
+    "defaults/backgroundtasks.js",
+]
+
+# For base::LaunchApp
+include("/ipc/chromium/chromium-config.mozbuild")

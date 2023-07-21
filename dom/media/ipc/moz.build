@@ -1,0 +1,107 @@
+# -*- Mode: python; c-basic-offset: 4; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+IPDL_SOURCES += [
+    "PMediaDecoderParams.ipdlh",
+    "PRemoteDecoder.ipdl",
+]
+
+PREPROCESSED_IPDL_SOURCES += [
+    "PRDD.ipdl",
+    "PRemoteDecoderManager.ipdl",
+]
+
+EXPORTS.mozilla += [
+    "RDDChild.h",
+    "RDDParent.h",
+    "RDDProcessHost.h",
+    "RDDProcessImpl.h",
+    "RDDProcessManager.h",
+    "RemoteDecoderChild.h",
+    "RemoteDecoderManagerChild.h",
+    "RemoteDecoderManagerParent.h",
+    "RemoteDecoderModule.h",
+    "RemoteDecoderParent.h",
+    "RemoteDecodeUtils.h",
+    "RemoteImageHolder.h",
+    "RemoteMediaData.h",
+    "RemoteMediaDataDecoder.h",
+    "ShmemRecycleAllocator.h",
+]
+
+EXPORTS.mozilla.dom += [
+    "MediaIPCUtils.h",
+    "MFCDMSerializers.h",
+]
+
+SOURCES += [
+    "RDDChild.cpp",
+    "RDDParent.cpp",
+    "RDDProcessHost.cpp",
+    "RDDProcessImpl.cpp",
+    "RDDProcessManager.cpp",
+    "RemoteAudioDecoder.cpp",
+    "RemoteDecoderChild.cpp",
+    "RemoteDecoderManagerChild.cpp",
+    "RemoteDecoderManagerParent.cpp",
+    "RemoteDecoderModule.cpp",
+    "RemoteDecoderParent.cpp",
+    "RemoteDecodeUtils.cpp",
+    "RemoteImageHolder.cpp",
+    "RemoteMediaData.cpp",
+    "RemoteMediaDataDecoder.cpp",
+    "RemoteVideoDecoder.cpp",
+]
+
+if CONFIG["MOZ_WMF_MEDIA_ENGINE"]:
+    IPDL_SOURCES += [
+        "PMFMediaEngine.ipdl",
+    ]
+    SOURCES += [
+        "MFMediaEngineChild.cpp",
+        "MFMediaEngineParent.cpp",
+        "MFMediaEngineUtils.cpp",
+    ]
+    EXPORTS.mozilla += [
+        "MFMediaEngineChild.h",
+        "MFMediaEngineParent.h",
+        "MFMediaEngineUtils.h",
+    ]
+    LOCAL_INCLUDES += [
+        "../platforms/wmf",
+    ]
+
+if CONFIG["MOZ_WMF_CDM"]:
+    IPDL_SOURCES += [
+        "PMFCDM.ipdl",
+    ]
+    EXPORTS.mozilla += [
+        "MFCDMChild.h",
+        "MFCDMParent.h",
+    ]
+    UNIFIED_SOURCES += [
+        "MFCDMChild.cpp",
+    ]
+    SOURCES += [
+        "MFCDMParent.cpp",
+    ]
+    LOCAL_INCLUDES += [
+        "../eme/mediafoundation",
+    ]
+
+# so we can include nsMacUtilsImpl.h in RDDParent.cpp for sandboxing
+LOCAL_INCLUDES += [
+    "/xpcom/base",
+]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+# Add libFuzzer configuration directives
+include("/tools/fuzzing/libfuzzer-config.mozbuild")
+
+
+FINAL_LIBRARY = "xul"

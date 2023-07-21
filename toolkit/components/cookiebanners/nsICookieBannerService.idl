@@ -1,0 +1,135 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+#include "nsIClickRule.idl"
+#include "nsICookieBannerRule.idl"
+#include "nsICookieRule.idl"
+#include "nsIURI.idl"
+webidl BrowsingContext;
+
+/**
+ * Service singleton which owns the cookie banner feature.
+ * This service owns the cookie banner handling rules.
+ * It initializes both the component for importing rules
+ * (nsICookieBannerListService) and injecting cookies (nsICookieInjector).
+ */
+[scriptable, uuid(eac9cdc4-ecee-49f2-91da-7627e15c1f3c)]
+interface nsICookieBannerService : nsISupports {
+
+  /**
+   * Modes for cookie banner handling
+   * MODE_DISABLED - No cookie banner handling, service disabled.
+   * MODE_REJECT - Only handle banners where selecting "reject all" is possible.
+   * MODE_REJECT_OR_ACCEPT - Prefer selecting "reject all", if not possible
+   * fall back to "accept all".
+   * MODE_UNSET - This represents the service mode is unset, the setting should
+   * fall back to default setting. This is used for the per-domain preferences.
+   */
+  cenum Modes : 8 {
+    MODE_DISABLED,
+    MODE_REJECT,
+    MODE_REJECT_OR_ACCEPT,
+    MODE_UNSET,
+  };
+
+  /**
+   * Whether the feature / service is enabled.
+   */
+  readonly attribute boolean isEnabled;
+
+  /**
+   * Getter for a list of all cookie banner rules. This includes both opt-in and opt-out rules.
+   */
+  readonly attribute Array<nsICookieBannerRule> rules;
+
+  /**
+   * Clears all imported rules. They will be imported again on startup and when
+   * enabling the service. This is currently only used for testing.
+   *
+   * doImport - Whether to import initial rule list after reset. Passing false
+   * will result in an empty rule list.
+   */
+  void resetRules([optional] in boolean doImport);
+
+  /**
+   * Look up all cookie rules for a given top-level URI. Depending on the MODE_
+   * this will return none, only reject rules or accept rules if there is no
+   * reject rule available.
+   */
+  Array<nsICookieRule> getCookiesForURI(in nsIURI aURI, in bool aIsPrivateBrowsing);
+
+  /**
+   * Look up the click rules for a given domain.
+   */
+  Array<nsIClickRule> getClickRulesForDomain(in ACString aDomain,
+                                             in bool aIsTopLevel);
+
+  /**
+   * Insert a cookie banner rule for a domain. If there was previously a rule
+   * stored with the same domain it will be overwritten.
+   */
+  void insertRule(in nsICookieBannerRule aRule);
+
+  /**
+   * Remove a cookie banner rule.
+   */
+  void removeRule(in nsICookieBannerRule aRule);
+
+  /**
+   * Computes whether we have a rule for the given browsing context or any of
+   * its children. This takes the current cookie banner service mode into
+   * consideration and whether the BC is in private browsing mode.
+   *
+   * This method only takes the global service mode into account. It will ignore
+   * any per-site mode overrides. It is meant for callers to find out whether an
+   * applicable rule exists, even if users have disabled the feature for the
+   * given site.
+   */
+  boolean hasRuleForBrowsingContextTree(in BrowsingContext aBrowsingContext);
+
+  /**
+   * Get the domain preference of the given top-level URI. It will return the
+   * service mode if there is a site preference for the given URI. Otherwise, it
+   * will return MODE_UNSET.
+   */
+  nsICookieBannerService_Modes getDomainPref(in nsIURI aTopLevelURI,
+                                             in boolean aIsPrivate);
+
+  /**
+   * Set the domain preference of the given top-level URI.
+   */
+  void setDomainPref(in nsIURI aTopLevelURI,
+                     in nsICookieBannerService_Modes aMode,
+                     in boolean aIsPrivate);
+
+  /**
+   * Set the domain preference of the given top-level URI. It will persist the
+   * domain preference for private browsing.
+   *
+   * WARNING: setting permanent domain preference _will_ leak data in private
+   * browsing. Only use if you understand the consequences and trade-offs. If
+   * you are unsure, |setDomainPref| is very likely what you want to use
+   * instead.
+   */
+  void setDomainPrefAndPersistInPrivateBrowsing(in nsIURI aTopLevelURI,
+                                                in nsICookieBannerService_Modes aMode);
+
+  /**
+   * Remove the domain preference of the given top-level URI.
+   */
+  void removeDomainPref(in nsIURI aTopLevelURI, in boolean aIsPrivate);
+
+  /**
+   * Remove all domain preferences.
+   */
+  void removeAllDomainPrefs(in boolean aIsPrivate);
+
+  /**
+   * Clears the in-memory set that we use to maintain the domains that we have
+   * reported telemetry. This function will clear the entry for the given
+   * domain. If the domain was not given, it will clear all set.
+   */
+  void resetDomainTelemetryRecord([optional] in ACString aDomain);
+};

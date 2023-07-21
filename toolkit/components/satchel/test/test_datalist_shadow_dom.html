@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for datalist in Shadow DOM</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <script type="text/javascript" src="satchel_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<p id="display"></p>
+<div id="content">
+  <div id="host"></div>
+</div>
+
+<script>
+
+const host = document.getElementById("host");
+host.attachShadow({ mode: "open" }).innerHTML = `
+  <form id="form1" onsubmit="return false;">
+    <input list="suggest" type="text" name="field1">
+    <button type="submit">Submit</button>
+  </form>
+  <datalist id="suggest">
+    <option value="First"></option>
+    <option value="Second"></option>
+    <option value="Secomundo"></option>
+  </datalist>
+`;
+
+add_task(async function fill_in_shadow() {
+  const { input } = await openPopupOn(host.shadowRoot.querySelector("input"));
+  assertAutocompleteItems("First", "Second", "Secomundo");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "First");
+});
+
+add_task(async function filter_and_fill_in_shadow() {
+  const { input } = await openPopupOn(host.shadowRoot.querySelector("input"));
+  sendString("Sec");
+  await notifyMenuChanged(2);
+  assertAutocompleteItems("Second", "Secomundo");
+  sendString("o");
+  await notifyMenuChanged(2);
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "Second");
+});
+
+</script>
+</body>
+</html>

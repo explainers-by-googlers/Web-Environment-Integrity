@@ -1,0 +1,27 @@
+[package]
+name = "jsrust_shared"
+version = "0.1.0"
+authors = ["The Spidermonkey developers"]
+license = "MPL-2.0"
+
+[lib]
+crate-type = ["rlib"]
+name = "jsrust_shared"
+path = "lib.rs"
+
+[dependencies]
+encoding_c = "0.9.5"
+encoding_c_mem = "0.2.4"
+smoosh = { path = "../../frontend/smoosh", optional = true }
+mozglue-static = { path = "../../../../mozglue/static/rust" }
+gluesmith = { path = "../../fuzz-tests/gluesmith", optional = true }
+
+[features]
+simd-accel = ['encoding_c/simd-accel']
+
+# Uncomment this to enable perf support in release mode.
+#[profile.release]
+#debug = true
+
+[package.metadata.cargo-udeps.ignore]
+normal = ["mozilla-central-workspace-hack"]

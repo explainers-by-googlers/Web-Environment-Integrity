@@ -1,0 +1,698 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for Form History Autocomplete</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <script type="text/javascript" src="satchel_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+  <style>
+.spacer {
+  height: 50vh;
+  width: 100%;
+}
+  </style>
+</head>
+<body>
+Form History test: form field autocomplete
+<p id="display"></p>
+
+<!-- We presumably can't hide the content for this test. The large top padding is to allow
+     listening for scrolls to occur. -->
+<div id="content" style="padding-top: 20000px;">
+
+  <!-- normal, basic form -->
+  <form id="form1">
+    <input  type="text" name="field1">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- normal, basic form (new fieldname) -->
+  <form id="form2">
+    <input  type="text" name="field2">
+    <button type="submit">Submit</button>
+  </form>
+
+  <div class="spacer">
+    Space to force a scroll on form3 focus
+  </div>
+
+  <!-- form with autocomplete=off on input -->
+  <form id="form3">
+    <input  type="text" name="field2" autocomplete="off">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with autocomplete=off on form -->
+  <form id="form4" autocomplete="off">
+    <input  type="text" name="field2">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- normal form for testing filtering -->
+  <form id="form5">
+    <input  type="text" name="field3">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- normal form for testing word boundary filtering -->
+  <form id="form6">
+    <input  type="text" name="field4">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with maxlength attribute on input -->
+  <form id="form7">
+    <input  type="text" name="field5" maxlength="10">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='email' -->
+  <form id="form8">
+    <input  type="email" name="field6">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='tel' -->
+  <form id="form9">
+    <input  type="tel" name="field7">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='url' -->
+  <form id="form10">
+    <input  type="url" name="field8">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='search' -->
+  <form id="form11">
+    <input  type="search" name="field9">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='number' -->
+  <form id="form12">
+    <input  type="text" name="field10"> <!-- TODO: change back to type=number -->
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- normal, basic form (with fieldname='searchbar-history') -->
+  <form id="form13">
+    <input  type="text" name="searchbar-history">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='date' -->
+  <form id="form14">
+    <input  type="date" name="field11">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='time' -->
+  <form id="form15">
+    <input  type="time" name="field12">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='range' -->
+  <form id="form16">
+    <input  type="range" name="field13" max="64">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='color' -->
+  <form id="form17">
+    <input  type="color" name="field14">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='month' -->
+  <form id="form18">
+    <input  type="month" name="field15">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='week' -->
+  <form id="form19">
+    <input  type="week" name="field16">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- form with input type='datetime-local' -->
+  <form id="form20">
+    <input  type="datetime-local" name="field17">
+    <button type="submit">Submit</button>
+  </form>
+
+</div>
+
+<script>
+async function addEntry(fieldname, value) {
+  await updateFormHistory({ op: "add", fieldname, value });
+}
+
+preventSubmitOnForms();
+SpecialPowers.pushPrefEnv({"set": [["security.allow_eval_with_system_principal", true]]});
+
+add_setup(async () => {
+  await updateFormHistory([
+    { op: "remove" },
+    { op: "add", fieldname: "field1", value: "value1" },
+    { op: "add", fieldname: "field1", value: "value2" },
+    { op: "add", fieldname: "field1", value: "value3" },
+    { op: "add", fieldname: "field1", value: "value4" },
+    { op: "add", fieldname: "field2", value: "value1" },
+    { op: "add", fieldname: "field3", value: "a" },
+    { op: "add", fieldname: "field3", value: "aa" },
+    { op: "add", fieldname: "field3", value: "aaz" },
+    { op: "add", fieldname: "field3", value: "aa\xe6" }, // 0xae == latin ae pair (0xc6 == AE)
+    { op: "add", fieldname: "field3", value: "az" },
+    { op: "add", fieldname: "field3", value: "z" },
+    { op: "add", fieldname: "field4", value: "a\xe6" },
+    { op: "add", fieldname: "field4", value: "aa a\xe6" },
+    { op: "add", fieldname: "field4", value: "aba\xe6" },
+    { op: "add", fieldname: "field4", value: "bc d\xe6" },
+    { op: "add", fieldname: "field5", value: "1" },
+    { op: "add", fieldname: "field5", value: "12" },
+    { op: "add", fieldname: "field5", value: "123" },
+    { op: "add", fieldname: "field5", value: "1234" },
+    { op: "add", fieldname: "field6", value: "value" },
+    { op: "add", fieldname: "field7", value: "value" },
+    { op: "add", fieldname: "field8", value: "value" },
+    { op: "add", fieldname: "field9", value: "value" },
+    { op: "add", fieldname: "field10", value: "42" },
+    // not used, since type=date doesn't have autocomplete currently
+    { op: "add", fieldname: "field11", value: "2010-10-10" },
+    // not used, since type=time doesn't have autocomplete currently
+    { op: "add", fieldname: "field12", value: "21:21" },
+    // not used, since type=range doesn't have a dropdown menu
+    { op: "add", fieldname: "field13", value: "32" },
+    // not used, since type=color doesn't have autocomplete currently
+    { op: "add", fieldname: "field14", value: "#ffffff" },
+    { op: "add", fieldname: "field15", value: "2016-08" },
+    { op: "add", fieldname: "field16", value: "2016-W32" },
+    { op: "add", fieldname: "field17", value: "2016-10-21T10:10" },
+    { op: "add", fieldname: "searchbar-history", value: "blacklist test" },
+  ]);
+});
+
+add_task(async function use_1st_item() {
+  const { input } = await openPopupOn("#form1 > input");
+
+  assertAutocompleteItems("value1", "value2", "value3", "value4");
+  assertValueAfterKeys(input, "KEY_ArrowDown", "");
+  assertValueAfterKeys(input, "KEY_Enter", "value1");
+});
+
+add_task(async function use_2nd_item() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowDown", "KEY_Enter"],
+    "value2");
+});
+
+add_task(async function use_3rd_item() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowDown", "KEY_ArrowDown", "KEY_Enter"],
+    "value3");
+});
+
+add_task(async function use_4th_item() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowDown", "KEY_ArrowDown", "KEY_ArrowDown", "KEY_Enter"],
+    "value4");
+});
+
+add_task(async function use_1st_item_wrap_around() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowDown", "KEY_ArrowDown", "KEY_ArrowDown",
+     "KEY_ArrowDown", "KEY_ArrowDown", "KEY_Enter"],
+    "value1");
+});
+
+add_task(async function use_last_item_via_arrow_up() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowUp", "KEY_Enter"],
+    "value4");
+});
+
+add_task(async function use_last_item_via_arrow_up_from_selected_1st() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowUp", "KEY_ArrowUp", "KEY_Enter"],
+    "value4");
+});
+
+add_task(async function test9() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowUp", "KEY_ArrowUp", "KEY_ArrowUp", "KEY_ArrowUp",
+     "KEY_ArrowUp", "KEY_ArrowUp", "KEY_ArrowUp", "KEY_Enter"],
+    "value4");
+});
+
+add_task(async function select_1st_item_without_autocomplete() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowRight"],
+    "value1");
+});
+
+add_task(async function set_first_item_without_autocomplete() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowLeft"],
+    "value1");
+});
+
+add_task(async function use_1st_item_with_page_up() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_ArrowDown", "KEY_PageUp", "KEY_Enter"],
+    "value1");
+});
+
+add_task(async function use_last_item_with_page_down() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_PageDown", "KEY_Enter"],
+    "value4");
+});
+
+add_task(async function delete_1st_item() {
+  assertAutocompleteItems("value1", "value2", "value3", "value4");
+
+  const { input } = await openPopupOn("#form1 > input", { inputValue: "value" });
+  synthesizeKey("KEY_ArrowDown");
+
+  // Tests that on OS X shift-backspace didn't delete the last character
+  // in the input (bug 480262).
+  // On OS X, shift-backspace and shift-delete work, just delete does not.
+  // On Win/Linux, shift-backspace does not work, delete and shift-delete do.
+  synthesizeKey(SpecialPowers.OS == "Darwin" ? "KEY_Backspace" : "KEY_Delete", { shiftKey: true });
+  assertValueAfterKeys(input, [], "value");
+  await notifyMenuChanged(3);
+  is(await countEntries("field1", "value1"), 0, "field1:value1 item deleted");
+  assertValueAfterKeys(input, ["KEY_Enter"], "value2");
+  assertAutocompleteItems("value2", "value3", "value4");
+});
+
+add_task(async function use_1st_item_of_3() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "value2");
+});
+
+add_task(async function delete_2nd_item() {
+  const { input } = await openPopupOn("#form1 > input");
+  synthesizeKey("KEY_ArrowDown");
+  synthesizeKey("KEY_ArrowDown");
+  deleteSelectedAutocompleteItem();
+  await notifyMenuChanged(2);
+  assertValueAfterKeys(input, [], "");
+  is(await countEntries("field1", "value3"), 0, "field1:value3 item deleted");
+  assertValueAfterKeys(input, ["KEY_Enter"], "value4");
+  assertAutocompleteItems("value2", "value4");
+});
+
+add_task(async function use_1st_item_of_2() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "value2");
+});
+
+add_task(async function delete_last_item_of_2() {
+  const { input } = await openPopupOn("#form1 > input");
+  synthesizeKey("KEY_ArrowDown");
+  synthesizeKey("KEY_ArrowDown");
+  deleteSelectedAutocompleteItem();
+  await notifyMenuChanged(1);
+  assertValueAfterKeys(input, [], "");
+  is(await countEntries("field1", "value4"), 0, "field1/value4 item deleted");
+  assertAutocompleteItems("value2");
+  assertValueAfterKeys(input, "KEY_Enter", "value2");
+});
+
+add_task(async function use_1st_item_of_1() {
+  const { input } = await openPopupOn("#form1 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "value2");
+});
+
+add_task(async function delete_only_item() {
+  const { input } = await openPopupOn("#form1 > input");
+  synthesizeKey("KEY_ArrowDown");
+  deleteSelectedAutocompleteItem();
+  await notifyMenuChanged(0);
+  is(await countEntries("field1", "value2"), 0, "field1/value2 item deleted");
+  assertValueAfterKeys(input, [], "");
+});
+
+add_task(async function form2_fills() {
+  const { input } = await openPopupOn("#form2 > input");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "value1");
+});
+
+add_task(async function form3_autocomplete_off() {
+  // Look at form 3, try to trigger autocomplete popup
+  // Sometimes, this will fail if scrollTo(0, 0) is called, so that doesn't
+  // happen here. Fortunately, a different input is used from the last test,
+  // so a scroll should still occur.
+  const scrollend = new Promise(resolve => {
+    addEventListener("scrollend", resolve);
+  });
+  const { input } = await openPopupOn("#form3 > input", { expectPopup: false });
+  await scrollend;
+  // Ensure there's no autocomplete dropdown (autocomplete=off is present)
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "");
+});
+
+add_task(async function form4_autocomplete_off() {
+  const { input } = await openPopupOn("#form4 > input", { expectPopup: false });
+  await notifyMenuChanged(0);
+
+  // Ensure there's no autocomplete dropdown (autocomplete=off is present)
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "");
+});
+
+add_task(async function filtering_form5() {
+  const { input } = await openPopupOn("#form5 > input");
+  sendChar("a");
+  await notifyMenuChanged(5);
+  assertAutocompleteItems("a", "aa", "aaz", "aa\xe6", "az");
+  sendChar("a");
+  await notifyMenuChanged(3);
+  assertAutocompleteItems("aa", "aaz", "aa\xe6");
+  sendChar("\xc6");
+  await notifyMenuChanged(1);
+  assertAutocompleteItems("aa\xe6");
+  synthesizeKey("KEY_Backspace");
+  await notifyMenuChanged(3);
+  assertAutocompleteItems("aa", "aaz", "aa\xe6");
+  synthesizeKey("KEY_Backspace");
+  await notifyMenuChanged(5);
+  assertAutocompleteItems("a", "aa", "aaz", "aa\xe6", "az");
+  input.focus();
+  sendChar("z");
+  await notifyMenuChanged(2);
+  assertAutocompleteItems("az", "aaz");
+  synthesizeKey("KEY_ArrowLeft");
+  // Check case-insensitivity.
+  sendChar("A");
+  await notifyMenuChanged(1);
+  assertAutocompleteItems("aaz");
+  await addEntry("field3", "aazq");
+  // check that results were cached
+  input.focus();
+  synthesizeKey("KEY_ArrowRight");
+  sendChar("q");
+  await notifyMenuChanged(0);
+  // check that results were cached
+  assertAutocompleteItems();
+  await addEntry("field3", "aazqq");
+  input.focus();
+  window.scrollTo(0, 0);
+  sendChar("q");
+  await notifyMenuChanged(0);
+  // check that empty results were cached - bug 496466
+  assertAutocompleteItems();
+  synthesizeKey("KEY_Escape");
+});
+
+add_task(async function filtering_form6_part1() {
+  await openPopupOn("#form6 > input");
+  sendChar("a");
+  await notifyMenuChanged(3);
+
+  // Test substring matches and word boundary bonuses
+  // alphabetical results for first character
+  assertAutocompleteItems("aa a\xe6", "aba\xe6", "a\xe6");
+  sendChar("\xe6");
+  await notifyMenuChanged(3, "a\xe6");
+
+  // prefix match comes first, then word boundary match
+  // followed by substring match
+  assertAutocompleteItems("a\xe6", "aa a\xe6", "aba\xe6");
+});
+
+add_task(async function filtering_form6_part2() {
+  await openPopupOn("#form6 > input");
+  sendChar("b");
+  await notifyMenuChanged(1, "bc d\xe6");
+  assertAutocompleteItems("bc d\xe6");
+  sendChar(" ");
+  await notifyMenuChanged(1);
+
+  // check that trailing space has no effect after single char.
+  assertAutocompleteItems("bc d\xe6");
+  sendChar("\xc6");
+  await notifyMenuChanged(2);
+
+  // check multi-word substring matches
+  assertAutocompleteItems("bc d\xe6", "aba\xe6");
+  synthesizeKey("KEY_ArrowLeft");
+  sendChar("d");
+  await notifyMenuChanged(1);
+
+  // check inserting in multi-word searches
+  assertAutocompleteItems("bc d\xe6");
+  sendChar("z");
+  await notifyMenuChanged(0);
+  assertAutocompleteItems();
+});
+
+add_task(async function input_maxLength() {
+  let { input } = await openPopupOn("#form7 > input");
+  await notifyMenuChanged(4);
+  assertAutocompleteItems("1", "12", "123", "1234");
+
+  input.maxLength = 4;
+  input = (await openPopupOn("#form7 > input")).input;
+  await notifyMenuChanged(4);
+  assertAutocompleteItems("1", "12", "123", "1234");
+
+  input.maxLength = 3;
+  input = (await openPopupOn("#form7 > input")).input;
+  await notifyMenuChanged(3);
+  assertAutocompleteItems("1", "12", "123");
+
+  input.maxLength = 2;
+  input = (await openPopupOn("#form7 > input")).input;
+  await notifyMenuChanged(2);
+  assertAutocompleteItems("1", "12");
+
+  input.maxLength = 1;
+  input = (await openPopupOn("#form7 > input")).input;
+  await notifyMenuChanged(1);
+  assertAutocompleteItems("1");
+
+  input.maxLength = 0;
+  synthesizeKey("KEY_Escape");
+  synthesizeKey("KEY_ArrowDown");
+  await notifyMenuChanged(0);
+  assertAutocompleteItems();
+
+  input.maxLength = 4;
+});
+
+add_task(async function input_maxLength_with_character_typed() {
+  let { input } = await openPopupOn("#form7 > input");
+  sendChar("1");
+  await notifyMenuChanged(4);
+  assertAutocompleteItems("1", "12", "123", "1234");
+
+  input.maxLength = 3;
+  input = (await openPopupOn("#form7 > input")).input;
+  assertAutocompleteItems("1", "12", "123");
+
+  input.maxLength = 2;
+  input = (await openPopupOn("#form7 > input")).input;
+  assertAutocompleteItems("1", "12");
+
+  input.maxLength = 1;
+  input = (await openPopupOn("#form7 > input")).input;
+  assertAutocompleteItems("1");
+
+  input.maxLength = 0;
+  synthesizeKey("KEY_Escape");
+  synthesizeKey("KEY_ArrowDown");
+  await notifyMenuChanged(0);
+  assertAutocompleteItems();
+});
+
+for (const formId of ["form8", "form9", "form10", "form11"]) {
+  add_named_task(formId, async () => {
+    const { input } = await openPopupOn(`#${formId} > input`);
+    assertAutocompleteItems("value");
+    assertValueAfterKeys(input, ["KEY_ArrowDown", "KEY_Enter"], "value");
+  });
+}
+
+add_task(async function form12() {
+  const { input } = await openPopupOn("#form12 > input");
+  assertAutocompleteItems("42");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "42");
+});
+
+add_task(async function form14() {
+  const { input } = await openPopupOn("#form14 > input", { expectPopup: false });
+  await notifyMenuChanged(0);
+  // type=date with it's own control frame does not have a dropdown menu
+  assertAutocompleteItems();
+  assertValueAfterKeys(input, [], "");
+});
+
+add_task(async function form15() {
+  const { input } = await openPopupOn("#form15 > input", { expectPopup: false });
+  await notifyMenuChanged(0);
+  // type=time with it's own control frame does not have a dropdown menu
+  assertAutocompleteItems();
+  assertValueAfterKeys(input, [], "");
+});
+
+add_task(async function form16() {
+  const { input } = await openPopupOn("#form16 > input", { expectPopup: false });
+  await notifyMenuChanged(0);
+  // type=range does not have a dropdown menu
+  assertAutocompleteItems();
+  // default (midway between minimum (0) and maximum (64)) - step
+  assertValueAfterKeys(input, [], "31");
+});
+
+add_task(async function form17() {
+  const { input } = await openPopupOn("#form17 > input", { expectPopup: false });
+  await notifyMenuChanged(0);
+  // type=color does not have a dropdown menu
+  assertAutocompleteItems();
+  // default color value
+  assertValueAfterKeys(input, [], "#000000");
+});
+
+add_task(async function form18() {
+  const { input } = await openPopupOn("#form18 > input");
+  assertAutocompleteItems("2016-08");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "2016-08");
+});
+
+add_task(async function form19() {
+  const { input } = await openPopupOn("#form19 > input");
+  assertAutocompleteItems("2016-W32");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "2016-W32");
+});
+
+add_task(async function form20() {
+  const { input } = await openPopupOn("#form20 > input", { expectPopup: false });
+  await notifyMenuChanged(0);
+  // type=datetime-local with it's own control frame does not have a dropdown menu
+  assertAutocompleteItems();
+  assertValueAfterKeys(input, [], "");
+});
+
+add_task(async function input_event_fired() {
+  await addEntry("field1", "value1");
+  const { input } = await openPopupOn("#form1 > input");
+
+  let beforeInputFired = false;
+  input.addEventListener("beforeinput", (e) => {
+    beforeInputFired = true;
+    ok(e instanceof InputEvent, "beforeinput event has InputEvent interface");
+    ok(e.bubbles, "beforeinput event should bubble");
+    is(e.cancelable, SpecialPowers.getBoolPref("dom.input_event.allow_to_cancel_set_user_input"),
+       "beforeinput event for insertReplacementText should be cancelable unless it's suppressed by the pref");
+    is(e.inputType, "insertReplacementText",
+       "inputType of beforeinput event should be insertReplacementText");
+    is(e.data, "value1", "data of beforeinput event should be value1");
+    is(e.dataTransfer, null, "dataTransfer of beforeinput event should be null");
+    is(e.getTargetRanges().length, 0,
+       "getTargetRanges() of beforeinput event should empty array");
+    is(input.value, "", "input value should've not been modified yet at beforeinput event");
+  }, { once: true });
+
+  let inputFired = false;
+  input.addEventListener("input", (e) => {
+    inputFired = true;
+    ok(e instanceof InputEvent, "input event has InputEvent interface");
+    ok(e.bubbles, "input event should bubble");
+    ok(!e.cancelable, "input event shouldn't be cancelable");
+    is(e.inputType, "insertReplacementText",
+        "inputType of input event should be insertReplacementText");
+    is(e.data, "value1","data of input event should be value1");
+    is(e.dataTransfer, null, "dataTransfer of input event should be null");
+    is(e.getTargetRanges().length, 0,
+        "getTargetRanges() of input event should empty array");
+    is(input.value, "value1", "input value should've already been modified at input event");
+  }, { once: true });
+
+  assertValueAfterKeys(input, "KEY_ArrowDown", "");
+  assertValueAfterKeys(input, "KEY_Enter", "value1");
+  ok(beforeInputFired, "beforeinput event should have been fired");
+  ok(inputFired, "input event should have been fired");
+});
+
+add_task(async function cancelling_beforeinput_cancels_autocompletion() {
+  const { input } = await openPopupOn("#form1 > input");
+  await SpecialPowers.pushPrefEnv({
+    set: [["dom.input_event.allow_to_cancel_set_user_input", true]],
+  });
+  input.addEventListener("beforeinput", (e) => e.preventDefault(), { once: true });
+
+  let inputFired = false;
+  input.addEventListener("input", () => inputFired = true, { once: true });
+
+  assertValueAfterKeys(input, "KEY_ArrowDown", "");
+  assertValueAfterKeys(input, "KEY_Enter", "");
+  ok(!inputFired, "no input event when beforeinput is canceled");
+
+  await SpecialPowers.pushPrefEnv({
+    clear: [["dom.input_event.allow_to_cancel_set_user_input"]],
+  });
+});
+
+add_task(async function no_autocomplete_for_searchbar_history() {
+  await openPopupOn("#form13 > input", { expectPopup: false });
+  await notifyMenuChanged(0);
+  assertAutocompleteItems();
+});
+</script>
+</body>
+</html>

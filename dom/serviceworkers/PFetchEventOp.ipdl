@@ -1,0 +1,35 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+include protocol PRemoteWorkerController;
+
+include ServiceWorkerOpArgs;
+include FetchTypes;
+
+namespace mozilla {
+namespace dom {
+
+[ManualDealloc]
+protocol PFetchEventOp {
+  manager PRemoteWorkerController;
+
+ parent:
+  async PreloadResponse(ParentToParentInternalResponse aResponse);
+
+  async PreloadResponseTiming(ResponseTiming aTiming);
+
+  async PreloadResponseEnd(ResponseEndArgs aArgs);
+
+ child:
+  async AsyncLog(nsCString aScriptSpec, uint32_t aLineNumber,
+                 uint32_t aColumnNumber, nsCString aMessageName,
+                 nsString[] aParams);
+
+  async RespondWith(ParentToParentFetchEventRespondWithResult aResult);
+
+  async __delete__(ServiceWorkerFetchEventOpResult aResult);
+};
+
+}  // namespace dom
+}  // namespace mozilla

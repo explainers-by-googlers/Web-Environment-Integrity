@@ -1,0 +1,112 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Core", "Networking: DNS")
+
+DIRS += ["tests"]
+
+XPIDL_SOURCES += [
+    "nsIDNSAdditionalInfo.idl",
+    "nsIDNSByTypeRecord.idl",
+    "nsIDNSListener.idl",
+    "nsIDNSRecord.idl",
+    "nsIDNSService.idl",
+    "nsIEffectiveTLDService.idl",
+    "nsIIDNService.idl",
+    "nsINativeDNSResolverOverride.idl",
+    "nsITRRSkipReason.idl",
+    "nsPIDNSService.idl",
+]
+
+XPIDL_MODULE = "necko_dns"
+
+EXTRA_JS_MODULES["netwerk-dns"] += [
+    "PublicSuffixList.sys.mjs",
+]
+
+XPCSHELL_TESTS_MANIFESTS += ["tests/unit/xpcshell.ini"]
+
+EXPORTS += [
+    "nsEffectiveTLDService.h",
+]
+
+EXPORTS.mozilla.net += [
+    "ChildDNSService.h",
+    "DNS.h",
+    "DNSByTypeRecord.h",
+    "DNSListenerProxy.h",
+    "DNSPacket.h",
+    "DNSRequestBase.h",
+    "DNSRequestChild.h",
+    "DNSRequestParent.h",
+    "DNSServiceBase.h",
+    "HTTPSSVC.h",
+    "IDNBlocklistUtils.h",
+    "NativeDNSResolverOverrideChild.h",
+    "NativeDNSResolverOverrideParent.h",
+    "TRRService.h",
+    "TRRServiceBase.h",
+    "TRRServiceChild.h",
+    "TRRServiceParent.h",
+]
+
+SOURCES += [
+    "GetAddrInfo.cpp",  # Undefines UNICODE
+    "nsEffectiveTLDService.cpp",  # Excluded from UNIFIED_SOURCES due to special build flags.
+]
+
+UNIFIED_SOURCES += [
+    "ChildDNSService.cpp",
+    "DNS.cpp",
+    "DNSAdditionalInfo.cpp",
+    "DNSListenerProxy.cpp",
+    "DNSPacket.cpp",
+    "DNSRequestChild.cpp",
+    "DNSRequestParent.cpp",
+    "DNSServiceBase.cpp",
+    "DNSUtils.cpp",
+    "HostRecordQueue.cpp",
+    "HTTPSSVC.cpp",
+    "IDNBlocklistUtils.cpp",
+    "NativeDNSResolverOverrideChild.cpp",
+    "NativeDNSResolverOverrideParent.cpp",
+    "nsDNSService2.cpp",
+    "nsHostRecord.cpp",
+    "nsHostResolver.cpp",
+    "nsIDNService.cpp",
+    "punycode.c",
+    "TRR.cpp",
+    "TRRQuery.cpp",
+    "TRRService.cpp",
+    "TRRServiceBase.cpp",
+    "TRRServiceChild.cpp",
+    "TRRServiceParent.cpp",
+]
+
+IPDL_SOURCES = [
+    "PDNSRequest.ipdl",
+    "PDNSRequestParams.ipdlh",
+    "PNativeDNSResolverOverride.ipdl",
+    "PTRRService.ipdl",
+]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+FINAL_LIBRARY = "xul"
+
+GeneratedFile(
+    "etld_data.inc", script="prepare_tlds.py", inputs=["effective_tld_names.dat"]
+)
+
+# need to include etld_data.inc
+LOCAL_INCLUDES += [
+    "/netwerk/base",
+    "/netwerk/ipc",
+    "/netwerk/protocol/http",
+]
+
+USE_LIBS += ["icu"]

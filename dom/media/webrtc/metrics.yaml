@@ -1,0 +1,340 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# Adding a new metric? We have docs for that!
+# https://firefox-source-docs.mozilla.org/toolkit/components/glean/user/new_definitions_file.html
+
+---
+$schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
+$tags:
+  - 'Core :: WebRTC'
+
+rtcrtpsender:
+  count:
+    type: counter
+    description: >
+      The number of RTCRtpSenders created.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  count_setparameters_compat:
+    type: counter
+    description: >
+      The number of RTCRtpSenders created that use the compatibility mode for
+      setParameters.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  used_sendencodings:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders that were created by an addTransceivers
+      call that was passed a sendEncodings.
+    denominator_metric: rtcrtpsender.count
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+rtcrtpsender.setparameters:
+  warn_no_getparameters:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders configured with the setParameters compat
+      mode that have warned at least once about a setParameters call because
+      [[LastReturnedParameters]] was not set.  (ie; there was not a recent
+      enough call to getParameters)
+    denominator_metric: rtcrtpsender.count_setparameters_compat
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  blame_no_getparameters:
+    type: labeled_counter
+    description: >
+      The number of RTCRtpSenders that have warned at least once about
+      a `setParameters` call because `[[LastReturnedParameters]]` was not set,
+      broken down by the eTLD+1 of the site. (ie; there was not a recent
+      enough call to `getParameters`) Collected only on EARLY_BETA_OR_EARLIER.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1831343
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1831343
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  warn_length_changed:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders configured with the setParameters compat
+      mode that have warned at least once about a setParameters call that
+      attempted to change the number of encodings.
+    denominator_metric: rtcrtpsender.count_setparameters_compat
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  blame_length_changed:
+    type: labeled_counter
+    description: >
+      The number of RTCRtpSenders that have warned at least once about a
+      `setParameters` call that attempted to change the number of encodings,
+      broken down by the eTLD+1 of the site. Collected only on
+      EARLY_BETA_OR_EARLIER.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1831343
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1831343
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  warn_no_transactionid:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders configured with the setParameters compat
+      mode that have warned at least once about a setParameters call that did
+      not set the transactionId field.
+    denominator_metric: rtcrtpsender.count_setparameters_compat
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  blame_no_transactionid:
+    type: labeled_counter
+    description: >
+      The number of RTCRtpSenders that have warned at least once about a
+      `setParameters` call that did not set the transactionId field, broken down
+      by the eTLD+1 of the site. Collected only on EARLY_BETA_OR_EARLIER.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1831343
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1831343
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  warn_stale_transactionid:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders configured with the setParameters compat
+      mode that have warned at least once about a setParameters call that used
+      a stale transaction id.
+    denominator_metric: rtcrtpsender.count_setparameters_compat
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  blame_stale_transactionid:
+    type: labeled_counter
+    description: >
+      The number of RTCRtpSenders that have warned at least once about a
+      `setParameters` call that used a stale transaction id, broken down by the
+      eTLD+1 of the site. Collected only on EARLY_BETA_OR_EARLIER.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1831343
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1831343
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  fail_length_changed:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders that have thrown an error at least once
+      about a setParameters call that attempted to change the number of
+      encodings.
+    denominator_metric: rtcrtpsender.count
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  fail_rid_changed:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders that have thrown an error at least once
+      about a setParameters call that attempted to change the rid on an
+      encoding (note that we only check this if the encoding count did not
+      change, see fail_length_changed).
+    denominator_metric: rtcrtpsender.count
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  fail_no_getparameters:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders that have thrown an error at least once
+      about a setParameters call because [[LastReturnedParameters]] was not set.
+      (ie; there was not a recent enough call to getParameters)
+    denominator_metric: rtcrtpsender.count
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  fail_no_transactionid:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders that have thrown an error at least once
+      about a setParameters call that did not set the transactionId field.
+    denominator_metric: rtcrtpsender.count
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  fail_stale_transactionid:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders that have thrown an error at least once
+      about a setParameters call that used a stale transaction id.
+    denominator_metric: rtcrtpsender.count
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  fail_no_encodings:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders configured with the setParameters compat
+      mode that have thrown an error at least once about a setParameters call
+      that had no encodings (we do not measure this against the general
+      population of RTCRtpSenders, since without the compat mode this failure
+      is never observed, because it fails the length change check).
+    denominator_metric: rtcrtpsender.count_setparameters_compat
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120
+
+  fail_other:
+    type: rate
+    description: >
+      The proportion of RTCRtpSenders that have thrown an error at least once
+      about a setParameters call that had no encodings.
+    denominator_metric: rtcrtpsender.count
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1401592
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1832459
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - webrtc-telemetry-alerts@mozilla.com
+    expires: 120

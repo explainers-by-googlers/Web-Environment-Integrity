@@ -1,0 +1,99 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+.tree.object-inspector .node.object-node {
+  display: inline-block;
+}
+
+.tree.object-inspector .object-label,
+.tree.object-inspector .object-label * {
+  color: var(--theme-highlight-blue);
+}
+
+.tree.object-inspector .node .unavailable {
+  color: var(--theme-comment);
+}
+
+.tree.object-inspector .lessen,
+.tree.object-inspector .lessen *,
+.tree.object-inspector .lessen .object-label,
+.tree.object-inspector .lessen .object-label * {
+  color: var(--theme-comment);
+}
+
+.tree.object-inspector .block .object-label,
+.tree.object-inspector .block .object-label * {
+  color: var(--theme-body-color);
+}
+
+.tree.object-inspector .block .object-label::before {
+  content: "☲";
+  font-size: 1.1em;
+  display: inline;
+  padding-inline-end: 2px;
+  line-height: 14px;
+}
+
+.object-inspector .object-delimiter {
+  color: var(--theme-comment);
+  white-space: pre-wrap;
+}
+
+.object-inspector .tree-node .arrow {
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline-start: -1px;
+}
+
+/* Focused styles */
+.tree.object-inspector .tree-node.focused * {
+  color: inherit;
+}
+
+.tree-node.focused button.open-inspector {
+  fill: currentColor;
+}
+
+.tree-node.focused button.invoke-getter {
+  background-color: currentColor;
+}
+
+button[class*="remove-watchpoint-"] {
+  background: url("chrome://devtools/content/debugger/images/webconsole-logpoint.svg")
+    no-repeat;
+  display: inline-block;
+  vertical-align: top;
+  height: 13px;
+  width: 15px;
+  margin: 1px 4px 0px 20px;
+  padding: 0;
+  border: none;
+  -moz-context-properties: fill, stroke;
+  cursor: pointer;
+}
+
+button.remove-watchpoint-set {
+  fill: var(--breakpoint-fill);
+  stroke: var(--breakpoint-fill);
+}
+
+button.remove-watchpoint-get {
+  fill: var(--purple-60);
+  stroke: var(--purple-60);
+}
+
+button.remove-watchpoint-getorset {
+  fill: var(--yellow-60);
+  stroke: var(--yellow-60);
+}
+
+.tree-node.focused button[class*="remove-watchpoint-"] {
+  stroke: white;
+}
+
+/* Don't display the light grey background we have on button hover */
+.theme-dark button[class*="remove-watchpoint-"]:hover,
+.theme-light button[class*="remove-watchpoint-"]:hover {
+  background-color: transparent;
+}

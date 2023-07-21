@@ -1,0 +1,71 @@
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*-
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+interface nsIRunnable;
+%{ C++
+template <class T> struct already_AddRefed;
+
+/**
+ * After the default timezone changes, this topic is notified. Some systems may
+ * not support monitoring timezone.
+ */
+#define DEFAULT_TIMEZONE_CHANGED_OBSERVER_TOPIC "default-timezone-changed"
+%}
+
+/**
+ * Interface for the native event system layer.  This interface is designed
+ * to be used on the main application thread only.
+ */
+[uuid(7cd5c71d-223b-4afe-931d-5eedb1f2b01f)]
+interface nsIAppShell : nsISupports
+{
+  /**
+   * Enter an event loop.  Don't leave until exit() is called.
+   */
+  void run();
+
+  /**
+   * Exit the handle event loop
+   */
+  void exit();
+
+  /**
+   * Ask the native event queue notification mechanism to favor Gecko tasks
+   * (instead of native tasks) for a short while. (Content processes always
+   * favor Gecko tasks.)
+   */
+  void geckoTaskBurst();
+
+  /**
+   * Suspends the use of additional platform-specific methods (besides the
+   * nsIAppShell->run() event loop) to run Gecko events on the main
+   * application thread.  Under some circumstances these "additional methods"
+   * can cause Gecko event handlers to be re-entered, sometimes leading to
+   * hangs and crashes.  Calls to suspendNative() and resumeNative() may be
+   * nested.  On some platforms (those that don't use any "additional
+   * methods") this will be a no-op.  Does not (in itself) stop Gecko events
+   * from being processed on the main application thread.  But if the
+   * nsIAppShell->run() event loop is blocked when this call is made, Gecko
+   * events will stop being processed until resumeNative() is called (even
+   * if a plugin or library is temporarily processing events on a nested
+   * event loop).
+   */
+  void suspendNative();
+
+  /**
+   * Resumes the use of additional platform-specific methods to run Gecko
+   * events on the main application thread.  Calls to suspendNative() and
+   * resumeNative() may be nested.  On some platforms this will be a no-op.
+   */
+  void resumeNative();
+
+  /**
+   * The current event loop nesting level.
+   */
+  readonly attribute unsigned long eventloopNestingLevel;
+};

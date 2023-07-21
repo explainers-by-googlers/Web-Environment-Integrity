@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<!--
+https://bugzilla.mozilla.org/show_bug.cgi?id=1479708
+-->
+<head>
+<title>Test required date/datetime-local input's Calendar button</title>
+<script src="/tests/SimpleTest/SimpleTest.js"></script>
+<script src="/tests/SimpleTest/EventUtils.js"></script>
+<link rel="stylesheet" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+Created for <a target="_blank" href="https://bugzilla.mozilla.org/show_bug.cgi?id=1479708">Mozilla Bug 1479708</a> and updated by <a target="_blank" href="https://bugzilla.mozilla.org/show_bug.cgi?id=1676068">Mozilla Bug 1676068</a>
+<p id="display"></p>
+<div id="content">
+<input type="date" id="id_date" value="2017-06-08">
+<input type="time" id="id_time" value="10:30">
+<input type="datetime-local" id="id_datetime-local" value="2017-06-08T10:30">
+<input type="date" id="id_date_required" value="2017-06-08" required>
+<input type="time" id="id_time_required" value="10:30" required>
+<input type="datetime-local" id="id_datetime-local_required" value="2017-06-08T10:30" required>
+<input type="date" id="id_date_readonly" value="2017-06-08" readonly>
+<input type="time" id="id_time_readonly" value="10:30" readonly>
+<input type="datetime-local" id="id_datetime-local_readonly" value="2017-06-08T10:30" readonly>
+<input type="date" id="id_date_disabled" value="2017-06-08" disabled>
+<input type="time" id="id_time_disabled" value="10:30" disabled>
+<input type="datetime-local" id="id_datetime-local_disabled" value="2017-06-08T10:30" disabled>
+</div>
+<pre id="test">
+<script class="testbody">
+
+const kTypes = ["date", "time", "datetime-local"];
+
+function id_for_type(type, kind) {
+  return "id_" + type + (kind ? "_" + kind : "");
+}
+
+SimpleTest.waitForExplicitFinish();
+SimpleTest.waitForFocus(function() {
+  // Initial load.
+  assert_calendar_visible_all("");
+  assert_calendar_visible_all("required");
+  assert_calendar_hidden_all("readonly");
+  assert_calendar_hidden_all("disabled");
+
+  // Dynamic toggling.
+  test_make_readonly("");
+  test_make_editable("readonly");
+  test_disabled_field_disabled();
+
+  // Now toggle the inputs to the initial state, but while being
+  // display: none. This tests for bug 1567191.
+  for (const input of document.querySelectorAll("input")) {
+    input.style.display = "none";
+    is(input.getBoundingClientRect().width, 0, "Should be undisplayed");
+  }
+
+  test_make_readonly("readonly");
+  test_make_editable("");
+
+  // And test other toggling as well.
+  test_readonly_field_disabled();
+  test_disabled_field_disabled();
+
+  SimpleTest.finish();
+});
+
+function test_disabled_field_disabled() {
+  for (let type of kTypes) {
+    const id = id_for_type(type, "disabled");
+    const input = document.getElementById(id);
+
+    ok(input.disabled, `#${id} Should be disabled`);
+    ok(
+      get_calendar_button(id).hidden,
+      `disabled's Calendar button is hidden (${id})`
+    );
+
+    input.disabled = false;
+    ok(!input.disabled, `#${id} Should not be disabled anymore`);
+    if (type === "time") {
+      assert_calendar_hidden(id);
+    } else {
+      ok(
+        !get_calendar_button(id).hidden,
+        `enabled field's Calendar button is not hidden (${id})`
+      );
+    }
+
+    input.disabled = true; // reset to the original state.
+  }
+}
+
+function test_readonly_field_disabled() {
+  for (let type of kTypes) {
+    const id = id_for_type(type, "readonly");
+    const input = document.getElementById(id);
+
+    ok(input.readOnly, `#${id} Should be read-only`);
+    ok(get_calendar_button(id).hidden, `readonly field's Calendar button is hidden (${id})`);
+
+    input.readOnly = false;
+    ok(!input.readOnly, `#${id} Should not be read-only anymore`);
+    if (type === "time") {
+      assert_calendar_hidden(id);
+    } else {
+      ok(
+        !get_calendar_button(id).hidden,
+        `non-readonly field's Calendar button is not hidden (${id})`
+      );
+    }
+
+    input.readOnly = true; // reset to the original state.
+  }
+}
+
+function test_make_readonly(kind) {
+  for (let type of kTypes) {
+    const id = id_for_type(type, kind);
+    const input = document.getElementById(id);
+    is(input.readOnly, false, `Precondition: input #${id} is editable`);
+
+    input.readOnly = true;
+    assert_calendar_hidden(id);
+  }
+}
+
+function test_make_editable(kind) {
+  for (let type of kTypes) {
+    const id = id_for_type(type, kind);
+    const input = document.getElementById(id);
+    is(input.readOnly, true, `Precondition: input #${id} is read-only`);
+
+    input.readOnly = false;
+    if (type === "time") {
+      assert_calendar_hidden(id);
+    } else {
+      assert_calendar_visible(id);
+    }
+  }
+}
+
+function assert_calendar_visible_all(kind) {
+  for (let type of kTypes) {
+    if (type === "time") {
+      assert_calendar_hidden(id_for_type(type, kind));
+    } else {
+      assert_calendar_visible(id_for_type(type, kind));
+    }
+  }
+}
+function assert_calendar_visible(id) {
+  const calendarButton = get_calendar_button(id);
+  is(calendarButton.hidden, false, `Calendar button is not hidden on #${id}`);
+}
+
+function assert_calendar_hidden_all(kind) {
+  for (let type of kTypes) {
+    assert_calendar_hidden(id_for_type(type, kind));
+  }
+}
+
+function assert_calendar_hidden(id) {
+  const calendarButton = get_calendar_button(id);
+  is(calendarButton.hidden, true, `Calendar button is hidden on #${id}`);
+}
+
+function get_calendar_button(id) {
+  const input = document.getElementById(id);
+  const shadowRoot = SpecialPowers.wrap(input).openOrClosedShadowRoot;
+  return shadowRoot.getElementById("calendar-button");
+}
+
+</script>
+</pre>
+</body>
+</html>

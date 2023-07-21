@@ -1,0 +1,464 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    worker-type: b-linux-gcp
+    worker:
+        max-run-time: 1800
+
+linux64-binutils-2.31.1:
+    description: "Binutils toolchain build"
+    treeherder:
+        symbol: TL(binutil2.31)
+    run:
+        script: build-binutils-linux.sh
+        resources:
+            - 'build/unix/build-binutils/build-binutils.sh'
+        toolchain-artifact: public/build/binutils.tar.zst
+    fetches:
+        fetch:
+            - binutils-2.31.1
+        toolchain:
+            # C++ code in gold doesn't compile with recent versions of GCC.
+            - linux64-gcc-8
+            - linux64-toolchain-sysroot
+
+linux64-binutils:
+    description: "Binutils toolchain build"
+    treeherder:
+        symbol: TL(binutil)
+    run:
+        script: build-binutils-linux.sh
+        resources:
+            - 'build/unix/build-binutils/build-binutils.sh'
+        toolchain-artifact: public/build/binutils.tar.zst
+    fetches:
+        fetch:
+            - binutils-2.36.1
+        toolchain:
+            - linux64-toolchain-sysroot
+
+linux64-cctools-port:
+    description: "cctools-port toolchain build"
+    treeherder:
+        symbol: TL(cctools-clang)
+    run:
+        script: build-cctools-port.sh
+        toolchain-artifact: public/build/cctools.tar.zst
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-toolchain-sysroot
+        fetch:
+            - cctools-port
+            - libtapi
+            - ldid
+
+linux64-hfsplus:
+    description: "hfsplus toolchain build"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TL(hfs+)
+    run:
+        script: build-hfsplus-linux.sh
+        resources:
+            - 'build/unix/build-hfsplus/build-hfsplus.sh'
+        toolchain-artifact: public/build/hfsplus.tar.zst
+    fetches:
+        fetch:
+            - hfsplus-tools
+        toolchain:
+            - linux64-clang-toolchain
+
+linux64-libdmg:
+    description: "libdmg-hfsplus toolchain build"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TL(libdmg-hfs+)
+    run:
+        script: build-dmg-hfsplus.sh
+        toolchain-artifact: public/build/dmg.tar.zst
+        toolchain-alias: linux64-dmg
+    fetches:
+        fetch:
+            - libdmg-hfsplus
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-toolchain-sysroot
+
+linux64-mkbom:
+    description: "mkbom toolchain build"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TL(mkbom)
+    run:
+        script: build-mkbom-linux.sh
+        toolchain-artifact: public/build/mkbom.tar.zst
+    fetches:
+        fetch:
+            - bomutils
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-toolchain-sysroot
+
+linux64-xar:
+    description: "xar toolchain build"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TL(xar)
+    run:
+        script: build-xar-linux.sh
+        toolchain-artifact: public/build/xar.tar.zst
+    fetches:
+        fetch:
+            - xar
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-toolchain-sysroot
+
+linux64-mar-tools:
+    description: "mar-tools toolchain build"
+    treeherder:
+        symbol: TL(mar-tools)
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+    run:
+        script: build-mar-tools.sh
+        sparse-profile: null
+        toolchain-artifact: public/build/mar-tools.tar.zst
+        resources:
+            - build/moz.configure
+            - modules/libmar/
+            - moz.configure
+            - other-licenses/bsdiff/
+            - other-licenses/nsis/Contrib/CityHash/cityhash/
+            - toolkit/mozapps/update/updater/bspatch/
+            - tools/update-packaging/
+
+linux64-upx:
+    description: "UPX build"
+    treeherder:
+        symbol: TL(upx)
+        tier: 1
+    run:
+        script: build-upx.sh
+        toolchain-artifact: public/build/upx.tar.zst
+
+linux64-msix-packaging:
+    description: "msix-packaging build"
+    treeherder:
+        symbol: TL(msix-packaging)
+        tier: 1
+    run:
+        script: build-msix-packaging.sh
+        toolchain-artifact: public/build/msix-packaging.tar.zst
+    fetches:
+        fetch:
+            - msix-packaging
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-toolchain-sysroot
+
+linux64-custom-v8:
+    description: "Custom v8 build"
+    treeherder:
+        symbol: TL(custom-v8)
+    worker:
+        docker-image: {in-tree: custom-v8}
+        max-run-time: 3600
+    run:
+        script: build-custom-v8.sh
+        arguments: [
+            d8.tar.zst,
+            is_debug=false,
+            target_cpu="x64"
+        ]
+        toolchain-artifact: public/build/d8.tar.zst
+
+macosx64-custom-car:
+    description: "Custom chromium-as-release build for mac"
+    worker-type: b-osx-1015
+    treeherder:
+        symbol: TM(custom-car)
+    worker:
+        max-run-time: 28800
+    run:
+        script: build-custom-car.sh
+        arguments: [
+            car_macosx.tar.zst,
+            blink_symbol_level=0,
+            chrome_pgo_phase=2,
+            dcheck_always_on=false,
+            enable_nacl=false,
+            enable_resource_allowlist_generation=false,
+            is_chrome_branded=false,
+            is_clang=true,
+            is_component_build=false,
+            is_debug=false,
+            is_official_build=true,
+            symbol_level=0,
+            target_cpu="x64",
+            v8_symbol_level=0
+        ]
+        toolchain-artifact: public/build/car_macosx.tar.zst
+    fetches:
+        toolchain:
+            - MacOSX13.3.sdk
+
+linux64-custom-car:
+    description: "Custom chromium-as-release build for Linux"
+    treeherder:
+        symbol: TL(custom-car)
+    worker:
+        docker-image: {in-tree: custom-car-linux}
+        max-run-time: 16200
+    run:
+        script: build-custom-car.sh
+        arguments: [
+            car_linux.tar.zst,
+            blink_symbol_level=0,
+            chrome_pgo_phase=2,
+            dcheck_always_on=false,
+            enable_nacl=false,
+            enable_resource_allowlist_generation=false,
+            is_chrome_branded=false,
+            is_clang=true,
+            is_component_build=false,
+            is_debug=false,
+            is_official_build=true,
+            symbol_level=0,
+            target_cpu="x64",
+            v8_symbol_level=0
+        ]
+        toolchain-artifact: public/build/car_linux.tar.zst
+
+win64-custom-car:
+    description: "Custom chromium-as-release build for Windows"
+    treeherder:
+        symbol: TW64(custom-car)
+    worker-type: b-win2022
+    worker:
+        max-run-time: 16200
+        env:
+            MSYSTEM: "MINGW64"
+    run:
+        script: build-custom-car.sh
+        arguments: [
+            car_win64.tar.zst,
+            blink_symbol_level=0,
+            chrome_pgo_phase=2,
+            dcheck_always_on=false,
+            enable_nacl=false,
+            enable_resource_allowlist_generation=false,
+            is_chrome_branded=false,
+            is_clang=true,
+            is_component_build=false,
+            is_debug=false,
+            is_official_build=true,
+            symbol_level=0,
+            target_cpu=\"x64\",
+            use_v8_context_snapshot=false,
+            v8_symbol_level=0
+        ]
+        toolchain-artifact: public/build/car_win64.tar.zst
+    fetches:
+        toolchain:
+            - win64-vs2022
+
+browsertime:
+    description: "npm install browsertime node_modules"
+    treeherder:
+        symbol: TL(browsertime)
+    run:
+        script: browsertime.sh
+        sparse-profile: null
+        resources:
+            - 'tools/browsertime/package.json'
+            - 'tools/browsertime/package-lock.json'
+            - 'tools/browsertime/mach_commands.py'
+        toolchain-artifact: public/build/browsertime.tar.zst
+    fetches:
+        toolchain:
+            - linux64-node-16
+
+wrench-deps:
+    description: "Downloads all the crates needed for building wrench"
+    treeherder:
+        symbol: WR(wrench-deps)
+    worker:
+        docker-image: {in-tree: webrender}
+    run:
+        script: wrench-deps-vendoring.sh
+        sparse-profile: null
+        resources:
+            - 'gfx/wr/Cargo.lock'
+            - 'gfx/wr/ci-scripts/install-meson.sh'
+        toolchain-artifact: public/build/wrench-deps.tar.zst
+    fetches:
+        fetch:
+            - android-ndk-rs
+        toolchain:
+            - linux64-rust  # whatever m-c is built with
+
+linux64-wine:
+    description: "Wine build for Windows Cross Compile"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TL(wine)
+        tier: 1
+    worker:
+        max-run-time: 10800
+    run:
+        script: build-wine.sh
+        toolchain-artifact: public/build/wine.tar.zst
+    fetches:
+        fetch:
+            - wine
+
+linux64-winchecksec:
+    description: "winchecksec"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TL(winchecksec)
+    run:
+        script: build-winchecksec.sh
+        arguments: ['x86_64-unknown-linux-gnu']
+        toolchain-artifact: public/build/winchecksec.tar.zst
+        tooltool-downloads: internal
+    fetches:
+        fetch:
+            - winchecksec
+
+win64-winchecksec:
+    description: "winchecksec"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TW64(winchecksec)
+    run:
+        script: build-winchecksec.sh
+        arguments: ['x86_64-pc-windows-msvc']
+        toolchain-artifact: public/build/winchecksec.tar.zst
+        tooltool-downloads: internal
+    fetches:
+        fetch:
+            - winchecksec
+        toolchain:
+            - linux64-clang-toolchain
+            - vs-toolchain
+
+linux64-makecab:
+    description: "makecab toolchain build"
+    treeherder:
+        symbol: TL(cab)
+    worker:
+        env:
+            FETCH: rust-makecab
+    run:
+        script: build-rust-based-toolchain.sh
+        arguments: ['x86_64-unknown-linux-gnu']
+        toolchain-artifact: public/build/makecab.tar.zst
+    fetches:
+        fetch:
+            - makecab
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-toolchain
+            - sysroot-x86_64-linux-gnu
+
+win64-mozmake:
+    description: "mozmake for Windows"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TW64(mozmake)
+    run:
+        script: build-mozmake.sh
+        toolchain-artifact: public/build/mozmake.tar.zst
+    fetches:
+        fetch:
+            - gnumake
+        toolchain:
+            - linux64-clang-toolchain
+            - vs-toolchain
+
+nsis:
+    description: "NSIS for Linux and Windows"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TL(nsis)
+    run:
+        script: build-nsis.sh
+        toolchain-artifact: public/build/nsis.tar.zst
+    fetches:
+        fetch:
+            - nsis-3.07
+            - nsis-3.07-win
+        toolchain:
+            - linux64-clang-toolchain
+            - sysroot-x86_64-linux-gnu
+
+win64-vs2019:
+    description: "VS 2019"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TW64(msvc2019)
+    worker:
+        env:
+            MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE: system
+    run:
+        script: get_vs.py
+        arguments:
+            - build/vs/vs2019.yaml
+        resources:
+            - build/vs/vs2019.yaml
+        toolchain-artifact: project/gecko/vs/vs.tar.zst
+        toolchain-alias:
+            - vs
+            - vs-toolchain
+
+win64-vs2022:
+    description: "VS 2022"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TW64(msvc2022)
+    worker:
+        env:
+            MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE: system
+    run:
+        script: get_vs.py
+        arguments:
+            - build/vs/vs2022.yaml
+        resources:
+            - build/vs/vs2022.yaml
+        toolchain-artifact: project/gecko/vs/vs.tar.zst
+
+linux64-afl-instrumentation-2.5:
+    description: "AFL instrumentation toolchain build"
+    treeherder:
+        symbol: TL(afl)
+    worker:
+        max-run-time: 3600
+    run:
+        script: build-afl.sh
+        resources:
+            - taskcluster/scripts/misc/afl-nyx.patch
+        toolchain-artifact: public/build/afl-instrumentation.tar.zst
+        toolchain-alias: linux64-afl-instrumentation
+    fetches:
+        fetch:
+            - afl-2.5
+        toolchain:
+            - linux64-clang
+            - linux64-toolchain-sysroot

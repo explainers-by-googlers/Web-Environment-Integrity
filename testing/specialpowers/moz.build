@@ -1,0 +1,39 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+XPI_NAME = "specialpowers"
+
+USE_EXTENSION_MANIFEST = True
+
+FINAL_TARGET_FILES += [
+    "api.js",
+    "manifest.json",
+    "schema.json",
+]
+
+FINAL_TARGET_FILES.content += [
+    "content/AppTestDelegate.sys.mjs",
+    "content/AppTestDelegateChild.sys.mjs",
+    "content/AppTestDelegateParent.sys.mjs",
+]
+
+modules = [
+    "content/MockColorPicker.sys.mjs",
+    "content/MockFilePicker.sys.mjs",
+    "content/MockPermissionPrompt.sys.mjs",
+    "content/SpecialPowersChild.sys.mjs",
+    "content/SpecialPowersEventUtils.sys.mjs",
+    "content/SpecialPowersParent.sys.mjs",
+    "content/SpecialPowersSandbox.sys.mjs",
+    "content/WrapPrivileged.sys.mjs",
+]
+
+TESTING_JS_MODULES += modules
+
+FINAL_TARGET_FILES.modules += modules
+
+with Files("**"):
+    BUG_COMPONENT = ("Testing", "Mochitest")

@@ -1,0 +1,242 @@
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* vim: set ts=8 sts=2 et sw=2 tw=80: */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "mozilla/dom/DocGroup.h"
+
+#include "mozilla/AbstractThread.h"
+#include "mozilla/SchedulerGroup.h"
+#include "mozilla/StaticPrefs_dom.h"
+#include "mozilla/Telemetry.h"
+#include "mozilla/ThrottledEventQueue.h"
+#include "mozilla/dom/BrowsingContext.h"
+#include "mozilla/dom/CustomElementRegistry.h"
+#include "mozilla/dom/DOMTypes.h"
+#include "mozilla/dom/JSExecutionManager.h"
+#include "mozilla/dom/WindowContext.h"
+#include "nsDOMMutationObserver.h"
+#include "nsIDirectTaskDispatcher.h"
+#include "nsIXULRuntime.h"
+#include "nsProxyRelease.h"
+#include "nsThread.h"
+#if defined(XP_WIN)
+#  include <processthreadsapi.h>  // for GetCurrentProcessId()
+#else
+#  include <unistd.h>  // for getpid()
+#endif                 // defined(XP_WIN)
+
+namespace mozilla::dom {
+
+AutoTArray<RefPtr<DocGroup>, 2>* DocGroup::sPendingDocGroups = nullptr;
+
+NS_IMPL_CYCLE_COLLECTION_CLASS(DocGroup)
+
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(DocGroup)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mSignalSlotList)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mBrowsingContextGroup)
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
+
+NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(DocGroup)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK(mSignalSlotList)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK(mBrowsingContextGroup)
+
+  // If we still have any documents in this array, they were just unlinked, so
+  // clear out our weak pointers to them.
+  tmp->mDocuments.Clear();
+NS_IMPL_CYCLE_COLLECTION_UNLINK_END
+
+/* static */
+already_AddRefed<DocGroup> DocGroup::Create(
+    BrowsingContextGroup* aBrowsingContextGroup, const nsACString& aKey) {
+  RefPtr<DocGroup> docGroup = new DocGroup(aBrowsingContextGroup, aKey);
+  docGroup->mEventTarget = mozilla::GetMainThreadSerialEventTarget();
+  return docGroup.forget();
+}
+
+/* static */
+nsresult DocGroup::GetKey(nsIPrincipal* aPrincipal, bool aCrossOriginIsolated,
+                          nsACString& aKey) {
+  // Use GetBaseDomain() to handle things like file URIs, IP address URIs,
+  // etc. correctly.
+  nsresult rv = aCrossOriginIsolated ? aPrincipal->GetOrigin(aKey)
+                                     : aPrincipal->GetSiteOrigin(aKey);
+  if (NS_FAILED(rv)) {
+    aKey.Truncate();
+  }
+
+  return rv;
+}
+
+void DocGroup::SetExecutionManager(JSExecutionManager* aManager) {
+  mExecutionManager = aManager;
+}
+
+mozilla::dom::CustomElementReactionsStack*
+DocGroup::CustomElementReactionsStack() {
+  MOZ_ASSERT(NS_IsMainThread());
+  if (!mReactionsStack) {
+    mReactionsStack = new mozilla::dom::CustomElementReactionsStack();
+  }
+
+  return mReactionsStack;
+}
+
+void DocGroup::AddDocument(Document* aDocument) {
+  MOZ_ASSERT(NS_IsMainThread());
+  MOZ_ASSERT(!mDocuments.Contains(aDocument));
+  MOZ_ASSERT(mBrowsingContextGroup);
+  // If the document is loaded as data it may not have a container, in which
+  // case it can be difficult to determine the BrowsingContextGroup it's
+  // associated with. XSLT can also add the document to the DocGroup before it
+  // gets a container in some cases, in which case this will be asserted
+  // elsewhere.
+  MOZ_ASSERT_IF(
+      aDocument->GetBrowsingContext(),
+      aDocument->GetBrowsingContext()->Group() == mBrowsingContextGroup);
+  mDocuments.AppendElement(aDocument);
+}
+
+void DocGroup::RemoveDocument(Document* aDocument) {
+  MOZ_ASSERT(NS_IsMainThread());
+  MOZ_ASSERT(mDocuments.Contains(aDocument));
+  mDocuments.RemoveElement(aDocument);
+
+  if (mDocuments.IsEmpty()) {
+    mBrowsingContextGroup = nullptr;
+  }
+}
+
+DocGroup::DocGroup(BrowsingContextGroup* aBrowsingContextGroup,
+                   const nsACString& aKey)
+    : mKey(aKey),
+      mBrowsingContextGroup(aBrowsingContextGroup),
+      mAgentClusterId(nsID::GenerateUUID()) {
+  // This method does not add itself to
+  // mBrowsingContextGroup->mDocGroups as the caller does it for us.
+  MOZ_ASSERT(NS_IsMainThread());
+  if (StaticPrefs::dom_arena_allocator_enabled_AtStartup()) {
+    mArena = new mozilla::dom::DOMArena();
+  }
+}
+
+DocGroup::~DocGroup() {
+  MOZ_RELEASE_ASSERT(NS_IsMainThread());
+  MOZ_RELEASE_ASSERT(mDocuments.IsEmpty());
+
+  if (mIframePostMessageQueue) {
+    FlushIframePostMessageQueue();
+  }
+}
+
+nsresult DocGroup::Dispatch(TaskCategory aCategory,
+                            already_AddRefed<nsIRunnable>&& aRunnable) {
+  MOZ_RELEASE_ASSERT(NS_IsMainThread());
+
+  return SchedulerGroup::Dispatch(aCategory, std::move(aRunnable));
+}
+
+nsISerialEventTarget* DocGroup::EventTargetFor(TaskCategory aCategory) const {
+  MOZ_RELEASE_ASSERT(NS_IsMainThread());
+  MOZ_ASSERT(!mDocuments.IsEmpty());
+
+  // Here we have the same event target for every TaskCategory. The
+  // reason for that is that currently TaskCategory isn't used, and
+  // it's unsure if it ever will be (See Bug 1624819).
+  return mEventTarget;
+}
+
+AbstractThread* DocGroup::AbstractMainThreadFor(TaskCategory aCategory) {
+  MOZ_RELEASE_ASSERT(NS_IsMainThread());
+  MOZ_ASSERT(!mDocuments.IsEmpty());
+
+  // Here we have the same thread for every TaskCategory. The reason
+  // for that is that currently TaskCategory isn't used, and it's
+  // unsure if it ever will be (See Bug 1624819).
+  return AbstractThread::MainThread();
+}
+
+void DocGroup::SignalSlotChange(HTMLSlotElement& aSlot) {
+  MOZ_ASSERT(!mSignalSlotList.Contains(&aSlot));
+  mSignalSlotList.AppendElement(&aSlot);
+
+  if (!sPendingDocGroups) {
+    // Queue a mutation observer compound microtask.
+    nsDOMMutationObserver::QueueMutationObserverMicroTask();
+    sPendingDocGroups = new AutoTArray<RefPtr<DocGroup>, 2>;
+  }
+
+  sPendingDocGroups->AppendElement(this);
+}
+
+bool DocGroup::TryToLoadIframesInBackground() {
+  return !FissionAutostart() &&
+         StaticPrefs::dom_separate_event_queue_for_post_message_enabled() &&
+         StaticPrefs::dom_cross_origin_iframes_loaded_in_background();
+}
+
+nsresult DocGroup::QueueIframePostMessages(
+    already_AddRefed<nsIRunnable>&& aRunnable, uint64_t aWindowId) {
+  if (DocGroup::TryToLoadIframesInBackground()) {
+    if (!mIframePostMessageQueue) {
+      nsCOMPtr<nsISerialEventTarget> target = GetMainThreadSerialEventTarget();
+      mIframePostMessageQueue = ThrottledEventQueue::Create(
+          target, "Background Loading Iframe PostMessage Queue",
+          nsIRunnablePriority::PRIORITY_DEFERRED_TIMERS);
+      nsresult rv = mIframePostMessageQueue->SetIsPaused(true);
+      MOZ_ALWAYS_SUCCEEDS(rv);
+    }
+
+    // Ensure the queue is disabled. Unlike the postMessageEvent queue
+    // in BrowsingContextGroup, this postMessage queue should always
+    // be paused, because if we leave it open, the postMessage may get
+    // dispatched to an unloaded iframe
+    MOZ_ASSERT(mIframePostMessageQueue);
+    MOZ_ASSERT(mIframePostMessageQueue->IsPaused());
+
+    mIframesUsedPostMessageQueue.Insert(aWindowId);
+
+    mIframePostMessageQueue->Dispatch(std::move(aRunnable), NS_DISPATCH_NORMAL);
+    return NS_OK;
+  }
+  return NS_ERROR_FAILURE;
+}
+
+void DocGroup::TryFlushIframePostMessages(uint64_t aWindowId) {
+  if (DocGroup::TryToLoadIframesInBackground()) {
+    mIframesUsedPostMessageQueue.Remove(aWindowId);
+    if (mIframePostMessageQueue && mIframesUsedPostMessageQueue.IsEmpty()) {
+      MOZ_ASSERT(mIframePostMessageQueue->IsPaused());
+      nsresult rv = mIframePostMessageQueue->SetIsPaused(true);
+      MOZ_ALWAYS_SUCCEEDS(rv);
+      FlushIframePostMessageQueue();
+    }
+  }
+}
+
+void DocGroup::FlushIframePostMessageQueue() {
+  nsCOMPtr<nsIRunnable> event;
+  while ((event = mIframePostMessageQueue->GetEvent())) {
+    Dispatch(TaskCategory::Other, event.forget());
+  }
+}
+
+nsTArray<RefPtr<HTMLSlotElement>> DocGroup::MoveSignalSlotList() {
+  for (const RefPtr<HTMLSlotElement>& slot : mSignalSlotList) {
+    slot->RemovedFromSignalSlotList();
+  }
+  return std::move(mSignalSlotList);
+}
+
+bool DocGroup::IsActive() const {
+  for (Document* doc : mDocuments) {
+    if (doc->IsCurrentActiveDocument()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+}  // namespace mozilla::dom

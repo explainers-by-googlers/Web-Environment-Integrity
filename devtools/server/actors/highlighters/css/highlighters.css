@@ -1,0 +1,1059 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+:host { display: contents; }
+
+.highlighter-container {
+  --highlighter-accessibility-bounds-color: #6a5acd;
+  --highlighter-accessibility-bounds-opacity: 0.6;
+  --highlighter-box-border-color: #444444;
+  --highlighter-box-content-color: hsl(197, 71%, 73%);
+  --highlighter-box-margin-color: #edff64;
+  --highlighter-box-padding-color: #6a5acd;
+  --highlighter-bubble-text-color: hsl(216, 33%, 97%);
+  --highlighter-bubble-background-color: hsl(214, 13%, 24%);
+  --highlighter-bubble-border-color: rgba(255, 255, 255, 0.2);
+  --highlighter-bubble-arrow-size: 8px;
+  --highlighter-font-family: message-box;
+  --highlighter-font-size: 11px;
+  --highlighter-guide-color: hsl(200, 100%, 40%);
+  --highlighter-infobar-color: hsl(210, 30%, 85%);
+
+  --grey-40: #b1b1b3;
+  --red-40: #ff3b6b;
+  --yellow-60: #d7b600;
+  --blue-60: #0060df;
+}
+
+/**
+ * Highlighters are absolute positioned in the page by default.
+ * A single highlighter can have fixed position in its css class if needed (see below the
+ * eye dropper or rulers highlighter, for example); but if it has to handle the
+ * document's scrolling (as rulers does), it would lag a bit behind due the APZ (Async
+ * Pan/Zoom module), that performs asynchronously panning and zooming on the compositor
+ * thread rather than the main thread.
+ */
+.highlighter-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* The container for all highlighters doesn't react to pointer-events by
+     default. This is because most highlighters cover the whole viewport but
+     don't contain UIs that need to be accessed.
+     If your highlighter has UI that needs to be interacted with, add
+     'pointer-events:auto;' on its container element. */
+  pointer-events: none;
+}
+
+.highlighter-container.box-model {
+  /* Make the box-model container have a z-index other than auto so it always sits above
+     other highlighters. */
+  z-index: 1;
+}
+
+.highlighter-container [hidden] {
+  display: none !important;
+}
+
+.highlighter-container [dragging] {
+  cursor: grabbing;
+}
+
+/* Box Model Highlighter */
+
+.box-model-regions {
+  opacity: 0.6;
+}
+
+/* Box model regions can be faded (see the onlyRegionArea option in
+   highlighters.js) in order to only display certain regions. */
+.box-model-regions [faded] {
+  display: none;
+}
+
+.box-model-content {
+  fill: var(--highlighter-box-content-color);
+}
+
+.box-model-padding {
+  fill: var(--highlighter-box-padding-color);
+}
+
+.box-model-border {
+  fill: var(--highlighter-box-border-color);
+}
+
+.box-model-margin {
+  fill: var(--highlighter-box-margin-color);
+}
+
+.box-model-content,
+.box-model-padding,
+.box-model-border,
+.box-model-margin {
+  stroke: none;
+}
+
+.box-model-guide-top,
+.box-model-guide-right,
+.box-model-guide-bottom,
+.box-model-guide-left {
+  stroke: var(--highlighter-guide-color);
+  stroke-dasharray: 5 3;
+  shape-rendering: crispEdges;
+}
+
+@media (prefers-reduced-motion) {
+  .use-simple-highlighters :is(
+     .box-model-content,
+     .box-model-padding,
+     .box-model-border,
+     .box-model-margin
+  ) {
+    fill: none;
+    stroke-width: 3;
+  }
+
+  .use-simple-highlighters .box-model-content {
+    stroke: var(--highlighter-box-content-color);
+  }
+
+  .use-simple-highlighters .box-model-padding {
+    stroke: var(--highlighter-box-padding-color);
+  }
+
+  .use-simple-highlighters .box-model-border {
+    stroke: var(--highlighter-box-border-color);
+  }
+
+  .use-simple-highlighters .box-model-margin {
+    stroke: var(--highlighter-box-margin-color);
+  }
+}
+
+/* Highlighter - Infobar */
+
+[class$="infobar-container"] {
+  position: absolute;
+  max-width: 95%;
+
+  font: var(--highlighter-font-family);
+  font-size: var(--highlighter-font-size);
+}
+
+[class$="infobar"] {
+  position: relative;
+
+  padding: 5px;
+  min-width: 75px;
+
+  border-radius: 3px;
+  background: var(--highlighter-bubble-background-color) no-repeat padding-box;
+
+  color: var(--highlighter-bubble-text-color);
+  text-shadow: none;
+
+  border: 1px solid var(--highlighter-bubble-border-color);
+}
+
+/* Arrows */
+
+[class$="infobar-container"] > [class$="infobar"]:before {
+  left: calc(50% - var(--highlighter-bubble-arrow-size));
+  border: var(--highlighter-bubble-arrow-size) solid
+    var(--highlighter-bubble-border-color);
+}
+
+[class$="infobar-container"] > [class$="infobar"]:after {
+  left: calc(50% - 7px);
+  border: 7px solid var(--highlighter-bubble-background-color);
+}
+
+[class$="infobar-container"] > [class$="infobar"]:before,
+[class$="infobar-container"] > [class$="infobar"]:after {
+  content: "";
+  display: none;
+  position: absolute;
+  height: 0;
+  width: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+[class$="infobar-container"][position="top"]:not([hide-arrow])
+  > [class$="infobar"]:before,
+[class$="infobar-container"][position="top"]:not([hide-arrow])
+  > [class$="infobar"]:after {
+  border-bottom: 0;
+  top: 100%;
+  display: block;
+}
+
+[class$="infobar-container"][position="bottom"]:not([hide-arrow])
+  > [class$="infobar"]:before,
+[class$="infobar-container"][position="bottom"]:not([hide-arrow])
+  > [class$="infobar"]:after {
+  border-top: 0;
+  bottom: 100%;
+  display: block;
+}
+
+/* Text Container */
+
+[class$="infobar-text"] {
+  overflow: hidden;
+  white-space: nowrap;
+  direction: ltr;
+  padding-bottom: 1px;
+  display: flex;
+  justify-content: center;
+  max-width: 768px;
+}
+
+.box-model-infobar-tagname {
+  color: hsl(285, 100%, 75%);
+}
+
+.box-model-infobar-id {
+  color: hsl(103, 46%, 54%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.box-model-infobar-classes,
+.box-model-infobar-pseudo-classes {
+  color: hsl(200, 74%, 57%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[class$="infobar-dimensions"],
+[class$="infobar-grid-type"],
+[class$="infobar-flex-type"] {
+  border-inline-start: 1px solid #5a6169;
+  margin-inline-start: 6px;
+  padding-inline-start: 6px;
+}
+
+[class$="infobar-grid-type"]:empty,
+[class$="infobar-flex-type"]:empty {
+  display: none;
+}
+
+[class$="infobar-dimensions"] {
+  color: var(--highlighter-infobar-color);
+}
+
+[class$="infobar-grid-type"],
+[class$="infobar-flex-type"] {
+  color: var(--grey-40);
+}
+
+/* CSS Grid Highlighter */
+
+.css-grid-canvas {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  image-rendering: -moz-crisp-edges;
+}
+
+.css-grid-regions {
+  opacity: 0.6;
+}
+
+.css-grid-areas,
+.css-grid-cells {
+  opacity: 0.5;
+  stroke: none;
+}
+
+.css-grid-area-infobar-name,
+.css-grid-cell-infobar-position,
+.css-grid-line-infobar-number {
+  color: hsl(285, 100%, 75%);
+}
+
+.css-grid-line-infobar-names:not(:empty) {
+  color: var(--highlighter-infobar-color);
+  border-inline-start: 1px solid #5a6169;
+  margin-inline-start: 6px;
+  padding-inline-start: 6px;
+}
+
+/* CSS Transform Highlighter */
+
+.css-transform-transformed {
+  fill: var(--highlighter-box-content-color);
+  opacity: 0.8;
+}
+
+.css-transform-untransformed {
+  fill: #66cc52;
+  opacity: 0.8;
+}
+
+.css-transform-transformed,
+.css-transform-untransformed,
+.css-transform-line {
+  stroke: var(--highlighter-guide-color);
+  stroke-dasharray: 5 3;
+  stroke-width: 2;
+}
+
+/* Element Geometry Highlighter */
+
+.geometry-editor-root {
+  /* The geometry editor can be interacted with, so it needs to react to
+     pointer events */
+  pointer-events: auto;
+  user-select: none;
+}
+
+.geometry-editor-offset-parent {
+  stroke: var(--highlighter-guide-color);
+  shape-rendering: crispEdges;
+  stroke-dasharray: 5 3;
+  fill: transparent;
+}
+
+.geometry-editor-current-node {
+  stroke: var(--highlighter-guide-color);
+  fill: var(--highlighter-box-content-color);
+  shape-rendering: crispEdges;
+  opacity: 0.6;
+}
+
+.geometry-editor-arrow {
+  stroke: var(--highlighter-guide-color);
+  shape-rendering: crispEdges;
+}
+
+.geometry-editor-root circle {
+  stroke: var(--highlighter-guide-color);
+  fill: var(--highlighter-box-content-color);
+}
+
+.geometry-editor-handler-top,
+.geometry-editor-handler-bottom {
+  cursor: ns-resize;
+}
+
+.geometry-editor-handler-right,
+.geometry-editor-handler-left {
+  cursor: ew-resize;
+}
+
+[dragging] .geometry-editor-handler-top,
+[dragging] .geometry-editor-handler-right,
+[dragging] .geometry-editor-handler-bottom,
+[dragging] .geometry-editor-handler-left {
+  cursor: grabbing;
+}
+
+.geometry-editor-handler-top.dragging,
+.geometry-editor-handler-right.dragging,
+.geometry-editor-handler-bottom.dragging,
+.geometry-editor-handler-left.dragging {
+  fill: var(--highlighter-guide-color);
+}
+
+.geometry-editor-label-bubble {
+  fill: var(--highlighter-bubble-background-color);
+  shape-rendering: crispEdges;
+}
+
+.geometry-editor-label-text {
+  fill: var(--highlighter-bubble-text-color);
+  font: var(--highlighter-font-family);
+  font-size: 10px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+/* Rulers Highlighter */
+
+.rulers-highlighter-elements {
+  shape-rendering: crispEdges;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.rulers-highlighter-elements > g {
+  opacity: 0.8;
+}
+
+.rulers-highlighter-elements > g > rect {
+  fill: #fff;
+}
+
+.rulers-highlighter-ruler-graduations {
+  stroke: #bebebe;
+}
+
+.rulers-highlighter-ruler-markers {
+  stroke: #202020;
+}
+
+.rulers-highlighter-horizontal-labels > text,
+.rulers-highlighter-vertical-labels > text {
+  stroke: none;
+  fill: #202020;
+  font: var(--highlighter-font-family);
+  font-size: 9px;
+  dominant-baseline: hanging;
+}
+
+.rulers-highlighter-horizontal-labels > text {
+  text-anchor: start;
+}
+
+.rulers-highlighter-vertical-labels > text {
+  transform: rotate(-90deg);
+  text-anchor: end;
+}
+
+.viewport-size-highlighter-viewport-infobar-container {
+  shape-rendering: crispEdges;
+  background-color: rgba(255, 255, 255, 0.7);
+  font: var(--highlighter-font-family);
+  position: fixed;
+  top: 30px;
+  right: 0px;
+  font-size: 12px;
+  padding: 4px;
+}
+
+/* Measuring Tool Highlighter */
+
+.measuring-tool-tool {
+  pointer-events: auto;
+}
+
+.measuring-tool-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  cursor: crosshair;
+}
+
+.measuring-tool-elements {
+  position: absolute;
+}
+
+.measuring-tool-root path {
+  shape-rendering: geometricPrecision;
+  pointer-events: auto;
+}
+
+.measuring-tool-root .measuring-tool-box-path,
+.measuring-tool-root .measuring-tool-diagonal-path {
+  fill: rgba(135, 206, 235, 0.6);
+  stroke: var(--highlighter-guide-color);
+}
+
+.measuring-tool-root circle {
+  stroke: var(--highlighter-guide-color);
+  stroke-width: 2px;
+  fill: #fff;
+  vector-effect: non-scaling-stroke;
+}
+
+.measuring-tool-root circle.highlight {
+  fill: var(--highlighter-guide-color);
+}
+
+.measuring-tool-handler-top,
+.measuring-tool-handler-bottom {
+  cursor: ns-resize;
+}
+
+.measuring-tool-handler-right,
+.measuring-tool-handler-left {
+  cursor: ew-resize;
+}
+
+.measuring-tool-handler-topleft,
+.measuring-tool-handler-bottomright {
+  cursor: nwse-resize;
+}
+
+.measuring-tool-handler-topright,
+.measuring-tool-handler-bottomleft {
+  cursor: nesw-resize;
+}
+
+.mirrored .measuring-tool-handler-topleft,
+.mirrored .measuring-tool-handler-bottomright {
+  cursor: nesw-resize;
+}
+
+.mirrored .measuring-tool-handler-topright,
+.mirrored .measuring-tool-handler-bottomleft {
+  cursor: nwse-resize;
+}
+
+[class^=measuring-tool-handler].dragging {
+  fill: var(--highlighter-guide-color);
+}
+
+.dragging .measuring-tool-box-path,
+.dragging .measuring-tool-diagonal-path {
+  opacity: 0.45;
+}
+
+.measuring-tool-label-size,
+.measuring-tool-label-position {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  border-radius: 4px;
+  padding: 4px;
+  white-space: pre-line;
+  font: var(--highlighter-font-family);
+  font-size: 10px;
+  pointer-events: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.measuring-tool-label-position {
+  color: #fff;
+  background: hsla(214, 13%, 24%, 0.8);
+}
+
+.measuring-tool-label-size {
+  color: var(--highlighter-bubble-text-color);
+  background: var(--highlighter-bubble-background-color);
+  border: 1px solid var(--highlighter-bubble-border-color);
+  line-height: 1.5em;
+}
+
+[class^=measuring-tool-guide] {
+  stroke: var(--highlighter-guide-color);
+  stroke-dasharray: 5 3;
+  shape-rendering: crispEdges;
+}
+
+/* Eye Dropper */
+
+.eye-dropper-root {
+  --magnifier-width: 96px;
+  --magnifier-height: 96px;
+  /* Width accounts for all color formats (hsl being the longest) */
+  --label-width: 160px;
+  --label-height: 23px;
+  --background-color: #e0e0e0;
+  color: #333;
+
+  position: fixed;
+  /* Tool start position. This should match the X/Y defines in JS */
+  top: 100px;
+  left: 100px;
+
+  /* Prevent interacting with the page when hovering and clicking */
+  pointer-events: auto;
+
+  /* Offset the UI so it is centered around the pointer */
+  transform: translate(
+    calc(var(--magnifier-width) / -2),
+    calc(var(--magnifier-height) / -2)
+  );
+
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.4));
+
+  /* We don't need the UI to be reversed in RTL locales, otherwise the # would appear
+     to the right of the hex code. Force LTR */
+  direction: ltr;
+}
+
+.eye-dropper-canvas {
+  image-rendering: -moz-crisp-edges;
+  cursor: none;
+  width: var(--magnifier-width);
+  height: var(--magnifier-height);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--background-color);
+  display: block;
+}
+
+.eye-dropper-color-container {
+  background-color: var(--background-color);
+  border-radius: 2px;
+  width: var(--label-width);
+  height: var(--label-height);
+  position: relative;
+
+  --label-horizontal-center: translateX(
+    calc((var(--magnifier-width) - var(--label-width)) / 2)
+  );
+  --label-horizontal-left: translateX(
+    calc((-1 * var(--label-width) + var(--magnifier-width) / 2))
+  );
+  --label-horizontal-right: translateX(calc(var(--magnifier-width) / 2));
+  --label-vertical-top: translateY(
+    calc((-1 * var(--magnifier-height)) - var(--label-height))
+  );
+
+  /* By default the color label container sits below the canvas.
+     Here we just center it horizontally */
+  transform: var(--label-horizontal-center);
+  transition: transform 0.1s ease-in-out;
+}
+
+/* If there isn't enough space below the canvas, we move the label container to the top */
+.eye-dropper-root[top] .eye-dropper-color-container {
+  transform: var(--label-horizontal-center) var(--label-vertical-top);
+}
+
+/* If there isn't enough space right of the canvas to horizontally center the label
+   container, offset it to the left */
+.eye-dropper-root[left] .eye-dropper-color-container {
+  transform: var(--label-horizontal-left);
+}
+
+.eye-dropper-root[left][top] .eye-dropper-color-container {
+  transform: var(--label-horizontal-left) var(--label-vertical-top);
+}
+
+/* If there isn't enough space left of the canvas to horizontally center the label
+   container, offset it to the right */
+.eye-dropper-root[right] .eye-dropper-color-container {
+  transform: var(--label-horizontal-right);
+}
+
+.eye-dropper-root[right][top] .eye-dropper-color-container {
+  transform: var(--label-horizontal-right) var(--label-vertical-top);
+}
+
+.eye-dropper-color-preview {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  inset-inline-start: 3px;
+  inset-block-start: 3px;
+  box-shadow: 0px 0px 0px black;
+  border: solid 1px #fff;
+}
+
+.eye-dropper-color-value {
+  text-shadow: 1px 1px 1px #fff;
+  font: var(--highlighter-font-family);
+  font-size: var(--highlighter-font-size);
+  text-align: center;
+  padding: 4px 0;
+}
+
+/* Paused Debugger Overlay */
+
+.paused-dbg-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  /* We don't have access to DevTools themes here, but some of these colors come from the
+     themes. Theme variable names are given in comments. */
+  --text-color: #585959; /* --theme-body-color-alt */
+  --toolbar-background: #fcfcfc; /* --theme-toolbar-background */
+  --toolbar-border: #dde1e4; /* --theme-splitter-color */
+  --toolbar-box-shadow: 0 2px 2px 0 rgba(155, 155, 155, 0.26); /* --rdm-box-shadow */
+  --overlay-background: #dde1e4a8;
+}
+
+.paused-dbg-root[overlay] {
+  background-color: var(--overlay-background);
+  pointer-events: auto;
+}
+
+.paused-dbg-toolbar {
+  /* Show the toolbar at the top, but not too high to prevent it overlaping OS toolbar on Android */
+  margin-top: 30px;
+  display: inline-flex;
+  user-select: none;
+
+  color: var(--text-color);
+  box-shadow: var(--toolbar-box-shadow);
+  background-color: var(--toolbar-background);
+  border: 1px solid var(--toolbar-border);
+  border-radius: 4px;
+
+  font: var(--highlighter-font-family);
+  font-size: var(--highlighter-font-size);
+}
+
+.paused-dbg-toolbar button {
+  margin: 8px 4px 6px 6px;
+  width: 16px;
+  height: 16px;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 16px 16px;
+  background-color: var(--text-color);
+
+  border: 0px;
+  appearance: none;
+}
+
+.paused-dbg-divider {
+  width: 1px;
+  height: 16px;
+  margin-top: 10px;
+  background-color: var(--toolbar-border);
+}
+
+.paused-dbg-reason,
+.paused-dbg-step-button-wrapper,
+.paused-dbg-resume-button-wrapper {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.paused-dbg-step-button-wrapper,
+.paused-dbg-resume-button-wrapper {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+button.paused-dbg-step-button {
+  margin-left: 6px;
+  margin-right: 6px;
+  mask-image: url(resource://devtools-shared-images/stepOver.svg);
+  padding: 0;
+}
+
+button.paused-dbg-resume-button {
+  margin-right: 6px;
+  mask-image: url(resource://devtools-shared-images/resume.svg);
+  padding: 0;
+}
+
+.paused-dbg-step-button-wrapper.hover,
+.paused-dbg-resume-button-wrapper.hover {
+  background-color: var(--toolbar-border);
+  border-radius: 2px;
+}
+
+.paused-dbg-reason {
+  padding: 3px 16px;
+  margin: 8px 0px;
+  font: var(--highlighter-font-family);
+  font-size: var(--highlighter-font-size);
+}
+
+
+/* Remote Node Picker Notice Highlighter */
+
+#node-picker-notice-root {
+  position: fixed;
+  max-width: 100vw;
+  /* Position at the bottom of the screen so it doesn't get into the user's way */
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  /* We don't have access to DevTools themes here, but some of these colors come from the
+     themes. Theme variable names are given in comments. */
+  --text-color: #585959; /* --theme-body-color-alt */
+  --toolbar-background: #fcfcfc; /* --theme-toolbar-background */
+  --toolbar-border: #dde1e4; /* --theme-splitter-color */
+  --toolbar-button-hover-background: rgba(12, 12, 13, 0.15); /* --theme-toolbarbutton-hover-background */
+  --toolbar-box-shadow: 0 2px 2px 0 rgba(155, 155, 155, 0.26); /* --rdm-box-shadow */
+}
+
+#node-picker-notice-root[overlay] {
+  pointer-events: auto;
+}
+
+#node-picker-notice-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 16px;
+
+  color: var(--text-color);
+  box-shadow: var(--toolbar-box-shadow);
+  background-color: var(--toolbar-background);
+  border: 1px solid var(--toolbar-border);
+  border-radius: 2px;
+
+  font: var(--highlighter-font-family);
+  font-size: var(--highlighter-font-size);
+
+  user-select: none;
+}
+
+#node-picker-notice-info {
+  font: var(--highlighter-font-family);
+  font-size: var(--highlighter-font-size);
+  text-align: center;
+}
+
+#node-picker-notice-icon {
+  width: 16px;
+  height: 16px;
+
+  background-image: url(resource://devtools-shared-images/command-pick.svg);
+  -moz-context-properties: fill;
+  fill: currentColor;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#node-picker-notice-icon.touch {
+  background-image: url(resource://devtools-shared-images/command-pick-remote-touch.svg);
+}
+
+
+#node-picker-notice-hide-button {
+  border: 0px;
+  border-radius: 2px;
+  appearance: none;
+  background-color: var(--toolbar-border);
+  color: currentColor;
+  font-size: 1em;
+  padding-inline: 4px;
+}
+
+/* We can't use :hover as it wouldn't work if the page is paused, so we add a specific class for this */
+#node-picker-notice-hide-button.hover {
+  background-color: var(--toolbar-button-hover-background);
+}
+
+/* Shapes highlighter */
+
+.shapes-root {
+  pointer-events: none;
+}
+
+.shapes-shape-container {
+  position: absolute;
+  overflow: visible;
+}
+
+.shapes-polygon,
+.shapes-ellipse,
+.shapes-rect,
+.shapes-bounding-box,
+.shapes-rotate-line,
+.shapes-quad {
+  fill: transparent;
+  stroke: var(--highlighter-guide-color);
+  shape-rendering: geometricPrecision;
+  vector-effect: non-scaling-stroke;
+}
+
+.shapes-markers {
+  fill: #fff;
+}
+
+.shapes-markers-outline {
+  fill: var(--highlighter-guide-color);
+}
+
+.shapes-marker-hover {
+  fill: var(--highlighter-guide-color);
+}
+
+/* Accessible highlighter */
+
+.accessible-infobar {
+  min-width: unset;
+}
+
+.accessible-infobar-text {
+  display: grid;
+  grid-template-areas:
+    "role name"
+    "audit audit";
+  grid-template-columns: min-content 1fr;
+}
+
+.accessible-infobar-role {
+  grid-area: role;
+  color: #9cdcfe;
+}
+
+.accessible-infobar-name {
+  grid-area: name;
+}
+
+.accessible-infobar-audit {
+  grid-area: audit;
+  padding-top: 5px;
+  padding-bottom: 2px;
+}
+
+.accessible-bounds {
+  fill: var(--highlighter-accessibility-bounds-color);
+  opacity: var(--highlighter-accessibility-bounds-opacity);
+}
+
+@media (prefers-reduced-motion) {
+  .use-simple-highlighters .accessible-bounds {
+    fill: none;
+    stroke: var(--highlighter-accessibility-bounds-color);
+    stroke-width: 3;
+  }
+}
+
+.accessible-infobar-name,
+.accessible-infobar-audit {
+  color: var(--highlighter-infobar-color);
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio:empty::before,
+.accessible-infobar-audit .accessible-contrast-ratio:empty::after,
+.accessible-infobar-name:empty {
+  display: none;
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio::before {
+  content: "";
+  height: 8px;
+  width: 8px;
+  display: inline-flex;
+  background-color: var(--accessibility-highlighter-contrast-ratio-color);
+  box-shadow: 0 0 0 1px var(--grey-40),
+    4px 3px var(--accessibility-highlighter-contrast-ratio-bg),
+    4px 3px 0 1px var(--grey-40);
+  margin-inline-start: 3px;
+  margin-inline-end: 9px;
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio::after {
+  margin-inline-start: 2px;
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio.AA::after,
+.accessible-infobar-audit .accessible-contrast-ratio.AAA::after {
+  color: #90E274;
+}
+
+.accessible-infobar-audit .accessible-audit::before,
+.accessible-infobar-audit .accessible-contrast-ratio.FAIL::after {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  content: "";
+  vertical-align: -2px;
+  background-position: center;
+  background-repeat: no-repeat;
+  -moz-context-properties: fill;
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio.FAIL:after {
+  color: #E57180;
+  margin-inline-start: 3px;
+  background-image: url(resource://devtools-shared-images/error-small.svg);
+  fill: var(--red-40);
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio.AA::after {
+  content: "AA\2713";
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio.AAA::after {
+  content: "AAA\2713";
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio-label,
+.accessible-infobar-audit .accessible-contrast-ratio-separator::before {
+  margin-inline-end: 3px;
+}
+
+.accessible-infobar-audit .accessible-contrast-ratio-separator::before {
+  content: "-";
+  margin-inline-start: 3px;
+}
+
+.accessible-infobar-audit .accessible-audit {
+  display: block;
+  padding-block-end: 5px;
+}
+
+.accessible-infobar-audit .accessible-audit:last-child {
+  padding-block-end: 0;
+}
+
+.accessible-infobar-audit .accessible-audit::before {
+  margin-inline-end: 4px;
+  background-image: none;
+  fill: currentColor;
+}
+
+.accessible-infobar-audit .accessible-audit.FAIL::before {
+  background-image: url(resource://devtools-shared-images/error-small.svg);
+  fill: var(--red-40);
+}
+
+.accessible-infobar-audit .accessible-audit.WARNING::before {
+  background-image: url(chrome://devtools/skin/images/alert-small.svg);
+  fill: var(--yellow-60);
+}
+
+.accessible-infobar-audit .accessible-audit.BEST_PRACTICES::before {
+  background-image: url(chrome://devtools/skin/images/info-small.svg);
+}
+
+.accessible-infobar-name {
+  border-inline-start: 1px solid #5a6169;
+  margin-inline-start: 6px;
+  padding-inline-start: 6px;
+}
+
+/* Tabbing-order highlighter */
+
+.tabbing-order-infobar {
+  min-width: unset;
+}
+
+.tabbing-order .tabbing-order-infobar-container {
+  font-size:calc(var(--highlighter-font-size) + 2px);
+}
+
+.tabbing-order .tabbing-order-bounds {
+  position: absolute;
+  display: block;
+  outline: 2px solid #000;
+  outline-offset: -2px;
+}
+
+.tabbing-order.focused .tabbing-order-bounds {
+  outline-color: var(--blue-60);
+}
+
+.tabbing-order.focused .tabbing-order-infobar {
+  background-color: var(--blue-60);
+}
+
+.tabbing-order.focused .tabbing-order-infobar-text {
+  text-decoration: underline;
+}
+
+.tabbing-order.focused .tabbing-order-infobar:after {
+  border-top-color: var(--blue-60);
+  border-bottom-color: var(--blue-60);
+}

@@ -1,0 +1,308 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+include("../components/telemetry/telemetry-constants.mozbuild")
+
+with Files("**"):
+    BUG_COMPONENT = ("Toolkit", "General")
+
+with Files("docs/**"):
+    BUG_COMPONENT = ("Toolkit", "Async Tooling")
+
+with Files("subprocess/**"):
+    BUG_COMPONENT = ("Toolkit", "Async Tooling")
+
+with Files("tests/browser/*AsyncPrefs*"):
+    BUG_COMPONENT = ("Core", "Security: Process Sandboxing")
+
+with Files("tests/browser/*Finder*"):
+    BUG_COMPONENT = ("Toolkit", "Find Toolbar")
+
+with Files("tests/xpcshell/test_Color.js"):
+    BUG_COMPONENT = ("Toolkit", "Find Toolbar")
+
+with Files("tests/xpcshell/test_DeferredTask.js"):
+    BUG_COMPONENT = ("Toolkit", "Async Tooling")
+
+with Files("tests/xpcshell/test_FinderIterator.js"):
+    BUG_COMPONENT = ("Toolkit", "Find Toolbar")
+
+with Files("tests/xpcshell/test_Integration.js"):
+    BUG_COMPONENT = ("Toolkit", "Async Tooling")
+
+with Files("tests/xpcshell/test_JSONFile.js"):
+    BUG_COMPONENT = ("Toolkit", "Form Manager")
+
+with Files("tests/xpcshell/test_Match*.js"):
+    BUG_COMPONENT = ("WebExtensions", "General")
+
+with Files("tests/xpcshell/test_NewTabUtils.js"):
+    BUG_COMPONENT = ("Firefox", "New Tab Page")
+
+with Files("tests/xpcshell/test_UpdateUtils*.js"):
+    BUG_COMPONENT = ("Toolkit", "Application Update")
+
+with Files("AsyncPrefs.sys.mjs"):
+    BUG_COMPONENT = ("Core", "Security: Process Sandboxing")
+
+with Files("AsanReporter.sys.mjs"):
+    BUG_COMPONENT = ("Firefox Build System", "General")
+
+with Files("Color.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Find Toolbar")
+
+with Files("Console.sys.mjs"):
+    BUG_COMPONENT = ("DevTools", "Console")
+
+with Files("DateTimePicker*.sys.mjs"):
+    BUG_COMPONENT = ("Core", "Layout: Form Controls")
+
+with Files("DeferredTask.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Async Tooling")
+
+with Files("E10SUtils.sys.mjs"):
+    BUG_COMPONENT = ("Core", "Security: Process Sandboxing")
+
+with Files("nsIE10SUtils.idl"):
+    BUG_COMPONENT = ("Core", "Security: Process Sandboxing")
+
+with Files("Finder*.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Find Toolbar")
+
+with Files("FormLikeFactory.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Password Manager")
+
+with Files("IndexedDB.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Async Tooling")
+
+with Files("InlineSpellChecker*.sys.mjs"):
+    BUG_COMPONENT = ("Core", "Spelling checker")
+
+with Files("Integration.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Async Tooling")
+
+with Files("JSONFile.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Form Manager")
+
+with Files("LightweightThemeConsumer.sys.mjs"):
+    BUG_COMPONENT = ("Firefox", "Toolbars and Customization")
+
+with Files("NLP.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Find Toolbar")
+
+with Files("NewTabUtils.sys.mjs"):
+    BUG_COMPONENT = ("Firefox", "Tabbed Browser")
+
+with Files("ObjectUtils.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Telemetry")
+
+with Files("PermissionsUtils.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Add-ons Manager")
+
+with Files("PopupNotifications.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "PopupNotifications and Notification Bars")
+
+with Files("PrivateBrowsingUtils.sys.mjs"):
+    BUG_COMPONENT = ("Firefox", "Private Browsing")
+
+with Files("Promise*.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Async Tooling")
+
+with Files("ResponsivenessMonitor.sys.mjs"):
+    BUG_COMPONENT = ("Firefox", "Migration")
+
+with Files("ShortcutUtils.sys.mjs"):
+    BUG_COMPONENT = ("Firefox", "Toolbars and Customization")
+
+with Files("Sqlite.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Storage")
+
+with Files("SubDialog.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Content Prompts")
+
+with Files("UpdateUtils.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "Application Update")
+
+with Files("WindowsRegistry.sys.mjs"):
+    BUG_COMPONENT = ("Toolkit", "General")
+
+
+XPCSHELL_TESTS_MANIFESTS += ["tests/xpcshell/xpcshell.ini"]
+BROWSER_CHROME_MANIFESTS += ["tests/browser/browser.ini"]
+MOCHITEST_CHROME_MANIFESTS += ["tests/chrome/chrome.ini"]
+
+TESTING_JS_MODULES += [
+    "tests/modules/MockDocument.sys.mjs",
+    "tests/modules/OSKeyStoreTestUtils.sys.mjs",
+    "tests/modules/PromiseTestUtils.sys.mjs",
+    "tests/xpcshell/RegionTestUtils.sys.mjs",
+    "tests/xpcshell/TestIntegration.sys.mjs",
+]
+
+SPHINX_TREES["toolkit_modules"] = "docs"
+
+with Files("docs/**"):
+    SCHEDULES.exclusive = ["docs"]
+
+EXTRA_JS_MODULES += [
+    "AboutPagesUtils.sys.mjs",
+    "ActorManagerParent.sys.mjs",
+    "AppMenuNotifications.sys.mjs",
+    "AsyncPrefs.sys.mjs",
+    "BinarySearch.sys.mjs",
+    "BrowserTelemetryUtils.sys.mjs",
+    "BrowserUtils.sys.mjs",
+    "CanonicalJSON.sys.mjs",
+    "CertUtils.sys.mjs",
+    "Color.sys.mjs",
+    "Console.sys.mjs",
+    "ContentDOMReference.sys.mjs",
+    "CreditCard.sys.mjs",
+    "DateTimePickerPanel.sys.mjs",
+    "DeferredTask.sys.mjs",
+    "Deprecated.sys.mjs",
+    "E10SUtils.sys.mjs",
+    "EventEmitter.sys.mjs",
+    "FileUtils.sys.mjs",
+    "FindBarContent.sys.mjs",
+    "Finder.sys.mjs",
+    "FinderHighlighter.sys.mjs",
+    "FinderIterator.sys.mjs",
+    "FinderParent.sys.mjs",
+    "FirstStartup.sys.mjs",
+    "FormLikeFactory.sys.mjs",
+    "Geometry.sys.mjs",
+    "HiddenFrame.sys.mjs",
+    "IgnoreLists.sys.mjs",
+    "IndexedDB.sys.mjs",
+    "InlineSpellChecker.sys.mjs",
+    "InlineSpellCheckerContent.sys.mjs",
+    "Integration.sys.mjs",
+    "JSONFile.sys.mjs",
+    "JsonSchema.sys.mjs",
+    "KeywordUtils.sys.mjs",
+    "LayoutUtils.sys.mjs",
+    "Log.sys.mjs",
+    "NewTabUtils.sys.mjs",
+    "NLP.sys.mjs",
+    "ObjectUtils.sys.mjs",
+    "OsEnvironment.sys.mjs",
+    "OSKeyStore.sys.mjs",
+    "PermissionsUtils.sys.mjs",
+    "PopupNotifications.sys.mjs",
+    "Preferences.sys.mjs",
+    "PrivateBrowsingUtils.sys.mjs",
+    "ProcessType.sys.mjs",
+    "ProfileAge.sys.mjs",
+    "PromiseUtils.sys.mjs",
+    "Region.sys.mjs",
+    "RemotePageAccessManager.sys.mjs",
+    "ResetProfile.sys.mjs",
+    "ResponsivenessMonitor.sys.mjs",
+    "SelectionUtils.sys.mjs",
+    "ServiceRequest.sys.mjs",
+    "ShortcutUtils.sys.mjs",
+    "Sqlite.sys.mjs",
+    "SubDialog.sys.mjs",
+    "Timer.sys.mjs",
+    "Troubleshoot.sys.mjs",
+    "UpdateUtils.sys.mjs",
+    "WebChannel.sys.mjs",
+]
+
+if CONFIG["MOZ_ASAN_REPORTER"]:
+    EXTRA_JS_MODULES += [
+        "AsanReporter.sys.mjs",
+    ]
+
+if CONFIG["MOZ_WIDGET_TOOLKIT"] == "cocoa":
+    EXTRA_JS_MODULES += [
+        "PropertyListUtils.sys.mjs",
+    ]
+
+EXTRA_JS_MODULES.third_party.jsesc += ["third_party/jsesc/jsesc.mjs"]
+EXTRA_JS_MODULES.sessionstore += [
+    "sessionstore/PrivacyFilter.sys.mjs",
+    "sessionstore/PrivacyLevel.sys.mjs",
+    "sessionstore/SessionHistory.sys.mjs",
+    "sessionstore/Utils.sys.mjs",
+]
+
+EXTRA_JS_MODULES.third_party.fathom += ["third_party/fathom/fathom.mjs"]
+
+if CONFIG["MOZ_WIDGET_TOOLKIT"] in ("windows", "gtk"):
+    DEFINES["MENUBAR_CAN_AUTOHIDE"] = 1
+
+if CONFIG["MOZ_WIDGET_TOOLKIT"] in ("windows", "gtk", "cocoa"):
+    DEFINES["HAVE_SHELL_SERVICE"] = 1
+
+EXTRA_PP_JS_MODULES += [
+    "AppConstants.sys.mjs",
+]
+
+if "Android" != CONFIG["OS_TARGET"]:
+    EXTRA_JS_MODULES += [
+        "GMPExtractorWorker.js",
+        "GMPInstallManager.sys.mjs",
+        "GMPUtils.sys.mjs",
+        "LightweightThemeConsumer.sys.mjs",
+    ]
+
+    DIRS += [
+        "subprocess",
+    ]
+
+if CONFIG["MOZ_WIDGET_TOOLKIT"] == "windows":
+    EXTRA_JS_MODULES += [
+        "WindowsRegistry.sys.mjs",
+    ]
+
+for var in (
+    "ANDROID_PACKAGE_NAME",
+    "MOZ_APP_NAME",
+    "MOZ_APP_BASENAME",
+    "MOZ_APP_DISPLAYNAME",
+    "MOZ_APP_VERSION",
+    "MOZ_APP_VERSION_DISPLAY",
+    "MOZ_BING_API_CLIENTID",
+    "MOZ_BING_API_KEY",
+    "MOZ_GOOGLE_LOCATION_SERVICE_API_KEY",
+    "MOZ_GOOGLE_SAFEBROWSING_API_KEY",
+    "MOZ_MACBUNDLE_ID",
+    "MOZ_MACBUNDLE_NAME",
+    "MOZ_MOZILLA_API_KEY",
+    "MOZ_WIDGET_TOOLKIT",
+    "DLL_PREFIX",
+    "DLL_SUFFIX",
+    "DEBUG_JS_MODULES",
+    "OMNIJAR_NAME",
+):
+    DEFINES[var] = CONFIG[var] or ""
+
+for var in (
+    "MOZ_ALLOW_ADDON_SIDELOAD",
+    "MOZ_SYSTEM_NSS",
+    "MOZ_SYSTEM_POLICIES",
+    "MOZ_UNSIGNED_APP_SCOPE",
+    "MOZ_UNSIGNED_SYSTEM_SCOPE",
+    "MOZ_UPDATE_AGENT",
+    "MOZ_UPDATER",
+    "MOZ_WEBEXT_WEBIDL_ENABLED",
+):
+    if CONFIG[var]:
+        DEFINES[var] = True
+
+JAR_MANIFESTS += ["jar.mn"]
+
+DEFINES["TOPOBJDIR"] = TOPOBJDIR
+
+XPIDL_SOURCES += [
+    "nsIBrowserWindowTracker.idl",
+    "nsIE10SUtils.idl",
+    "nsIRegion.idl",
+]
+
+XPIDL_MODULE = "toolkit_modules"

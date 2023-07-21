@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<!--
+https://bugzilla.mozilla.org/show_bug.cgi?id=602130
+-->
+<head>
+  <title>Test for Bug 602130</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
+</head>
+<body>
+<a target="_blank" href="https://bugzilla.mozilla.org/show_bug.cgi?id=602130">Mozilla Bug 602130</a>
+<p id="display"></p>
+<div id="content">
+</div>
+<pre id="test">
+<script type="application/javascript">
+
+/** Test for Bug 602130 **/
+
+SimpleTest.waitForExplicitFinish();
+addLoadEvent(function() {
+  var i = document.createElement("input");
+  document.body.appendChild(i);
+  i.select();
+  i.focus();
+  is(
+    SpecialPowers.wrap(i).editor.canUndo,
+    false,
+    "Editor shouldn't have undo transactions at start"
+  );
+  i.style.display = "none";
+  document.offsetWidth;
+  i.style.display = "";
+  document.offsetWidth;
+  i.select();
+  i.focus();
+  is(
+    SpecialPowers.wrap(i).editor.canUndo,
+    false,
+    "Editor shouldn't have undo transaction after re-initializing the editor"
+  );
+  SimpleTest.finish();
+});
+
+</script>
+</pre>
+</body>
+</html>

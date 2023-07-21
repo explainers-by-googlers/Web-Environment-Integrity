@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for Clipboard Events</title>
+  <script type="text/javascript" src="/MochiKit/MochiKit.js"></script>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<p id="display"></p>
+<input id="input" value="INPUT TEXT" oncopy="checkAllowed(event)">
+
+<script>
+function doTest()
+{
+  document.getElementById("input").focus();
+  synthesizeKey("c", {accelKey: 1});
+}
+
+function checkAllowed(event)
+{
+  let clipboardData = event.clipboardData;
+
+  let disallowedTypes = [
+    "application/x-moz-file",
+    "application/x-moz-file-promise",
+    "application/x-moz-file-promise-url",
+    "application/x-moz-file-promise-dest-filename",
+    "application/x-moz-file-promise-dir",
+    "application/x-moz-nativeimage",
+    "text/x-moz-requestmime",
+    "text/x-moz-place",
+    "text/x-moz-place-container",
+    "text/x-moz-some-made-up-type",
+  ];
+
+  for (let type of disallowedTypes) {
+    let exception;
+    try {
+      clipboardData.setData(type, "Test");
+    } catch(ex) {
+      exception = ex;
+    }
+    is(String(exception).indexOf("SecurityError"), 0, "Cannot set " + type);
+  }
+
+  let allowedTypes = [
+    "application/something",
+    "x-moz-/something",
+    "something/ax-moz-",
+  ];
+
+  for (let type of allowedTypes) {
+    let exception = null;
+    try {
+      clipboardData.setData(type, "This is data");
+    } catch(ex) {
+      exception = ex;
+    }
+    is(exception, null, "Can set " + type);
+  }
+
+  SimpleTest.finish();
+}
+
+SimpleTest.waitForExplicitFinish();
+SimpleTest.waitForFocus(doTest);
+</script>

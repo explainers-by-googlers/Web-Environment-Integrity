@@ -1,0 +1,62 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Core", "String")
+
+EXPORTS += [
+    "nsASCIIMask.h",
+    "nsAString.h",
+    "nsCharTraits.h",
+    "nsDependentString.h",
+    "nsDependentSubstring.h",
+    "nsLiteralString.h",
+    "nsPrintfCString.h",
+    "nsPromiseFlatString.h",
+    "nsReadableUtils.h",
+    "nsString.h",
+    "nsStringBuffer.h",
+    "nsStringFlags.h",
+    "nsStringFwd.h",
+    "nsStringIterator.h",
+    "nsTDependentString.h",
+    "nsTDependentSubstring.h",
+    "nsTextFormatter.h",
+    "nsTLiteralString.h",
+    "nsTPromiseFlatString.h",
+    "nsTString.h",
+    "nsTStringHasher.h",
+    "nsTStringRepr.h",
+    "nsTSubstring.h",
+    "nsTSubstringTuple.h",
+    "nsUTF8Utils.h",
+]
+
+EXPORTS.mozilla += [
+    "RustRegex.h",
+]
+
+UNIFIED_SOURCES += [
+    "nsASCIIMask.cpp",
+    "nsReadableUtils.cpp",
+    "nsStringBuffer.cpp",
+    "nsTDependentString.cpp",
+    "nsTDependentSubstring.cpp",
+    "nsTextFormatter.cpp",
+    "nsTLiteralString.cpp",
+    "nsTPromiseFlatString.cpp",
+    "nsTString.cpp",
+    "nsTStringComparator.cpp",
+    "nsTStringRepr.cpp",
+    "nsTSubstring.cpp",
+    "nsTSubstringTuple.cpp",
+    "RustStringAPI.cpp",
+]
+
+if CONFIG["MOZ_DEBUG"]:
+    UNIFIED_SOURCES += ["nsStringStats.cpp"]
+
+FINAL_LIBRARY = "xul"

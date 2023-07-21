@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html class="reftest-wait">
+<head>
+<script>
+function onLoad() {
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // <p> which is the deepest last child of the <body> (<spacer> can contain
+  // <p>).
+  getSelection().collapse(
+    document.querySelector("p"),
+    document.querySelector("p").childNodes.length
+  );
+  document.querySelector("spacer").addEventListener("DOMNodeInserted", () => {
+    document.querySelector("style").appendChild(
+      document.querySelector("table")
+    );
+    document.documentElement.classList.remove("reftest-wait");
+  });
+  document.execCommand("insertOrderedList");
+}
+</script>
+</head>
+<body onload="onLoad()">
+<table></table>
+<style></style>
+<spacer contenteditable>
+<p></p>
+</body>
+</html>

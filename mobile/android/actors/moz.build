@@ -1,0 +1,40 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("GeckoView", "General")
+
+FINAL_TARGET_FILES.actors += [
+    "ContentDelegateChild.sys.mjs",
+    "ContentDelegateParent.sys.mjs",
+    "GeckoViewAutoFillChild.sys.mjs",
+    "GeckoViewAutoFillParent.sys.mjs",
+    "GeckoViewClipboardPermissionChild.sys.mjs",
+    "GeckoViewClipboardPermissionParent.sys.mjs",
+    "GeckoViewContentChild.sys.mjs",
+    "GeckoViewContentParent.sys.mjs",
+    "GeckoViewFormValidationChild.sys.mjs",
+    "GeckoViewPermissionChild.sys.mjs",
+    "GeckoViewPermissionParent.sys.mjs",
+    "GeckoViewPermissionProcessChild.sys.mjs",
+    "GeckoViewPermissionProcessParent.sys.mjs",
+    "GeckoViewPrintDelegateChild.sys.mjs",
+    "GeckoViewPrintDelegateParent.sys.mjs",
+    "GeckoViewPromptChild.sys.mjs",
+    "GeckoViewPrompterChild.sys.mjs",
+    "GeckoViewPrompterParent.sys.mjs",
+    "GeckoViewSettingsChild.sys.mjs",
+    "LoadURIDelegateChild.sys.mjs",
+    "LoadURIDelegateParent.sys.mjs",
+    "MediaControlDelegateChild.sys.mjs",
+    "MediaControlDelegateParent.sys.mjs",
+    "ProgressDelegateChild.sys.mjs",
+    "ProgressDelegateParent.sys.mjs",
+    "ScrollDelegateChild.sys.mjs",
+    "ScrollDelegateParent.sys.mjs",
+    "SelectionActionDelegateChild.sys.mjs",
+    "SelectionActionDelegateParent.sys.mjs",
+]
+
+MOCHITEST_MANIFESTS += ["tests/mochitests/mochitest.ini"]

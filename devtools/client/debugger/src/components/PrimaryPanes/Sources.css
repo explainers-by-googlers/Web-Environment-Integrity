@@ -1,0 +1,219 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+.sources-panel {
+  background-color: var(--theme-sidebar-background);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.sources-panel * {
+  user-select: none;
+}
+
+/***********************/
+/* Souces Panel layout */
+/***********************/
+
+.sources-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sources-list .sources-clear-root-container {
+  grid-area: custom-root;
+}
+
+.sources-list :is(.tree, .no-sources-message) {
+  grid-area: sources-tree-or-empty-message;
+}
+
+/****************/
+/*  Custom root */
+/****************/
+
+.sources-clear-root {
+  padding: 4px 8px;
+  width: 100%;
+  text-align: start;
+  white-space: nowrap;
+  color: inherit;
+  display: flex;
+  border-bottom: 1px solid var(--theme-splitter-color);
+}
+
+.sources-clear-root .home {
+  background-color: var(--theme-icon-dimmed-color);
+}
+
+.sources-clear-root .breadcrumb {
+  width: 5px;
+  margin: 0 2px 0 6px;
+  vertical-align: bottom;
+  background: var(--theme-text-color-alt);
+}
+
+.sources-clear-root-label {
+  margin-left: 5px;
+  line-height: 16px;
+}
+
+/*****************/
+/*  Sources tree */
+/*****************/
+
+.sources-list .tree {
+  flex-grow: 1;
+  padding: 4px 0;
+  user-select: none;
+
+  white-space: nowrap;
+  overflow: auto;
+  min-width: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+
+  line-height: 1.4em;
+}
+
+.sources-list .tree .node {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-block: 8px;
+  padding-inline: 6px 8px;
+}
+
+.sources-list .tree .tree-node:not(.focused):hover {
+  background: var(--theme-toolbar-background-hover);
+}
+
+.sources-list .tree button {
+  display: block;
+}
+
+.sources-list .tree .node {
+  padding: 2px 3px;
+  position: relative;
+}
+
+.sources-list .tree .node.focused {
+  color: var(--theme-selection-color);
+  background-color: var(--theme-selection-background);
+}
+
+html:not([dir="rtl"]) .sources-list .tree .node > div {
+  margin-left: 10px;
+}
+
+html[dir="rtl"] .sources-list .tree .node > div {
+  margin-right: 10px;
+}
+
+.sources-list .tree-node button {
+  position: fixed;
+}
+
+.sources-list .img {
+  margin-inline-end: 4px;
+}
+
+.sources-list .tree .focused .img {
+  --icon-color: #ffffff;
+  background-color: var(--icon-color);
+  fill: var(--icon-color);
+}
+
+/* Use the same width as .img.arrow */
+.sources-list .tree .img.no-arrow {
+  width: 10px;
+  visibility: hidden;
+}
+
+.sources-list .tree .label .suffix {
+  font-style: italic;
+  font-size: 0.9em;
+  color: var(--theme-comment);
+}
+
+.sources-list .tree .focused .label .suffix {
+  color: inherit;
+}
+
+.theme-dark .source-list .node.focused {
+  background-color: var(--theme-tab-toolbar-background);
+}
+
+.sources-list .tree .blackboxed {
+  color: #806414;
+}
+
+.sources-list .img.blackBox {
+  mask-size: 13px;
+  background-color: #806414;
+}
+
+.sources-list .tree .label {
+  display: inline-block;
+  line-height: 16px;
+}
+
+.source-list-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+  text-align: center;
+  min-height: var(--editor-footer-height);
+  border-block-start: 1px solid var(--theme-warning-border);
+  user-select: none;
+  padding: 3px 10px;
+  color: var(--theme-warning-color);
+  background-color: var(--theme-warning-background);
+}
+
+.source-list-footer .devtools-togglebutton {
+  background-color: var(--theme-toolbar-hover);
+}
+
+.source-list-footer .devtools-togglebutton:hover {
+  background-color: var(--theme-toolbar-hover);
+  cursor: pointer;
+}
+
+
+/* Removes start margin when a custom root is used */
+.sources-list-custom-root
+  .tree
+  > .tree-node[data-expandable="false"][aria-level="0"] {
+  padding-inline-start: 4px;
+}
+
+.sources-list .tree-node[data-expandable="false"] .tree-indent:last-of-type {
+  margin-inline-end: 0;
+}
+
+
+/*****************/
+/*   No Sources  */
+/*****************/
+
+.no-sources-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-style: italic;
+  text-align: center;
+  padding: 0.5em;
+  font-size: 12px;
+  user-select: none;
+}

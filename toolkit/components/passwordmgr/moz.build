@@ -1,0 +1,82 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+if CONFIG["MOZ_BUILD_APP"] == "browser":
+    DEFINES["MOZ_BUILD_APP_IS_BROWSER"] = True
+
+MOCHITEST_MANIFESTS += ["test/mochitest/mochitest.ini"]
+BROWSER_CHROME_MANIFESTS += ["test/browser/browser.ini"]
+XPCSHELL_TESTS_MANIFESTS += ["test/unit/xpcshell.ini"]
+
+TESTING_JS_MODULES += [
+    "test/LoginTestUtils.sys.mjs",
+]
+
+XPIDL_SOURCES += [
+    "nsILoginAutoCompleteSearch.idl",
+    "nsILoginInfo.idl",
+    "nsILoginManager.idl",
+    "nsILoginManagerAuthPrompter.idl",
+    "nsILoginManagerCrypto.idl",
+    "nsILoginManagerPrompter.idl",
+    "nsILoginMetaInfo.idl",
+    "nsIPromptInstance.idl",
+]
+
+XPIDL_MODULE = "loginmgr"
+
+EXTRA_JS_MODULES += [
+    "crypto-SDR.sys.mjs",
+    "FirefoxRelay.sys.mjs",
+    "FirefoxRelayTelemetry.mjs",
+    "InsecurePasswordUtils.sys.mjs",
+    "LoginAutoComplete.sys.mjs",
+    "LoginFormFactory.sys.mjs",
+    "LoginHelper.sys.mjs",
+    "LoginInfo.sys.mjs",
+    "LoginManager.shared.mjs",
+    "LoginManager.sys.mjs",
+    "LoginManagerAuthPrompter.sys.mjs",
+    "LoginManagerChild.sys.mjs",
+    "LoginManagerParent.sys.mjs",
+    "LoginManagerPrompter.sys.mjs",
+    "LoginManagerTelemetry.sys.mjs",
+    "LoginRecipes.sys.mjs",
+    "LoginRelatedRealms.sys.mjs",
+    "NewPasswordModel.sys.mjs",
+    "PasswordGenerator.sys.mjs",
+    "PasswordRulesManager.sys.mjs",
+    "PasswordRulesParser.sys.mjs",
+    "SignUpFormRuleset.sys.mjs",
+    "storage-json.sys.mjs",
+]
+
+if CONFIG["OS_TARGET"] != "Android":
+    EXTRA_JS_MODULES += [
+        "CSV.sys.mjs",
+        "LoginCSVImport.sys.mjs",
+        "LoginExport.sys.mjs",
+        "LoginStore.sys.mjs",
+    ]
+
+if CONFIG["OS_TARGET"] == "WINNT":
+    EXTRA_JS_MODULES += [
+        "OSCrypto_win.sys.mjs",
+    ]
+
+if CONFIG["MOZ_BUILD_APP"] == "browser" or CONFIG["MOZ_SUITE"]:
+    EXTRA_JS_MODULES += [
+        "LoginManagerContextMenu.sys.mjs",
+    ]
+
+XPCOM_MANIFESTS += [
+    "components.conf",
+]
+
+JAR_MANIFESTS += ["jar.mn"]
+
+with Files("**"):
+    BUG_COMPONENT = ("Toolkit", "Password Manager")

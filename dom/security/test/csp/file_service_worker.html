@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Bug 1208559 - ServiceWorker registration not governed by CSP</title>
+</head>
+<body>
+<script>
+  function finish(status) {
+    window.parent.postMessage({result: status}, "*");
+  }
+
+  const promises = [
+    navigator.serviceWorker.ready,
+    navigator.serviceWorker.register("file_service_worker.js", { scope: "." })
+  ];
+
+  Promise.race(promises).then(finish.bind(null, 'allowed'),
+                              finish.bind(null, 'blocked'));
+  </script>
+</body>
+</html>

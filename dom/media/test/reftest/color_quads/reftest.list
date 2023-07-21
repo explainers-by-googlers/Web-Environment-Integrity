@@ -1,0 +1,69 @@
+# Reference image generated via https://jdashg.github.io/misc/colors/color-quads-16-127-235.html
+# Test videos encoded via ../gen_combos.py --write color_quads/720p.png
+
+# We're sort of testing two things here:
+# 1. Does a av1.webm video into the actual values we expect?
+# 2. Do other similar videos decode the same was as av1.webm?
+# We have this split because while each platform/compositor has its own inaccuracies,
+# each platform/compositor will have the *same* inaccuracies regardless of video.
+# So, we just need to first check if e.g. av1.webm decodes to what we expect,
+# and then we have generally trivially compare other codecs/containers to that.
+
+defaults pref(media.av1.enabled,true)
+
+# -
+# yuv420p
+
+fuzzy(16-51,5234-5622) fuzzy-if(swgl,32-38,1600-91746) fuzzy-if(useDrawSnapshot,16-16,11600-11600) fuzzy-if(OSX,16-73,5212-5622) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.av1.webm ../reftest_img.html?src=color_quads/720p.png
+fuzzy-if(winWidget&&swgl,0-20,0-5620) fuzzy-if(winWidget&&!swgl,0-1,0-78) fuzzy-if(Android,254-255,273680-273807) fuzzy-if(OSX,0-35,0-1947) fuzzy-if(OSX&&swgl,0-67,0-5451) fuzzy-if(appleSilicon,30-48,1760-187409) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.vp9.webm  ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.av1.webm
+fuzzy-if(winWidget,0-1,0-78) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.av1.mp4   ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.av1.webm
+skip-if(winWidget&&isCoverageBuild) fuzzy(0-16,75-1941) fuzzy-if(Android,254-255,273680-273807) fuzzy-if(OSX,30-32,187326-187407) fuzzy-if(appleSilicon,30-48,1835-187409) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.h264.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.av1.webm
+fuzzy-if(winWidget&&swgl,0-20,0-5620) fuzzy-if(winWidget&&!swgl,0-1,0-78) fuzzy-if(Android,254-255,273680-273807) fuzzy-if(OSX,0-35,0-1947) fuzzy-if(OSX&&swgl,0-67,0-5451) fuzzy-if(appleSilicon,30-48,1760-187409) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.vp9.mp4   ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p.av1.webm
+
+skip-if(Android) fuzzy(16-48,8107-8818) fuzzy-if(winWidget&&swgl,31-38,8240-184080) fuzzy-if(appleSilicon,33-38,8819-11705) fuzzy-if(useDrawSnapshot,20-20,187200-187200) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.av1.webm ../reftest_img.html?src=color_quads/720p.png
+skip-if(Android) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.av1.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.av1.webm
+# On Windows & sw render, we noticed that the comparison image captured from AV1 is not equal to its displayed video frame, so we would need to compare other codecs directly to PNG file. That should be fixed in bug 1748540.
+skip-if(Android) skip-if(winWidget&&swgl) fuzzy-if(Android,255-255,273726-273726) fuzzy-if(OSX,0-16,0-1718) fuzzy-if(OSX&&swgl,0-20,0-2423) fuzzy-if(appleSilicon,0-16,0-1874) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.vp9.webm ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.av1.webm
+skip-if(Android) skip-if(winWidget&&swgl) fuzzy-if(Android,255-255,273726-273726) fuzzy-if(OSX,2-36,184281-187407) fuzzy-if(winWidget,0-21,0-360000) fuzzy-if(appleSilicon,36-49,187329-187407) fuzzy-if(useDrawSnapshot,0-1,0-10) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.h264.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.av1.webm
+skip-if(Android) skip-if(winWidget&&swgl) fuzzy-if(Android,255-255,273726-273726) fuzzy-if(OSX,0-16,0-1718) fuzzy-if(OSX&&swgl,0-20,0-2423) fuzzy-if(appleSilicon,0-16,0-1874) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.vp9.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.av1.webm
+skip-if(Android) skip-if(!(winWidget&&swgl)) fuzzy(0-35,0-8506) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.vp9.webm ../reftest_img.html?src=color_quads/720p.png
+skip-if(Android) skip-if(!(winWidget&&swgl)) fuzzy(0-35,0-8506) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p.vp9.mp4 ../reftest_img.html?src=color_quads/720p.png
+
+# -
+# yuv420p10
+
+skip-if(Android) fuzzy(33-49,1870-2579) fuzzy-if(swgl,34-52,180421-270528) fuzzy-if(useDrawSnapshot,16-16,183840-183840) fuzzy-if(OSX,60-74,270329-271024) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.av1.webm ../reftest_img.html?src=color_quads/720p.png
+skip-if(Android) fuzzy-if(OSX,0-12,0-187770) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.vp9.webm ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.av1.webm
+skip-if(Android) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.av1.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.av1.webm
+#[2] skip-if(Android) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.h264.mp4  ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.av1.webm
+skip-if(Android) fuzzy-if(OSX,0-12,0-187770) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.vp9.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.yuv420p10.av1.webm
+
+skip-if(Android) fuzzy(33-49,174620-270059) fuzzy-if(swgl&&!winWidget,36-52,11553-11555) fuzzy-if(swgl&&winWidget,36-52,11554-187200) fuzzy-if(swgl&&OSX,34-50,11465-270059) fuzzy-if(useDrawSnapshot,20-20,186800-186800) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.av1.webm ../reftest_img.html?src=color_quads/720p.png
+skip-if(Android) fuzzy-if(OSX,0-12,0-274122) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.vp9.webm ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.av1.webm
+skip-if(Android) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.av1.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.av1.webm
+#[2] skip-if(Android) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.h264.mp4  ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.av1.webm
+skip-if(Android) fuzzy-if(OSX,0-12,0-274122) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.vp9.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.yuv420p10.av1.webm
+
+# Android is really broken in a variety of ways for p10.
+#[2]: yuv420p10 broken in h264.mp4: https://bugzilla.mozilla.org/show_bug.cgi?id=1711812
+
+
+# -
+# gbrp
+# Note: tv-gbrp doesn't really make sense, and we should consider dropping it.
+# Specifically, we should probably do (gbrp, ...(tv,pc)x(yuv,yuv10)) instead of (tv,pc)x(gbrp,yuv,yuv10)
+# That said, we should probably test a couple combos, at least. (But then again, why not all!)
+
+skip-if(winWidget&&swgl) fuzzy(0-1,0-3600) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.av1.webm ../reftest_img.html?src=color_quads/720p.png
+skip-if(winWidget&&swgl) fuzzy(0-1,0-7200) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.gbrp.av1.webm ../reftest_img.html?src=color_quads/720p.png
+
+== ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.av1.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.av1.webm
+== ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.gbrp.av1.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.gbrp.av1.webm
+
+# Our h264.mp4 doesn't handle gbrp, but *also* doesn't error properly.
+== ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.h264.mp4 ../reftest_video.html?src=timeout
+== ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.gbrp.h264.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.h264.mp4
+
+fuzzy(0-1,0-3600) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.gbrp.vp9.webm ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.vp9.webm
+== ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.vp9.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.vp9.webm
+fuzzy(0-1,0-3600) == ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.pc.gbrp.vp9.mp4 ../reftest_video.html?src=color_quads/720p.png.bt709.bt709.tv.gbrp.vp9.webm

@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head contenteditable="true">
+<script type="text/javascript">
+<![CDATA[
+function onLoad() {
+  getSelection().collapse(document.body, document.body.childNodes.length);
+  const r = document.createRange();
+  r.selectNode(document.body);
+  r.deleteContents();
+  try {
+    document.execCommand("selectAll");
+  } catch(e) {}
+}
+]]>
+</script>
+</head>
+
+<body onload="onLoad();" contenteditable="true"></body>
+</html>

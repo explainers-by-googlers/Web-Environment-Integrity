@@ -1,0 +1,122 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+#include "nsIURI.idl"
+#include "nsIPrincipal.idl"
+
+interface WebTransportSessionEventListener;
+interface nsIWebTransportStreamCallback;
+interface nsIWebTransportBidirectionalStream;
+interface nsIWebTransportSendStream;
+interface nsIWebTransportReceiveStream;
+
+%{C++
+namespace mozilla::dom {
+class ClientInfo;
+}
+namespace mozilla::net {
+class Http3WebTransportSession;
+class Http3WebTransportStream;
+}
+%}
+
+[ptr] native Http3WebTransportSessionPtr(mozilla::net::Http3WebTransportSession);
+[ptr] native Http3WebTransportStreamPtr(mozilla::net::Http3WebTransportStream);
+native Datagram(nsTArray<uint8_t>&&);
+[ref] native const_MaybeClientInfoRef(const mozilla::Maybe<mozilla::dom::ClientInfo>);
+
+[builtinclass, scriptable, uuid(c20d6e77-8cb1-4838-a88d-fff826080aa3)]
+interface nsIWebTransport : nsISupports {
+  cenum WebTransportError : 16 {
+    UNKNOWN_ERROR,
+    INVALID_STATE_ERROR,
+  };
+
+  // When called, perform steps in "Initialization WebTransport over HTTP".
+  void asyncConnect(in nsIURI aURI,
+                    in nsIPrincipal aLoadingPrincipal,
+                    in unsigned long aSecurityFlags,
+                    in WebTransportSessionEventListener aListener);
+
+  void asyncConnectWithClient(in nsIURI aURI,
+                    in nsIPrincipal aLoadingPrincipal,
+                    in unsigned long aSecurityFlags,
+                    in WebTransportSessionEventListener aListener,
+                    in const_MaybeClientInfoRef aClientInfo);
+
+  // Asynchronously get states.
+  void getStats();
+
+  // Close the session.
+  void closeSession(in uint32_t aErrorCode,
+                    in ACString aReason);
+
+  // Create and open a new WebTransport stream.
+  void createOutgoingBidirectionalStream(in nsIWebTransportStreamCallback aListener);
+  void createOutgoingUnidirectionalStream(in nsIWebTransportStreamCallback aListener);
+
+  void sendDatagram(in Array<uint8_t> aData, in uint64_t aTrackingId);
+
+  void getMaxDatagramSize();
+
+  // This can be only called after onSessionReady().
+  // After this point, we can retarget the underlying WebTransportSessionProxy
+  // object off main thread.
+  [noscript] void retargetTo(in nsIEventTarget aTarget);
+};
+
+// Events related to a WebTransport session.
+[scriptable, uuid(0e3cb269-f318-43c8-959e-897f57894b71)]
+interface WebTransportSessionEventListener : nsISupports {
+  // This is used to let the consumer of nsIWebTransport know that the
+  // underlying WebTransportSession object is ready to use.
+  void onSessionReady(in uint64_t aSessionId);
+  // This is used internally to pass the reference of WebTransportSession
+  // object to WebTransportSessionProxy.
+  void onSessionReadyInternal(in Http3WebTransportSessionPtr aSession);
+  void onSessionClosed(in uint32_t aErrorCode,
+                       in ACString aReason);
+
+  // When a new stream has been received.
+  void onIncomingBidirectionalStreamAvailable(in nsIWebTransportBidirectionalStream aStream);
+  void onIncomingUnidirectionalStreamAvailable(in nsIWebTransportReceiveStream aStream);
+
+  // This is used internally to pass the reference of Http3WebTransportStream
+  // object to WebTransportSessionProxy.
+  void onIncomingStreamAvailableInternal(in Http3WebTransportStreamPtr aStream);
+
+  void onStopSending(in uint64_t aStreamId, in nsresult aError);
+  void onResetReceived(in uint64_t aStreamId, in nsresult aError);
+
+  // When a new datagram has been received.
+  void onDatagramReceived(in Array<uint8_t> aData);
+
+  // This is used internally to pass the datagram to WebTransportSessionProxy.
+  void onDatagramReceivedInternal(in Datagram aData);
+
+  void onMaxDatagramSize(in uint64_t aSize);
+
+  cenum DatagramOutcome: 32 {
+    UNKNOWN               = 0,
+    DROPPED_TOO_MUCH_DATA = 1,
+    SENT                  = 2,
+  };
+
+  void onOutgoingDatagramOutCome(
+    in uint64_t aId,
+    in WebTransportSessionEventListener_DatagramOutcome aOutCome);
+
+  // void onStatsAvailable(in WebTransportStats aStats);
+};
+
+// This interface is used as a callback when creating an outgoing
+// unidirectional or bidirectional stream.
+[scriptable, uuid(c6eeff1d-599b-40a8-9157-c7a40c3d51a2)]
+interface nsIWebTransportStreamCallback : nsISupports {
+  void onBidirectionalStreamReady(in nsIWebTransportBidirectionalStream aStream);
+  void onUnidirectionalStreamReady(in nsIWebTransportSendStream aStream);
+  void onError(in uint8_t aError);
+};

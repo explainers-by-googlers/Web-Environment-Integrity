@@ -1,0 +1,35 @@
+schema: 1
+
+bugzilla:
+  product: "Firefox Build System"
+  component: "General"
+
+origin:
+  name: rlbox
+  description: sandboxing framework
+
+  url: https://github.com/PLSysSec/rlbox_sandboxing_api
+
+  release: 936e54137728cb4cb33dcd525305d9605d250f9a (2023-07-08T12:30:02Z).
+  revision: 936e54137728cb4cb33dcd525305d9605d250f9a
+
+  license: MIT
+
+vendoring:
+  url: https://github.com/PLSysSec/rlbox_sandboxing_api
+  source-hosting: github
+  tracking: commit
+
+  exclude:
+    - ".*"
+    - "*"
+    - "**"
+
+  include:
+    - "code/include"
+    - "LICENSE"
+
+  update-actions:
+    - action: move-dir
+      from: '{vendor_dir}/code/include'
+      to: '{vendor_dir}/include'

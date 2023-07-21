@@ -1,0 +1,181 @@
+<html>
+  <head>
+    <title>WebMIDI Listener Test</title>
+    <script src="/tests/SimpleTest/SimpleTest.js"></script>
+    <script type="application/javascript" src="MIDITestUtils.js"></script>
+  </head>
+
+  <body onload="runTests()">
+    <iframe id="subdomain"></iframe>
+    <iframe id="localhost"></iframe>
+    <script class="testbody" type="application/javascript">
+    SimpleTest.waitForExplicitFinish();
+    const filePath = "/tests/dom/midi/tests/file_midi_permission_gated.html";
+    // Generally this runs on example.com but with --enable-xorigin-tests it runs
+    // on example.org.
+    let subdomainURL = "https://test1." + location.host + filePath;
+    $("subdomain").src = subdomainURL;
+    // For some reason the mochitest server returns "Bad request" with localhost,
+    // but permits the loopback address. That's good enough for testing purposes.
+    $("localhost").src = "http://127.0.0.1:8888" + filePath;
+
+    function waitForMessage() {
+      return new Promise((resolve) => {
+        window.addEventListener("message", (e) => resolve(e.data), {once: true});
+      });
+    }
+
+    async function runTests() {
+      await SpecialPowers.pushPrefEnv({
+        set: [
+          ["dom.webmidi.enabled", true],
+          ["midi.testing", true],
+        ],
+      });
+      ok(
+        await SpecialPowers.testPermission(
+          "midi-sysex",
+          SpecialPowers.Services.perms.UNKNOWN_ACTION,
+          document
+        ),
+        "midi-sysex value should have UNKNOWN permission"
+      );
+      ok(
+        await SpecialPowers.testPermission(
+          "midi-sysex",
+          SpecialPowers.Services.perms.UNKNOWN_ACTION,
+          subdomainURL
+        ),
+        "permission should also not be set for subdomain"
+      );
+
+      let onChangeCalled = 0;
+      let onChangeCalledWithSysex = 0;
+      // We expect the same states with and without sysex support.
+      const expectedChangedStates = ["denied", "granted", "prompt"];
+
+      const results = [];
+      for (let sysex of [false, true]) {
+        let result = await navigator.permissions.query({ name: "midi", sysex });
+        is(result?.state, "prompt", "expected 'prompt' permission status");
+        // Register two unique listeners that should be invoked every time we
+        // change permissions in the rest of this test case: one with sysex
+        // support, and the other one without.
+        if (sysex) {
+          result.onchange = () => {
+            is(
+              result.state,
+              expectedChangedStates[onChangeCalledWithSysex++],
+              "expected change event with sysex support"
+            );
+          };
+          results.push(result);
+        } else {
+          result.onchange = () => {
+            is(
+              result.state,
+              expectedChangedStates[onChangeCalled++],
+              "expected change event"
+            );
+          };
+          results.push(result);
+        }
+      }
+
+      // Explicitly set the permission as blocked, and expect the
+      // `requestMIDIAccess` call to be automatically rejected (not having any
+      // permission set would trigger the synthetic addon install provided by
+      // AddonManager and SitePermsAddonProvider).
+      await SpecialPowers.addPermission(
+        "midi-sysex",
+        SpecialPowers.Services.perms.DENY_ACTION,
+        document
+      );
+      await SpecialPowers.addPermission(
+        "midi",
+        SpecialPowers.Services.perms.DENY_ACTION,
+        document
+      );
+      for (let sysex of [false, true]) {
+        try {
+          await navigator.requestMIDIAccess({ sysex });
+          ok(false, "MIDI Access Request gate allowed but expected to be denied");
+        } catch (ex) {
+          ok(true, "MIDI Access Request denied by default");
+        }
+
+        let result = await navigator.permissions.query({ name: "midi", sysex });
+        // We expect "denied" because that's what has been set above (with
+        // `SpecialPowers.addPermission()`). In practice, this state should
+        // never be returned since explicit rejection is handled at the add-on
+        // installation level.
+        is(result?.state, "denied", "expected 'denied' permission status");
+      }
+
+      // Gated permission should prompt for localhost.
+      //
+      // Note: We don't appear to have good test machinery anymore for
+      // navigating prompts from a plain mochitest. If you uncomment the lines
+      // below and run the test interactively, it should pass. Given that this
+      // is a niche feature that's unlikely to break, it doesn't seem worth
+      // investing in complicated test infrastructure to check it in automation.
+      // for (let sysex of [false, true]) {
+      //   $("localhost").contentWindow.postMessage(sysex, "*");
+      //   let response = await waitForMessage();
+      //   is(response, "succeeded", "MIDI Access Request allowed for localhost");
+      // }
+
+      // When an addon is installed, the permission is inserted.  Test
+      // that the request succeeds after we insert the permission.
+      await SpecialPowers.addPermission(
+        "midi-sysex",
+        SpecialPowers.Services.perms.ALLOW_ACTION,
+        document
+      );
+      await SpecialPowers.addPermission(
+        "midi",
+        SpecialPowers.Services.perms.ALLOW_ACTION,
+        document
+      );
+      // Gated permission should allow access after addon inserted permission.
+      for (let sysex of [false, true]) {
+        try {
+          await navigator.requestMIDIAccess({ sysex });
+          ok(true, "MIDI Access Request allowed");
+        } catch (ex) {
+          ok(false, "MIDI Access Request failed");
+        }
+
+        let result = await navigator.permissions.query({ name: "midi", sysex });
+        is(result?.state, "granted", "expected 'granted' permission status");
+      }
+
+      // Gated permission should also apply to subdomains.
+      for (let sysex of [false, true]) {
+        $("subdomain").contentWindow.postMessage(sysex, "*");
+        let response = await waitForMessage();
+        is(response, "succeeded", "MIDI Access Request allowed for subdomain");
+      }
+
+      is(
+        onChangeCalled,
+        expectedChangedStates.length - 1,
+        `expected onchange listener to have been called ${expectedChangedStates.length - 1} times`
+      );
+      is(
+        onChangeCalledWithSysex,
+        expectedChangedStates.length - 1,
+        `expected onchange listener to have been called ${expectedChangedStates.length - 1} times (sysex)`
+      );
+
+      // Remove the permission.
+      await SpecialPowers.removePermission("midi-sysex", document);
+      await SpecialPowers.removePermission("midi", document);
+
+      results.forEach(result => result.onchange = null);
+
+      SimpleTest.finish();
+    }
+    </script>
+  </body>
+</html>

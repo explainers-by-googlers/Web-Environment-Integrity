@@ -1,0 +1,759 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# Adding a new metric? We have docs for that!
+# https://firefox-source-docs.mozilla.org/toolkit/components/glean/user/new_definitions_file.html
+
+---
+$schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
+$tags:
+  - "Firefox :: Address Bar"
+
+urlbar:
+  abandonment:
+    disabled: true
+    type: event
+    description: Recorded when the user abandons a search (blurring the urlbar).
+    extra_keys:
+      sap:
+        description: >
+          `sap` is the meaning of `search access point`. It records where the
+          user started the search action from. The possible values are: `urlbar`
+          , `handoff`, `urlbar_newtab` and `urlbar_addonpage`.
+        type: string
+      interaction:
+        description: >
+          How the user started the search action. The possible values are:
+          `typed`, `pasted`, `topsite_search` (clicked on a topsite search
+          shortcut), `topsites` (selected a topsite result with empty search
+          string), `returned` (The user abandoned a search, then returned to it)
+          , `restarted` (The user abandoned a search, then returned to it,
+          cleared it and typed a completely different string), `refined` (The
+          user abandoned a search, then returned to it, and partially modified
+          the string), `persisted_search_terms` (The user returned to a previous
+          successful search that persisted terms in the urlbar),
+          `persisted_search_terms_restarted` (The user returned to a previous
+          successful search that persisted terms in the urlbar, then cleared it
+          and typed a completely different string) and
+          `persisted_search_terms_refined` (The user returned to a previous
+          successful search that persisted terms in the urlbar, and partially
+          modified the string).
+        type: string
+      search_mode:
+        description: >
+          If the urlbar is in search mode, thus restricting results to a
+          specific search engine or local source, this is set to the search mode
+          source. The possible sources are: `actions`, `bookmarks`, `history`,
+          `search_engine`, and `tabs`. If search mode is active but the source
+          did not fall into any of these categories, this will be `unknown`. If
+          search mode is not active, this will be an empty string.
+        type: string
+      n_chars:
+        description: >
+          The length of string used for the search. It includes whitespaces.
+        type: quantity
+      n_words:
+        description: >
+          The length of words used for the search. The words are made by
+          splitting the search string by whitespaces, thus this doesn’t support
+          CJK languages. For performance reasons a maximum of 255 characters are
+          considered when splitting.
+        type: quantity
+      n_results:
+        description: >
+          The number of results shown to the user. If this is high the results
+          list below may be truncated due to technical limitations. Also note in
+          that case not all the results may be physically visible due to the
+          screen size limitation.
+        type: quantity
+      groups:
+        description: >
+          Comma separated list of result groups in the order they were shown to
+          the user. The groups may be repeated, since the list will match 1:1
+          the results list, so we can link each result to a group. The possible
+          group names are: `heuristic`, `adaptive_history`, `search_history`,
+          `search_suggest`, `search_suggest_rich`, `trending_search`,
+          `trending_search_rich`, `top_pick`, `top_site`, `remote_tab`,
+          `addon`, `general`, `suggest`, `about_page` and `suggested_index`. If
+          the group did not fall into any of these, this will be `unknown` and
+          a bug should be filed to investigate it.
+        type: string
+      results:
+        description: >
+          Comma separated list of result types in the order they were shown to
+          the user. The `unknown` type should not occur and indicates a bug. The
+          possible types are:
+          `action`,
+          `addon`,
+          `autofill_about`,
+          `autofill_adaptive`,
+          `autofill_origin`,
+          `autofill_unknown`,
+          `autofill_url`,
+          `bookmark`,
+          `calc`,
+          `history`,
+          `intervention_clear`,
+          `intervention_refresh`,
+          `intervention_unknown`,
+          `intervention_update`,
+          `keyword`,
+          `merino_adm_nonsponsored`,
+          `merino_adm_sponsored`,
+          `merino_amo`,
+          `merino_top_picks`,
+          `merino_wikipedia`,
+          `remote_tab`,
+          `rs_adm_nonsponsored`,
+          `rs_adm_sponsored`,
+          `rs_amo`,
+          `rs_pocket`,
+          `search_engine`,
+          `search_history`,
+          `search_suggest`,
+          `search_suggest_rich`,
+          `suggest_non_sponsor`,
+          `suggest_sponsor`,
+          `tab`,
+          `tab_to_search`,
+          `tip_dismissal_acknowledgment`,
+          `tip_onboard`,
+          `tip_persist`,
+          `tip_redirect`,
+          `tip_unknown`,
+          `top_site`,
+          `trending_search`,
+          `trending_search_rich`,
+          `unit`,
+          `url`,
+          `weather`
+        type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1800414
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1805717
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1800414#c2
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1805717#c4
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - fx-search-telemetry@mozilla.com
+    expires: never
+  engagement:
+    disabled: true
+    type: event
+    description: Recorded when the user executes an action on a result.
+    extra_keys:
+      sap:
+        description: >
+          `sap` is the meaning of `search access point`. It records where the
+          user started the search action from. The possible values are: `urlbar`
+          , `handoff`, `urlbar_newtab` and `urlbar_addonpage`.
+        type: string
+      interaction:
+        description: >
+          How the user started the search action. The possible values are:
+          `typed`, `pasted`, `topsite_search` (clicked on a topsite search
+          shortcut), `topsites` (selected a topsite result with empty search
+          string), `returned` (The user abandoned a search, then returned to it)
+          , `restarted` (The user abandoned a search, then returned to it,
+          cleared it and typed a completely different string), `refined` (The
+          user abandoned a search, then returned to it, and partially modified
+          the string), `persisted_search_terms` (The user returned to a previous
+          successful search that persisted terms in the urlbar),
+          `persisted_search_terms_restarted` (The user returned to a previous
+          successful search that persisted terms in the urlbar, then cleared it
+          and typed a completely different string) and
+          `persisted_search_terms_refined` (The user returned to a previous
+          successful search that persisted terms in the urlbar, and partially
+          modified the string).
+        type: string
+      search_mode:
+        description: >
+          If the urlbar is in search mode, thus restricting results to a
+          specific search engine or local source, this is set to the search mode
+          source. The possible sources are: `actions`, `bookmarks`, `history`,
+          `search_engine`, and `tabs`. If search mode is active but the source
+          did not fall into any of these categories, this will be `unknown`. If
+          search mode is not active, this will be an empty string.
+        type: string
+      n_chars:
+        description: >
+          The length of string used for the search. It includes whitespaces.
+        type: quantity
+      n_words:
+        description: >
+          The length of words used for the search. The words are made by
+          splitting the search string by whitespaces, thus this doesn’t support
+          CJK languages. For performance reasons a maximum of 255 characters are
+          considered when splitting.
+        type: quantity
+      n_results:
+        description: >
+          The number of results shown to the user. If this is high the results
+          list below may be truncated due to technical limitations. Also note in
+          that case not all the results may be physically visible due to the
+          screen size limitation.
+        type: quantity
+      selected_result:
+        description: >
+          The type of the result the user selected. The `unknown` type should
+          not occur and indicates a bug. The possible types are:
+          `action`,
+          `addon`,
+          `autofill_about`,
+          `autofill_adaptive`,
+          `autofill_origin`,
+          `autofill_unknown`,
+          `autofill_url`,
+          `bookmark`,
+          `calc`,
+          `experimental_addon`,
+          `history`,
+          `input_field`,
+          `intervention_clear`,
+          `intervention_refresh`,
+          `intervention_unknown`,
+          `intervention_update`,
+          `keyword`,
+          `merino_adm_nonsponsored`,
+          `merino_adm_sponsored`,
+          `merino_amo`,
+          `merino_top_picks`,
+          `merino_wikipedia`,
+          `remote_tab`,
+          `rs_adm_nonsponsored`,
+          `rs_adm_sponsored`,
+          `rs_amo`,
+          `rs_pocket`,
+          `search_engine`,
+          `search_history`,
+          `search_shortcut_button`,
+          `search_suggest`,
+          `search_suggest_rich`,
+          `site_specific_contextual_search`,
+          `suggest_non_sponsor`,
+          `suggest_sponsor`,
+          `tab`,
+          `tab_to_search`,
+          `tip_dismissal_acknowledgment`,
+          `tip_onboard`,
+          `tip_persist`,
+          `tip_redirect`,
+          `tip_unknown`,
+          `top_site`,
+          `trending_search`,
+          `trending_search_rich`,
+          `unit`,
+          `url`,
+          `weather`
+        type: string
+      selected_result_subtype:
+        description: >
+          The subtype of the result the user selected. Currently, only the
+          action of the quick actions is the target to this. The possible values
+          are: `addon`, `bookmarks`, `clear`, `downloads`, `extensions`,
+          `inspect`, `logins`, `plugins`, `print`, `private`, `refresh`,
+          `restart`, `screenshot`, `settings`, `themes`, `update` and
+          `viewsource`. Otherwise, an empty string is returned.
+        type: string
+      provider:
+        description: >
+          The name of the `UrlbarProvider` that provided the selected result.
+          The possible values are: `AboutPages`, `AliasEngines`, `Autofill`,
+          `BookmarkKeywords`, `calculator`, `UrlbarProviderContextualSearch`,
+          `HeuristicFallback`, `HistoryUrlHeuristic`, `InputHistory`,
+          `UrlbarProviderInterventions`, `Omnibox`, `OpenTabs`, `Places`,
+          `PrivateSearch`, `quickactions`, `UrlbarProviderQuickSuggest`,
+          `RemoteTabs`, `SearchSuggestions`, `UrlbarProviderSearchTips`,
+          `TabToSearch`, `TokenAliasEngines`, `UrlbarProviderTopSites`,
+          `UnitConversion` and `UnifiedComplete`.
+          If engagement_type is `drop_go` or `paste_go`, this will be null
+          because no results are shown. And also, if selected_result is
+          `experimental_addon`, it means that the user selected a result
+           from an add-on using the urlbar experimental API. In this case,
+           this will be the provider name specified by the add-on.
+        type: string
+      engagement_type:
+        description: >
+          Records how the user selected the result. The possible values are:
+          `click`,
+          `dismiss`,
+          `drop_go`,
+          `enter`,
+          `go_button`,
+          `help`,
+          `inaccurate_location`,
+          `not_interested`,
+          `not_relevant`,
+          `paste_go`,
+          `show_less_frequently`
+        type: string
+      groups:
+        description: >
+          Comma separated list of result groups in the order they were shown to
+          the user. The groups may be repeated, since the list will match 1:1
+          the results list, so we can link each result to a group. The possible
+          group names are: `heuristic`, `adaptive_history`, `search_history`,
+          `search_suggest`, `search_suggest_rich`, `trending_search`,
+          `trending_search_rich`, `top_pick`, `top_site`, `remote_tab`, 
+          `addon`, `general`, `suggest`, `about_page` and `suggested_index`. 
+          If the group did not fall into any of these, this will be `unknown`
+          and a bug should be filed to investigate it. If engagement_type is
+          `drop_go` or `paste_go`, this will be empty string because no results
+          are shown.
+        type: string
+      results:
+        description: >
+          Comma separated list of result types in the order they were shown to
+          the user. The `unknown` type should not occur and indicates a bug. The
+          possible types are:
+          `action`,
+          `addon`,
+          `autofill_about`,
+          `autofill_adaptive`,
+          `autofill_origin`,
+          `autofill_unknown`,
+          `autofill_url`,
+          `bookmark`,
+          `calc`,
+          `history`,
+          `intervention_clear`,
+          `intervention_refresh`,
+          `intervention_unknown`,
+          `intervention_update`,
+          `keyword`,
+          `merino_adm_nonsponsored`,
+          `merino_adm_sponsored`,
+          `merino_amo`,
+          `merino_top_picks`,
+          `merino_wikipedia`,
+          `remote_tab`,
+          `rs_adm_nonsponsored`,
+          `rs_adm_sponsored`,
+          `rs_amo`,
+          `rs_pocket`,
+          `search_engine`,
+          `search_history`,
+          `search_suggest`,
+          `search_suggest_rich`,
+          `suggest_non_sponsor`,
+          `suggest_sponsor`,
+          `tab`,
+          `tab_to_search`,
+          `tip_dismissal_acknowledgment`,
+          `tip_onboard`,
+          `tip_persist`,
+          `tip_redirect`,
+          `tip_unknown`,
+          `top_site`,
+          `trending_search`,
+          `trending_search_rich`,
+          `unit`,
+          `url`,
+          `weather`
+        type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1797265
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1805717
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1797265#c3
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1805717#c4
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - fx-search-telemetry@mozilla.com
+    expires: never
+  impression:
+    disabled: true
+    type: event
+    description: Recorded when urlbar results are shown to the user.
+    extra_keys:
+      reason:
+        description: Reason for the impression.
+        type: string
+      sap:
+        description: >
+          `sap` is the meaning of `search access point`. It records where the
+          user started the search action from. The possible values are: `urlbar`
+          , `handoff`, `urlbar_newtab` and `urlbar_addonpage`.
+        type: string
+      interaction:
+        description: >
+          How the user started the search action. The possible values are:
+          `typed`, `pasted`, `topsite_search` (clicked on a topsite search
+          shortcut), `topsites` (selected a topsite result with empty search
+          string), `returned` (The user abandoned a search, then returned to it)
+          , `restarted` (The user abandoned a search, then returned to it,
+          cleared it and typed a completely different string), `refined` (The
+          user abandoned a search, then returned to it, and partially modified
+          the string), `persisted_search_terms` (The user returned to a previous
+          successful search that persisted terms in the urlbar),
+          `persisted_search_terms_restarted` (The user returned to a previous
+          successful search that persisted terms in the urlbar, then cleared it
+          and typed a completely different string) and
+          `persisted_search_terms_refined` (The user returned to a previous
+          successful search that persisted terms in the urlbar, and partially
+          modified the string).
+        type: string
+      search_mode:
+        description: >
+          If the urlbar is in search mode, thus restricting results to a
+          specific search engine or local source, this is set to the search mode
+          source. The possible sources are: `actions`, `bookmarks`, `history`,
+          `search_engine`, and `tabs`. If search mode is active but the source
+          did not fall into any of these categories, this will be `unknown`. If
+          search mode is not active, this will be an empty string.
+        type: string
+      n_chars:
+        description: >
+          The length of string used for the search. It includes whitespaces.
+        type: quantity
+      n_words:
+        description: >
+          The length of words used for the search. The words are made by
+          splitting the search string by whitespaces, thus this doesn’t support
+          CJK languages. For performance reasons a maximum of 255 characters are
+          considered when splitting.
+        type: quantity
+      n_results:
+        description: >
+          The number of results shown to the user. If this is high the results
+          list below may be truncated due to technical limitations. Also note in
+          that case not all the results may be physically visible due to the
+          screen size limitation.
+        type: quantity
+      groups:
+        description: >
+          Comma separated list of result groups in the order they were shown to
+          the user. The groups may be repeated, since the list will match 1:1
+          the results list, so we can link each result to a group. The possible
+          group names are: `heuristic`, `adaptive_history`, `search_history`,
+          `search_suggest`, `search_suggest_rich`, `trending_search`,
+          `trending_search_rich`, `top_pick`, `top_site`, `remote_tab`,
+          `addon`, `general`, `suggest`, `about_page` and `suggested_index`. If
+          the group did not fall into any of these, this will be `unknown` and
+          a bug should be filed to investigate it.
+        type: string
+      results:
+        description: >
+          Comma separated list of result types in the order they were shown to
+          the user. The `unknown` type should not occur and indicates a bug. The
+          possible types are:
+          `action`,
+          `addon`,
+          `autofill_about`,
+          `autofill_adaptive`,
+          `autofill_origin`,
+          `autofill_unknown`,
+          `autofill_url`,
+          `bookmark`,
+          `calc`,
+          `history`,
+          `intervention_clear`,
+          `intervention_refresh`,
+          `intervention_unknown`,
+          `intervention_update`,
+          `keyword`,
+          `merino_adm_nonsponsored`,
+          `merino_adm_sponsored`,
+          `merino_amo`,
+          `merino_top_picks`,
+          `merino_wikipedia`,
+          `remote_tab`,
+          `rs_adm_nonsponsored`,
+          `rs_adm_sponsored`,
+          `rs_amo`,
+          `rs_pocket`,
+          `search_engine`,
+          `search_history`,
+          `search_suggest`,
+          `search_suggest_rich`,
+          `suggest_non_sponsor`,
+          `suggest_sponsor`,
+          `tab`,
+          `tab_to_search`,
+          `tip_dismissal_acknowledgment`,
+          `tip_onboard`,
+          `tip_persist`,
+          `tip_redirect`,
+          `tip_unknown`,
+          `top_site`,
+          `trending_search`,
+          `trending_search_rich`,
+          `unit`,
+          `url`,
+          `weather`
+        type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1800579
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1805717
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1800579#c4
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1805717#c4
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - fx-search-telemetry@mozilla.com
+    expires: never
+
+  exposure:
+    type: event
+    description: >
+      Recorded when client is exposed to urlbar experiment results.
+    extra_keys:
+      results:
+        description: >
+          Comma separated list of results that were visible to the user.
+        type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1819766
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1819766#c9
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - fx-search-telemetry@mozilla.com
+    expires: never
+
+  pref_max_results:
+    lifetime: application
+    type: quantity
+    unit: integer
+    description: >
+      Maximum results to show in the Address Bar.
+      Corresponds to the value of the `browser.urlbar.maxRichResults` pref.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1817196
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1817196
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - fx-search-telemetry@mozilla.com
+    expires: never
+    send_in_pings:
+      - events
+
+  pref_suggest_topsites:
+    lifetime: application
+    type: boolean
+    description: >
+      Whether topsite results are enabled in the urlbar.
+      Corresponds to the value of the `browser.urlbar.suggest.topsites` pref.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1817196
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1817196
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - fx-search-telemetry@mozilla.com
+    expires: never
+    send_in_pings:
+      - events
+
+# Replacement for PingCentre "quicksuggest-block|impression|click" pings.
+quick_suggest:
+  ping_type:
+    type: string
+    description: >
+      The ping's type. In other situations might be designated by an event's
+      name or an interaction field. E.g. "quicksuggest-impression",
+      "quicksuggest-block", "quicksuggest-click".
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  position:
+    type: quantity
+    unit: QuickSuggest position
+    description: >
+      The position (1-based) of the QuickSuggest item being interatcted with.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  source:
+    type: string
+    description: >
+      The source of the interaction. E.g. "urlbar".
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  match_type:
+    type: string
+    description: >
+      Whether this was a best/top match or not. Either "best-match" or
+      "firefox-suggest".
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  block_id:
+    type: string
+    description: >
+      A unique identifier for the suggestion (a.k.a. a keywords block).
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  improve_suggest_experience:
+    type: boolean
+    description: >
+      Whether the "Improve Suggest Experience" checkbox is checked.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  advertiser:
+    type: string
+    description: >
+      The name of the advertiser providing the sponsored TopSite.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+      - web_activity
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  request_id:
+    type: string
+    description: >
+      A request identifier for each API request to
+      [Merino](https://mozilla-services.github.io/merino/).
+      Only present for suggestions provided by Merino.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+      - web_activity
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  is_clicked:
+    type: boolean
+    description: >
+      Whether this quicksuggest-impression ping was for an item that was
+      clicked.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  reporting_url:
+    type: url
+    description: >
+      The url to report this interaction to.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - top-sites
+
+  context_id:
+    type: uuid
+    description: >
+      An identifier to identify users for Contextual Services user interaction pings.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest
+
+  iab_category:
+    type: string
+    description: >
+      The suggestion's category. Either "22 - Shopping" or "5 - Educational".
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1836283
+    data_sensitivity:
+      - interaction
+      - web_activity
+    notification_emails:
+      - najiang@mozilla.com
+    expires: never
+    send_in_pings:
+      - quick-suggest

@@ -1,0 +1,19 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+octane:
+    description: Octane benchmark
+    fetch:
+        type: static-url
+        url: https://github.com/mozilla/perf-automation/releases/download/octane-v1/octane-0f5b8d48d4a9.zip
+        sha256: 38425ee1abfc5feca178b2f60fbd82b5873897c345112a85359be00024402f9f
+        size: 1816138
+
+web-tooling-benchmark:
+    description: Web Tooling Benchmark
+    fetch:
+        type: static-url
+        url: https://github.com/mozilla/perf-automation/releases/download/V1/web-tooling-benchmark-b2ac25c897c9.zip
+        sha256: 93b0b51df0cec3ca9bfa0bdf81d782306dcf18532e39b3ff3180409125daaff1
+        size: 5444135

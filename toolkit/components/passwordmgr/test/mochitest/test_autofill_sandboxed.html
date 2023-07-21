@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test form field autofill in sandboxed documents (null principal)</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+
+  <script type="text/javascript" src="pwmgr_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<p id="display"></p>
+
+<div id="content">
+  <iframe id="sandboxed"
+          sandbox=""></iframe>
+</div>
+
+<pre id="test">
+<script class="testbody" type="text/javascript">
+
+const { TestUtils } = SpecialPowers.ChromeUtils.importESModule(
+  "resource://testing-common/TestUtils.sys.mjs"
+);
+
+/** Test for Login Manager: form field autofill in sandboxed documents (null principal) **/
+
+const sandboxed = document.getElementById("sandboxed");
+let uname;
+let pword;
+
+add_setup(async () => {
+  await setStoredLoginsAsync(["https://example.com", "", null, "tempuser1", "temppass1", "uname", "pword"]);
+});
+
+add_task(async function test_no_autofill_in_form() {
+  sandboxed.src = "form_basic.html";
+  const frameWindow = SpecialPowers.wrap(sandboxed).contentWindow;
+  const DOMFormHasPasswordPromise = new Promise(resolve => {
+    SpecialPowers.addChromeEventListener("DOMFormHasPassword", function onDFHP() {
+      SpecialPowers.removeChromeEventListener("DOMFormHasPassword", onDFHP);
+      resolve();
+    });
+  });
+  // Can't use SimpleTest.promiseFocus as it doesn't work with the sandbox.
+  await SimpleTest.promiseWaitForCondition(() => {
+    return frameWindow.document.readyState == "complete" &&
+             frameWindow.location.href.endsWith("form_basic.html");
+  }, "Check frame is loaded");
+  info("frame loaded");
+  await DOMFormHasPasswordPromise;
+  const frameDoc = SpecialPowers.wrap(sandboxed).contentDocument;
+
+  uname = frameDoc.getElementById("form-basic-username");
+  pword = frameDoc.getElementById("form-basic-password");
+
+  // Autofill shouldn't happen in the sandboxed frame but would have happened by
+  // now since DOMFormHasPassword was observed above.
+  await ensureLoginFormStaysFilledWith(uname, "", pword, "");
+
+  info("blurring the username field after typing the username");
+  uname.focus();
+  uname.setUserInput("tempuser1");
+  synthesizeKey("VK_TAB", {}, frameWindow);
+
+  await TestUtils.waitForCondition(() => {
+    return uname.value === "tempuser1" & pword.value === "";
+  }, "Username and password field should be filled");
+});
+
+add_task(async function test_no_autofill_outside_form() {
+  sandboxed.src = "formless_basic.html";
+  const frameWindow = SpecialPowers.wrap(sandboxed).contentWindow;
+  const DOMInputPasswordAddedPromise = new Promise(resolve => {
+    SpecialPowers.addChromeEventListener("DOMInputPasswordAdded", function onDIPA() {
+      SpecialPowers.removeChromeEventListener("DOMInputPasswordAdded", onDIPA);
+      resolve();
+    });
+  });
+  // Can't use SimpleTest.promiseFocus as it doesn't work with the sandbox.
+  await SimpleTest.promiseWaitForCondition(() => {
+    return frameWindow.document.readyState == "complete" &&
+             frameWindow.location.href.endsWith("formless_basic.html");
+  }, "Check frame is loaded");
+  info("frame loaded");
+  await DOMInputPasswordAddedPromise;
+  const frameDoc = SpecialPowers.wrap(sandboxed).contentDocument;
+
+  uname = frameDoc.getElementById("form-basic-username");
+  pword = frameDoc.getElementById("form-basic-password");
+
+  // Autofill shouldn't happen in the sandboxed frame but would have happened by
+  // now since DOMInputPasswordAdded was observed above.
+  await ensureLoginFormStaysFilledWith(uname, "", pword, "");
+});
+</script>
+</pre>
+</body>
+</html>

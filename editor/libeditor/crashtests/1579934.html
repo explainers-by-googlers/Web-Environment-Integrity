@@ -1,0 +1,39 @@
+<html><script>
+window["_gaUserPrefs"] = { ioo : function() { return true; } }
+</script><head>
+<meta charset="windows-1252"><script>
+function onLoad() {
+  const form = document.querySelector("form");
+  form.addEventListener("DOMCharacterDataModified", () => {
+    document.documentElement.appendChild(form);
+  });
+  document.execCommand("delete");
+}
+
+function onToggle() {
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // text node node in the <button> which is the deepest last child of the
+  // <body>.
+  const button = document.querySelector("button");
+  getSelection().collapse(button.lastChild, button.lastChild.length);
+  document.querySelector("form").reset();
+}
+</script>
+</head><body onload="onLoad()">
+<details ontoggle="onToggle()" open>
+<dt contenteditable>
+</dt>
+</details><aside style="
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  font-family: &quot;Lucida Console&quot;, monospace;
+  background-color: rgb(242, 230, 217);
+  padding: 3px;
+  z-index: 10000;
+  text-align: center;
+  max-width: 120px;
+  opacity: 0;
+  transition: opacity 0.5s linear 0s;">1194 x 73</aside></body><form id="b"><keygen>
+<button autofocus>
+</button></form></html>

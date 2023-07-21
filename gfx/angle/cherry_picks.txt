@@ -1,0 +1,107 @@
+commit 23347851217a581f3b9d877af203a0dcc4b7b6e9
+Author: Kelsey Gilbert <kelsey.gilbert@mozilla.com>
+Date:   Wed Mar 29 16:13:39 2023 -0700
+
+    Add ShCompileOptions.initGLPointSize.
+    
+    Change-Id: I1d998867f3e829ed0dc8181fa76be5fe701dde70
+
+commit aa3a569c8ddc1122d55663749a6db63e48b3033c
+Author: Ashley Hale <ahale@mozilla.com>
+Date:   Wed Mar 1 18:03:04 2023 -0800
+
+    Disable ClearView with scissor on Skylake iGPU because of observed bugs with edge corruption. (#27)
+
+commit d93c05cd2d786f2c624fbf8f4465238b38a771a1
+Author: Kelsey Gilbert <jgilbert@mozilla.com>
+Date:   Thu Sep 8 17:10:21 2022 -0700
+
+    Import <cmath> in SymbolTable_ESSL_autogen.cpp.
+    
+    Fixes Snap builds of Firefox.
+    
+    Change-Id: I8d71d230d5e4a5a042e6afd4e31342da9a085bed
+    
+    Co-authored-by: Erich Gubler <erichdongubler@gmail.com>
+
+commit 0bf5781fddeb50d02b703dd89cc77b2c5f07e334
+Author: Erich Gubler <erichdongubler@gmail.com>
+Date:   Thu Jan 19 00:20:06 2023 -0500
+
+    build(linux): disable `PoolAlloc` to work around `asan` failures
+    
+    We noticed this causing problems in [Firefox CI][failing-ci].
+    
+    [failing-ci]: https://treeherder.mozilla.org/jobs?repo=autoland&author=egubler%40mozilla.com&selectedTaskRun=e6KdZgnNTCOE9weaOnTjVQ.0
+
+commit ea4d354f6cfc83c31446a855f3fd5603737eae76
+Author: Erich Gubler <erichdongubler@gmail.com>
+Date:   Wed Nov 16 20:54:23 2022 -0500
+
+    fix(windows,pre-c++20): use default ctors for `std::atomic<angle::Mutex*>`
+
+commit 9bcfaed62b60e210004217fd5e79c25f3e2b3760
+Author: Jeff Gilbert <jdashg@gmail.com>
+Date:   Thu Jul 15 15:56:45 2021 -0700
+
+    Add missing header to build config.
+
+commit 16baec7195df362b9d615ccb7e5d51673501e10e
+Author: Jeff Gilbert <jdashg@gmail.com>
+Date:   Thu Feb 11 17:34:00 2021 -0800
+
+    Don't assert for non-sampleable non-ms sources in blitRenderbufferRect if we can CopySubResource.
+    
+    In Firefox, we can have a source from DirectComposition without
+    D3D11_BIND_SHADER_RESOURCE. This is fine so long as our formats etc
+    match enough to hit the CopySubResource path.
+    Firefox bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1692355
+
+commit 43e9d9a7c95b509869a774fab62bf42d6d15b745
+Author: Jeff Muizelaar <jrmuizel@gmail.com>
+Date:   Wed May 6 14:04:42 2020 -0400
+
+    Don't use ClearView if we previously used dual source blending on Intel gen6. (#22)
+    
+    Doing a ClearView after a dual source blend seems to cause a TDR on
+    Intel SandyBridge. Presumeably this is because the ClearView is
+    implemented as a regular draw and the driver doesn't properly set up the
+    state.
+    
+    If we detect that this is going to happen we fall back to the manual
+    draw call path. This lets us use ClearView most of the time still.
+
+commit b16ebaa05424354c06c2ccdccc36df2c7c1b191e
+Author: Erich Gubler <erichdongubler@gmail.com>
+Date:   Wed Nov 9 21:12:44 2022 -0500
+
+    Fix broken build from `-Wexit-time-destructors` on Windows x64
+
+commit 4c3a473aec4e09ffacd0466817cb851529087767
+Author: Dzmitry Malyshau <dmalyshau@mozilla.com>
+Date:   Thu Dec 5 13:02:14 2019 -0500
+
+    Restrict the slow texture upload workaround to 128bit formats. (#21)
+    
+    The workaround is slow for having a CPU-visible mirror of the texture, but that mirror is not properly recycled with regards to GPU usage, thus causing a CPU stall on update.
+    
+    Original reports were related to WebRender vertex texture updates that are RGBA32F and RGBA32U formats. Limiting the workaround to these formats would allow the affected platforms to upload regular texture data faster without stalls.
+    
+    Co-authored-by: Erich Gubler <erichdongubler@gmail.com>
+
+Above: cherries picked
+================================================================================
+Below: merge base from: origin/chromium/5359
+
+commit ceec659ac60b0c8ee9d9c602ca1a878ec1d3a88f
+Author: Shahbaz Youssefi <syoussefi@chromium.org>
+Date:   Mon Oct 31 10:29:45 2022 -0400
+
+    M108: Vulkan: Disable logicOp dynamic state on Intel/Mesa
+    
+    Hits a stack overflow inside the driver.
+    
+    Bug: chromium:1379201
+    Change-Id: I790d7ef0333ba17eedbe91e4fc9c3a2b94563bff
+    Reviewed-on: https://chromium-review.googlesource.com/c/angle/angle/+/4004440
+    Reviewed-by: Yuxin Hu <yuxinhu@google.com>

@@ -1,0 +1,88 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    description: "sccache toolchain build"
+    attributes:
+        local-toolchain: true
+    treeherder:
+        symbol: TL(sccache)
+    worker-type: b-linux-gcp
+    worker:
+        max-run-time: 1800
+    run:
+        using: toolchain-script
+        script: build-rust-based-toolchain.sh
+        toolchain-artifact: public/build/sccache.tar.zst
+    fetches:
+        fetch:
+            - sccache
+
+linux64-sccache:
+    treeherder:
+        symbol: TL(sccache)
+    run:
+        arguments:
+            - x86_64-unknown-linux-gnu
+            - s3
+            - gcs
+            - azure
+            - dist-server
+            - openssl/vendored
+            - native-zlib
+    fetches:
+        toolchain:
+            - linux64-rust-toolchain
+            - linux64-clang-toolchain
+            - sysroot-x86_64-linux-gnu
+
+macosx64-sccache:
+    treeherder:
+        symbol: TM(sccache)
+    run:
+        arguments:
+            - x86_64-apple-darwin
+            - all
+            - native-zlib
+    fetches:
+        toolchain:
+            - linux64-rust-macos-toolchain
+            - linux64-clang-toolchain
+            - macosx64-sdk-toolchain
+
+macosx64-aarch64-sccache:
+    treeherder:
+        symbol: TM(sccache-aarch64)
+    worker:
+        max-run-time: 1800
+    run:
+        arguments:
+            - aarch64-apple-darwin
+            - all
+            - native-zlib
+    fetches:
+        toolchain:
+            - linux64-rust-macos-toolchain
+            - linux64-clang-toolchain
+            - macosx64-sdk-toolchain
+
+win64-sccache:
+    treeherder:
+        symbol: TW64(sccache)
+    worker:
+        env:
+            # Blake3 assembly can't be cross-compiled. The intrinsics version should be good enough.
+            CARGO_FEATURE_PREFER_INTRINSICS: '1'
+    run:
+        arguments:
+            - x86_64-pc-windows-msvc
+            - dist-client
+            - s3
+            - gcs
+            - native-zlib
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-windows-toolchain
+            - vs-toolchain

@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <script type="application/javascript" src="pc.js"></script>
+  <script type="application/javascript" src="/tests/dom/canvas/test/captureStream_common.js"></script>
+  <script type="application/javascript" src="helpers_from_wpt/sdp.js"></script>
+  <script type="application/javascript" src="simulcast.js"></script>
+  <script type="application/javascript" src="stats.js"></script>
+</head>
+<body>
+<pre id="test">
+<script type="application/javascript">
+  createHTML({
+    bug: "1432793",
+    title: "Simulcast with odd resolution",
+    visible: true
+  });
+
+  runNetworkTest(async () => {
+    const helper = new VideoStreamHelper();
+    const emitter = new VideoFrameEmitter(helper.green, helper.red, 705, 528);
+
+    async function checkVideoElement(senderElement, receiverElement, encoding) {
+      info(`Waiting for receiver video element ${encoding.rid} to start playing`);
+      await helper.checkVideoPlaying(receiverElement);
+      const srcWidth = senderElement.videoWidth;
+      const srcHeight = senderElement.videoHeight;
+      info(`Source resolution is ${srcWidth}x${srcHeight}`);
+
+      const scaleDownBy = encoding.scaleResolutionDownBy;
+      const expectedWidth = srcWidth / scaleDownBy;
+      const expectedHeight = srcHeight / scaleDownBy;
+      const margin = srcWidth * 0.1;
+      const width = receiverElement.videoWidth;
+      const height = receiverElement.videoHeight;
+      const rid = encoding.rid;
+      ok(width >= expectedWidth - margin && width <= expectedWidth + margin,
+        `Width ${width} should be within 10% of ${expectedWidth} for rid '${rid}'`);
+      ok(height >= expectedHeight - margin && height <= expectedHeight + margin,
+        `Height ${height} should be within 10% of ${expectedHeight} for rid '${rid}'`);
+    }
+
+    async function checkVideoElements(senderElement, receiverElements, encodings) {
+      is(receiverElements.length, encodings.length, 'Number of video elements should match number of encodings');
+      info('Waiting for sender video element to start playing');
+      await helper.checkVideoPlaying(senderElement);
+      for (let i = 0; i < encodings.length; i++) {
+        await checkVideoElement(senderElement, receiverElements[i], encodings[i]);
+      }
+    }
+
+    const sendEncodings = [{ rid: "0", maxBitrate: 40000, scaleResolutionDownBy: 1.9 },
+                           { rid: "1", maxBitrate: 40000, scaleResolutionDownBy: 3.5 },
+                           { rid: "2", maxBitrate: 40000, scaleResolutionDownBy: 17.8 }];
+
+    async function checkSenderStats(sender) {
+      const senderStats = await sender.getStats();
+      checkSenderStats(senderStats, sendEncodings.length);
+      checkExpectedFields(senderStats);
+      pedanticChecks(senderStats);
+    }
+
+    async function waitForResizeEvents(elements) {
+      return Promise.all(elements.map(elem => haveEvent(elem, 'resize')));
+    }
+
+    await pushPrefs(
+        // 180Kbps was determined empirically, set well-higher than
+        // the 80Kbps+overhead needed for the two simulcast streams.
+        // 100Kbps was apparently too low.
+        ['media.peerconnection.video.min_bitrate_estimate', 180*1000]);
+
+
+    const offerer = new RTCPeerConnection();
+    const answerer = new RTCPeerConnection();
+
+    const add = (pc, can, failed) => can && pc.addIceCandidate(can).catch(failed);
+    offerer.onicecandidate = e => add(answerer, e.candidate, generateErrorCallback());
+    answerer.onicecandidate = e => add(offerer, e.candidate, generateErrorCallback());
+
+    const metadataToBeLoaded = [];
+    answerer.ontrack = (e) => {
+      metadataToBeLoaded.push(getPlaybackWithLoadedMetadata(e.track));
+    };
+
+    // One send transceiver, that will be used to send both simulcast streams
+    const videoStream = emitter.stream();
+    offerer.addTransceiver(videoStream.getVideoTracks()[0], {sendEncodings});
+    const senderElement = document.createElement('video');
+    senderElement.autoplay = true;
+    senderElement.srcObject = videoStream;
+    senderElement.id = videoStream.id
+
+    const sender = offerer.getSenders()[0];
+    let parameters = sender.getParameters();
+    is(parameters.encodings[0].maxBitrate, sendEncodings[0].maxBitrate);
+    isfuzzy(parameters.encodings[0].scaleResolutionDownBy,
+      sendEncodings[0].scaleResolutionDownBy, 0.01);
+    is(parameters.encodings[1].maxBitrate, sendEncodings[1].maxBitrate);
+    isfuzzy(parameters.encodings[1].scaleResolutionDownBy,
+      sendEncodings[1].scaleResolutionDownBy, 0.01);
+    is(parameters.encodings[2].maxBitrate, sendEncodings[2].maxBitrate);
+    isfuzzy(parameters.encodings[2].scaleResolutionDownBy,
+      sendEncodings[2].scaleResolutionDownBy, 0.01);
+
+    const offer = await offerer.createOffer();
+
+    const mungedOffer = ridToMid(offer);
+    info(`Transformed send simulcast offer to multiple m-sections: ${offer.sdp} to ${mungedOffer}`);
+
+    await answerer.setRemoteDescription({type: 'offer', sdp: mungedOffer});
+    await offerer.setLocalDescription(offer);
+
+    const rids = answerer.getTransceivers().map(t => t.mid);
+    is(rids.length, 3, 'Should have 3 mids in offer');
+    ok(rids[0], 'First mid should be non-empty');
+    ok(rids[1], 'Second mid should be non-empty');
+    ok(rids[2], 'Third mid should be non-empty');
+    info(`rids: ${JSON.stringify(rids)}`);
+
+    const answer = await answerer.createAnswer();
+
+    const mungedAnswer = midToRid(answer);
+    info(`Transformed recv answer to simulcast: ${answer.sdp} to ${mungedAnswer}`);
+    await offerer.setRemoteDescription({type: 'answer', sdp: mungedAnswer});
+    await answerer.setLocalDescription(answer);
+
+    is(metadataToBeLoaded.length, 3, 'Offerer should have gotten 3 ontrack events');
+    emitter.start();
+    info('Waiting for 3 loadedmetadata events');
+    const videoElems = await Promise.all(metadataToBeLoaded);
+    await checkVideoElements(senderElement, videoElems, parameters.encodings);
+    emitter.stop();
+
+    await Promise.all([waitForSyncedRtcp(offerer), waitForSyncedRtcp(answerer)]);
+
+    info(`Changing source resolution to 1280x720`);
+    emitter.size(1280, 720);
+    emitter.start();
+    await waitForResizeEvents([senderElement, ...videoElems]);
+    await checkVideoElements(senderElement, videoElems, parameters.encodings);
+    await checkSenderStats(sender);
+
+    parameters = sender.getParameters();
+    parameters.encodings[0].scaleResolutionDownBy = 1;
+    parameters.encodings[1].scaleResolutionDownBy = 2;
+    parameters.encodings[2].scaleResolutionDownBy = 3;
+    info(`Changing encodings to ${JSON.stringify(parameters.encodings)}`);
+    await sender.setParameters(parameters);
+    await waitForResizeEvents(videoElems);
+    await checkVideoElements(senderElement, videoElems, parameters.encodings);
+    await checkSenderStats(sender);
+
+    parameters = sender.getParameters();
+    parameters.encodings[0].scaleResolutionDownBy = 6;
+    parameters.encodings[1].scaleResolutionDownBy = 5;
+    parameters.encodings[2].scaleResolutionDownBy = 4;
+    info(`Changing encodings to ${JSON.stringify(parameters.encodings)}`);
+    await sender.setParameters(parameters);
+    await waitForResizeEvents(videoElems);
+    await checkVideoElements(senderElement, videoElems, parameters.encodings);
+    await checkSenderStats(sender);
+
+    parameters = sender.getParameters();
+    parameters.encodings[0].scaleResolutionDownBy = 4;
+    parameters.encodings[1].scaleResolutionDownBy = 1;
+    parameters.encodings[2].scaleResolutionDownBy = 2;
+    info(`Changing encodings to ${JSON.stringify(parameters.encodings)}`);
+    await sender.setParameters(parameters);
+    await waitForResizeEvents(videoElems);
+    await checkVideoElements(senderElement, videoElems, parameters.encodings);
+    await checkSenderStats(sender);
+
+    emitter.stop();
+    videoStream.getVideoTracks()[0].stop();
+    offerer.close();
+    answerer.close();
+  });
+
+</script>
+</pre>
+</body>
+</html>

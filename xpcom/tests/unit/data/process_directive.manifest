@@ -1,0 +1,2 @@
+category directives-test main-process @mozilla.org/supports-cstring;1 process=main
+category directives-test content-process @mozilla.org/supports-cstring;1 process=content

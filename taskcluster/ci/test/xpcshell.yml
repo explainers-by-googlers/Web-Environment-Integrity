@@ -1,0 +1,177 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    suite:
+        category: xpcshell
+        name:
+            by-variant:
+                msix: xpcshell-msix
+                default: xpcshell
+    target:
+        by-test-platform:
+            android-em-7.*: geckoview-test_runner.apk
+            windows11-64-2009.*:
+                by-variant:
+                    msix: target.installer.msix
+                    default: null
+            default: null
+    mozharness:
+        script:
+            by-test-platform:
+                android-em.*: android_emulator_unittest.py
+                default: desktop_unittest.py
+        config:
+            by-test-platform:
+                android-em-7.*:
+                    - android/android_common.py
+                    - android/android-x86_64.py
+                linux.*:
+                    - unittests/linux_unittest.py
+                    - remove_executables.py
+                macosx.*:
+                    - unittests/mac_unittest.py
+                windows.*:
+                    - unittests/win_unittest.py
+        requires-signed-builds:
+            by-test-platform:
+                macosx1100.*: true
+                windows.*-asan-qr/opt: false    # No XPCShell on ASAN yet
+                windows.*-mingwclang-qr/.*: false
+                windows.*: true
+                default: false
+
+xpcshell:
+    description: "xpcshell test run"
+    treeherder-symbol: X(X)
+    variants:
+        - conditioned_profile
+        - socketprocess_networking+no-fission
+        - socketprocess_networking
+        - no-fission
+        - msix
+    run-on-projects:
+        by-variant:
+            conditioned_profile:
+                by-test-platform:
+                    .*asan.*: []
+                    .*ccov.*: []
+                    (linux1804-64|windows11-64.*)(-shippable)?-qr/opt: ['trunk']
+                    default: []
+            socketprocess_networking+no-fission:
+                by-test-platform:
+                    linux1804-64.*: ['trunk']
+                    default: []
+            socketprocess_networking:
+                by-test-platform:
+                    (linux1804-64|macosx).*: ['trunk']  # All Linux & Mac variants
+                    ^(?!.*asan).*windows11.*: ['trunk']   # All Windows11 except ASAN
+                    default: []
+            no-fission:
+                by-test-platform:
+                    android-em-7.0-x86_64-qr/debug-isolated-process: []
+                    android.*: built-projects
+                    linux1804-64.*: ['trunk']
+                    default: []
+            msix:
+                by-test-platform:
+                    windows11-64-2009(-shippable)?-qr/opt: built-projects
+                    windows11-64-2009-qr/debug: built-projects
+                    default: []
+            default:
+                by-test-platform:
+                    android.*: []
+                    .*wayland.*: []
+                    windows.*-asan-qr/opt: []  # No XPCShell on ASAN yet
+                    default: built-projects
+    chunks:
+        by-test-platform:
+            .*-asan-qr/opt: 4
+            .*-ccov.*/.*: 8
+            .*-tsan-qr/opt: 8
+            (android-em-7.*|macosx.*|linux1804-64.*/opt): 2
+            default: 4
+    max-run-time:
+        by-variant:
+            msix: 7200
+            conditioned_profile: 7200
+            default:
+                by-test-platform:
+                    .*-ccov(-qr)?/.*: 7200
+                    .*-tsan-qr/opt: 7200
+                    default: 5400
+    allow-software-gl-layers: false
+    tier:
+        by-test-platform:
+            windows.*-asan.*: 3
+            android-em-7.0-x86_64-qr/debug-isolated-process: 3
+            default: default
+    mozharness:
+        extra-options:
+            by-test-platform:
+                windows1.*:
+                    - --threads=2
+                default: []
+    fetches:
+        toolchain:
+            by-test-platform:
+                linux.*:
+                    - linux64-node
+                    - linux64-minidump-stackwalk
+                    - linux64-fix-stacks
+                macosx.*:
+                    - macosx64-node
+                    - macosx64-minidump-stackwalk
+                    - macosx64-fix-stacks
+                win.*-64.*:
+                    - win64-node
+                    - win32-minidump-stackwalk
+                    - win32-fix-stacks
+                win.*32.*:
+                    - win32-node
+                    - win32-minidump-stackwalk
+                    - win32-fix-stacks
+                android-em-7.*:
+                    - android-system-image-x86_64-linux
+                    - android-avd-x86_64-linux
+                    - android-emulator-linux
+                    - linux64-node
+                    - linux64-minidump-stackwalk
+
+xpcshell-failures:
+    description: "xpcshell specific failures test run"
+    treeherder-symbol: X-f(X)
+    run-on-projects: ["mozilla-central"]
+    chunks: 2
+    max-run-time: 2700
+    allow-software-gl-layers: false
+    tier: 3
+    mozharness:
+        script:
+            by-test-platform:
+                macos.*: mac_unittest.py
+                windows1.*: desktop_unittest.py
+        config:
+            by-test-platform:
+                macos.*:
+                    - unittests/mac_unittest.py
+                windows1.*:
+                    - unittests/win_unittest.py
+        extra-options:
+            by-test-platform:
+                macosx1100.*:
+                    - --run-failures=apple_silicon
+                    - --timeout-as-pass
+                    - --crash-as-pass
+    fetches:
+        toolchain:
+            by-test-platform:
+                macosx.*:
+                    - macosx64-node
+                    - macosx64-minidump-stackwalk
+                    - macosx64-fix-stacks
+                win.*32.*:
+                    - win32-node
+                    - win32-minidump-stackwalk
+                    - win32-fix-stacks

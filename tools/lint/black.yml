@@ -1,0 +1,18 @@
+---
+black:
+    description: Reformat python
+    exclude:
+        - gfx/harfbuzz/src/meson.build
+        - '**/*.mako.py'
+        - python/mozbuild/mozbuild/test/frontend/data/reader-error-syntax/moz.build
+        - testing/mozharness/configs/test/test_malformed.py
+        - testing/web-platform/tests
+    extensions:
+        - build
+        - configure
+        - py
+    support-files:
+        - 'tools/lint/python/**'
+    type: external
+    payload: python.black:lint
+    setup: python.black:setup

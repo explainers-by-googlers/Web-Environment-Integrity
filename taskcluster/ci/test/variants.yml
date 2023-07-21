@@ -1,0 +1,300 @@
+---
+1proc:
+    description: "{description} with e10s disabled"
+    component: "Testing::General"
+    expiration: "never"
+    suffix: "1proc"
+    merge:
+        mozharness:
+            extra-options:
+                - "--disable-e10s"
+                - "--disable-fission"
+
+headless:
+    description: "{description} without a window"
+    component: "Firefox::Headless"
+    expiration: "never"
+    suffix: "headless"
+    replace:
+        tier: 2
+    merge:
+        mozharness:
+            extra-options:
+                - "--headless"
+
+a11y-checks:
+    description: "{description} with accessibility checks enabled"
+    component: "Core::Disability Access APIs"
+    expiration: "2023-09-01"
+    suffix: "a11y-checks"
+    replace:
+        tier: 2
+    merge:
+        mozharness:
+            extra-options:
+                - "--enable-a11y-checks"
+
+aab:
+    description: "{description} with aab test_runner"
+    component: "GeckoView::General"
+    expiration: "2023-09-01"
+    when: &gv_e10s_filter
+        $eval: '"android" in task["test-platform"]'
+    suffix: "aab"
+    # Need to add jdk but there isn't a good way to do that
+    # so we just replace the toolchain list
+    merge:
+        fetches:
+            toolchain:
+                - android-system-image-x86_64-linux
+                - android-avd-x86_64-linux
+                - android-emulator-linux
+                - linux64-minidump-stackwalk
+                - linux64-fix-stacks
+                - linux64-jdk
+    replace:
+        target: "geckoview-test_runner.aab"
+
+geckoview-no-fission:
+    description: "{description} without fission enabled"
+    component: "Core::DOM: Content Processes"
+    expiration: "2023-09-01"
+    when:
+        <<: *gv_e10s_filter
+    suffix: "nofis"
+    merge:
+        mozharness:
+            extra-options:
+                - "--disable-fission"
+
+geckoview-fission:
+    description: "{description} with fission enabled"
+    component: "Core::DOM: Content Processes"
+    expiration: "2023-09-01"
+    when:
+        <<: *gv_e10s_filter
+    suffix: "fis"
+
+fission:
+    description: "{description} with fission enabled"
+    component: "Core::DOM: Content Processes"
+    expiration: "2023-09-01"
+    suffix: "fis"
+
+no-fission:
+    description: "{description} without fission enabled"
+    component: "Core::DOM: Content Processes"
+    expiration: "2023-09-01"
+    suffix: "nofis"
+    merge:
+        mozharness:
+            extra-options:
+                - "--disable-fission"
+
+xorigin:
+    description: "{description} with cross-origin"
+    component: "Core::DOM: Content Processes"
+    expiration: "2023-09-01"
+    suffix: "xorig"
+    replace:
+        e10s: true
+    merge:
+        mozharness:
+            extra-options:
+                - "--enable-xorigin-tests"
+                - "--setpref=privacy.partition.always_partition_third_party_non_cookie_storage=false"
+
+editor-legacy-direction:
+    description: "{description} with compatible join/split node direction of editor disabled"
+    component: "Core::DOM: Editor"
+    expiration: "2023-09-01"
+    suffix: "editor-legacy-dir"
+    replace:
+        tier: 2
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=editor.join_split_direction.compatible_with_the_other_browsers=false"
+
+conditioned_profile:
+    description: "{description} with conditioned profile"
+    component: "Testing::General"
+    expiration: "2023-09-01"
+    suffix: "condprof"
+    merge:
+        mozharness:
+            extra-options:
+                - "--conditioned-profile"
+    replace:
+        chunks: 8
+
+socketprocess:
+    description: "{description} with socket process enabled"
+    component: "Core::Networking"
+    expiration: "2023-08-01"
+    suffix: "spi"
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=media.peerconnection.mtransport_process=true"
+                - "--setpref=network.process.enabled=true"
+
+socketprocess_networking:
+    description: "{description} with networking on socket process enabled"
+    component: "Core::Networking"
+    expiration: "2023-08-01"
+    suffix: "spi-nw"
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=network.process.enabled=true"
+                - "--setpref=network.http.network_access_on_socket_process.enabled=true"
+
+# -
+# Webrender DComp variants for Win10
+
+webrender-dcomp-disabled:
+    description: "{description} with dcomp disabled"
+    component: "Core::Graphics: WebRender"
+    expiration: "2023-09-01"
+    suffix: "wr-dc0"
+    when:
+        $eval: '"windows1" in task["test-platform"]'
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=gfx.webrender.dcomp-win.enabled=false"
+                - "--setpref=gfx.webrender.dcomp-video-overlay-win=false"
+                - "--setpref=gfx.webrender.dcomp-video-overlay-win.force-enabled=false"
+                - "--setpref=gfx.webrender.compositor=false"
+                - "--setpref=gfx.webrender.compositor.force-enabled=false"
+
+webrender-dcomp-present:  # Default variant ends up like this.
+    description: "{description} with dcomp present but not overlays"
+    component: "Core::Graphics: WebRender"
+    expiration: "2023-09-01"
+    suffix: "wr-dc1-p"
+    when:
+        $eval: '"windows1" in task["test-platform"]'
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=gfx.webrender.dcomp-win.enabled=true"
+                - "--setpref=gfx.webrender.dcomp-video-overlay-win=false"
+                - "--setpref=gfx.webrender.dcomp-video-overlay-win.force-enabled=false"
+                - "--setpref=gfx.webrender.compositor=false"
+                - "--setpref=gfx.webrender.compositor.force-enabled=false"
+
+webrender-dcomp-overlays:
+    description: "{description} with dcomp overlays but not compositing"
+    component: "Core::Graphics: WebRender"
+    expiration: "2023-09-01"
+    suffix: "wr-dc2-o"
+    when:
+        $eval: '"windows1" in task["test-platform"]'
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=gfx.webrender.dcomp-win.enabled=true"
+                - "--setpref=gfx.webrender.dcomp-video-overlay-win=true"
+                - "--setpref=gfx.webrender.dcomp-video-overlay-win.force-enabled=true"
+                - "--setpref=gfx.webrender.compositor=false"
+                - "--setpref=gfx.webrender.compositor.force-enabled=false"
+
+webrender-dcomp-compositing:
+    description: "{description} with dcomp compositing"
+    component: "Core::Graphics: WebRender"
+    expiration: "2023-09-01"
+    suffix: "wr-dc3-c"
+    when:
+        $eval: '"windows1" in task["test-platform"]'
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=gfx.webrender.dcomp-win.enabled=true"
+                - "--setpref=gfx.webrender.dcomp-video-overlay-win=true"
+                - "--setpref=gfx.webrender.dcomp-video-overlay-win.force-enabled=true"
+                - "--setpref=gfx.webrender.compositor=true"
+                - "--setpref=gfx.webrender.compositor.force-enabled=true"
+
+# -
+
+webrender-sw:
+    description: "{description} with software webrender enabled"
+    component: "Core::Graphics: WebRender"
+    expiration: "2023-09-01"
+    suffix: "swr"
+    merge:
+        webrender: true
+        mozharness:
+            extra-options:
+                - "--setpref=gfx.webrender.software=true"
+
+webgl-ipc:
+    description: "{description} with WebGL IPC process enabled"
+    component: "Core::Graphics: CanvasWebGL"
+    expiration: "2023-09-01"
+    suffix: "gli"
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=webgl.out-of-process=true"
+                - "--setpref=security.sandbox.content.headless=true"
+
+devtools-no-eft:
+    description: "{description} with DevTools EFT disabled"
+    component: "DevTools::Framework"
+    expiration: "2023-09-01"
+    suffix: "dt-no-eft"
+    merge:
+        mozharness:
+            extra-options:
+                - "--setpref=devtools.every-frame-target.enabled=false"
+
+wmf-media-engine:
+    description: "{description} with Windows Media Foundation media engine enabled"
+    component: "Core::Audio/Video: Playback"
+    expiration: "2023-10-10"
+    when:
+        $eval: '"windows1" in task["test-platform"]'
+    suffix: "wmfme"
+    replace:
+        tier: 2
+    merge:
+        mozharness:
+            extra-options:
+                - "--tag=media-engine-compatible"
+                - "--setpref=media.wmf.media-engine.enabled=1"
+                - "--setpref=media.wmf.media-engine.channel-decoder.enabled=true"
+
+msix:
+    description: "{description} from msix packages"
+    component: "Firefox:Installer"
+    expiration: "never"
+    suffix: "msix"
+    when:
+        $eval: '"windows1" in task["test-platform"] && "-64" in task["test-platform"] && ("opt" in task["test-platform"] || "debug" in task["test-platform"]) && !("asan" in task["test-platform"]) && !("ccov" in task["test-platform"])'
+    merge:
+        mozharness:
+            extra-options:
+                - "--installer-path installer.msix"
+
+http3:
+    description: "{description} with http3 server"
+    component: "Testing::General"
+    expiration: "2023-09-01"
+    suffix: "http3"
+    merge:
+        mozharness:
+            extra-options:
+                - "--use-http3-server"
+
+http2:
+    description: "{description} with http2 server"
+    component: "Testing::General"
+    expiration: "2023-12-01"
+    suffix: "http2"
+    merge:
+        mozharness:
+            extra-options:
+                - "--use-http2-server"

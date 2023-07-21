@@ -1,0 +1,4202 @@
+
+# cargo-vet audits file
+
+[[wildcard-audits.audio_thread_priority]]
+who = "Paul Adenot <paul@paul.cx>"
+criteria = "safe-to-deploy"
+user-id = 1258 # Paul Adenot (padenot)
+start = "2019-05-09"
+end = "2024-04-24"
+notes = """
+I've written most of this crate, the rest has been either written and in any
+case has been reviewed by Mozilla developers.
+"""
+
+[[wildcard-audits.authenticator]]
+who = "John M. Schanck <jschanck@mozilla.com>"
+criteria = "safe-to-deploy"
+user-id = 175410 # John Schanck (jschanck)
+start = "2022-11-15"
+end = "2024-04-26"
+notes = "Maintained by the CryptoEng team at Mozilla."
+
+[[wildcard-audits.bhttp]]
+who = "Martin Thomson <mt@lowentropy.net>"
+criteria = "safe-to-deploy"
+user-id = 128763 # Martin Thomson (martinthomson)
+start = "2022-08-04"
+end = "2024-03-09"
+notes = "Though the code is safe to run and deploy, the code for processing HTTP/1.1 messages (the `read-http` feature, specifically) is not suited for deployment in real applications, either clients or servers.  Some features necessary for live deployment are not implemented, such as the proper handling of some types of response (e.g., a response to a HEAD request).  Software that processes HTTP/1.1 messages requires a large number of compatibility tweaks if it is to be deployed interoperably.  This feature only exists to support basic validation tools and is unlikely to be widely compatible."
+
+[[wildcard-audits.cexpr]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+user-id = 3788 # Emilio Cobos Álvarez (emilio)
+start = "2021-06-21"
+end = "2024-04-21"
+notes = "No unsafe code, rather straight-forward parser."
+
+[[wildcard-audits.cocoa]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2019-07-23"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.cocoa]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 5946 # Jeff Muizelaar (jrmuizel)
+start = "2022-11-01"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.cocoa-foundation]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 5946 # Jeff Muizelaar (jrmuizel)
+start = "2023-03-16"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.cocoa-foundation]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2020-07-20"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-foundation]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2019-11-12"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-foundation]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 5946 # Jeff Muizelaar (jrmuizel)
+start = "2019-03-29"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-foundation-sys]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2019-11-12"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-foundation-sys]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 5946 # Jeff Muizelaar (jrmuizel)
+start = "2020-10-14"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-graphics]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2019-10-28"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-graphics]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 5946 # Jeff Muizelaar (jrmuizel)
+start = "2020-12-08"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-graphics-types]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2020-07-20"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-text]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2019-03-29"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.core-text]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 5946 # Jeff Muizelaar (jrmuizel)
+start = "2021-02-14"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.dogear]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 27901 # Lina Butler (linabutler)
+start = "2019-03-04"
+end = "2024-05-05"
+notes = "Lina developed this crate as Mozilla staff."
+
+[[wildcard-audits.etagere]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+user-id = 1281 # Nicolas Silva (nical)
+start = "2020-11-12"
+end = "2024-04-25"
+notes = "I am the author of this crate."
+
+[[wildcard-audits.euclid]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+user-id = 1281 # Nicolas Silva (nical)
+start = "2019-03-14"
+end = "2024-04-25"
+notes = "I wrote most of the commits in the euclid reprository and review every change that is not produced by me."
+
+[[wildcard-audits.freetype]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2020-02-28"
+end = "2023-05-04"
+renew = false
+notes = "All code written or reviewed by Mozilla staff."
+
+[[wildcard-audits.gleam]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2019-03-18"
+end = "2023-05-04"
+renew = false
+notes = "All code written or reviewed by Mozilla."
+
+[[wildcard-audits.gleam]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 5946 # Jeff Muizelaar (jrmuizel)
+start = "2023-04-21"
+end = "2023-05-04"
+renew = false
+notes = "All code written or reviewed by Mozilla."
+
+[[wildcard-audits.gleam]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 1039
+start = "2019-03-01"
+end = "2023-05-04"
+renew = false
+notes = "All code written or reviewed by Mozilla."
+
+[[wildcard-audits.glean]]
+who = "Chris H-C <chutten@mozilla.com>"
+criteria = "safe-to-deploy"
+user-id = 48 # Jan-Erik Rediger (badboy)
+start = "2020-11-10"
+end = "2024-02-24"
+notes = "The Glean SDKs are maintained by the Glean Team at Mozilla."
+
+[[wildcard-audits.glean-core]]
+who = "Chris H-C <chutten@mozilla.com>"
+criteria = "safe-to-deploy"
+user-id = 48 # Jan-Erik Rediger (badboy)
+start = "2019-09-24"
+end = "2024-02-24"
+notes = "The Glean SDKs are maintained by the Glean Team at Mozilla."
+
+[[wildcard-audits.glslopt]]
+who = "Jamie Nicol <jnicol@mozilla.com>"
+criteria = "safe-to-deploy"
+user-id = 84794 # Jamie Nicol (jamienicol)
+start = "2020-04-07"
+end = "2024-04-25"
+
+[[wildcard-audits.io-surface]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 2396 # Josh Matthews (jdm)
+start = "2019-07-23"
+end = "2023-05-04"
+renew = false
+notes = "I've reviewed every source contribution that was neither authored nor reviewed by Mozilla."
+
+[[wildcard-audits.marionette]]
+who = "Henrik Skupin <mail@hskupin.info>"
+criteria = "safe-to-run"
+user-id = 22262
+start = "2020-11-03"
+end = "2024-03-31"
+notes = "Maintained by the DevTools team at Mozilla and has no unsafe code."
+
+[[wildcard-audits.mozdevice]]
+who = "Henrik Skupin <mail@hskupin.info>"
+criteria = "safe-to-run"
+user-id = 22262
+start = "2020-11-03"
+end = "2024-03-31"
+notes = "Maintained by the DevTools team at Mozilla and has no unsafe code."
+
+[[wildcard-audits.mozprofile]]
+who = "Henrik Skupin <mail@hskupin.info>"
+criteria = "safe-to-deploy"
+user-id = 22262
+start = "2020-11-03"
+end = "2024-03-31"
+notes = "Maintained by the DevTools team at Mozilla and has no unsafe code."
+
+[[wildcard-audits.mozrunner]]
+who = "Henrik Skupin <mail@hskupin.info>"
+criteria = "safe-to-deploy"
+user-id = 22262
+start = "2020-11-03"
+end = "2024-03-31"
+notes = "Maintained by the DevTools team at Mozilla and has no unsafe code."
+
+[[wildcard-audits.mozversion]]
+who = "Henrik Skupin <mail@hskupin.info>"
+criteria = "safe-to-run"
+user-id = 22262
+start = "2020-11-03"
+end = "2024-03-31"
+notes = "Maintained by the DevTools team at Mozilla and has no unsafe code."
+
+[[wildcard-audits.ohttp]]
+who = "Martin Thomson <mt@lowentropy.net>"
+criteria = "safe-to-deploy"
+user-id = 128763 # Martin Thomson (martinthomson)
+start = "2022-08-04"
+end = "2024-03-09"
+notes = "This code contains two cryptographic back ends.  No unsafe code is contained if the Rust `hpke` crate is used (the `rust-hpke` feature).  Using NSS (the `nss` feature) involves extensive use of bindings to the native code provided by NSS.  This interface uses wrappers that attempt to add safety to a fundamentally very dangerous library, but those wrappers have only been validated for use following the needs of this crate."
+
+[[wildcard-audits.rust_cascade]]
+who = "Dana Keeler <dkeeler@mozilla.com>"
+criteria = "safe-to-deploy"
+user-id = 57462 # Dana Keeler (mozkeeler)
+start = "2019-11-15"
+end = "2024-04-24"
+notes = "Written and maintained by the security engineering team at Mozilla."
+
+[[wildcard-audits.unicode-normalization]]
+who = "Manish Goregaokar <manishsmail@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2019-11-06"
+end = "2024-05-03"
+notes = "All code written or reviewed by Manish"
+
+[[wildcard-audits.unicode-segmentation]]
+who = "Manish Goregaokar <manishsmail@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2019-05-15"
+end = "2024-05-03"
+notes = "All code written or reviewed by Manish"
+
+[[wildcard-audits.unicode-width]]
+who = "Manish Goregaokar <manishsmail@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2019-12-05"
+end = "2024-05-03"
+notes = "All code written or reviewed by Manish"
+
+[[wildcard-audits.unicode-xid]]
+who = "Manish Goregaokar <manishsmail@gmail.com>"
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2019-07-25"
+end = "2024-05-03"
+notes = "All code written or reviewed by Manish"
+
+[[wildcard-audits.webdriver]]
+who = "Henrik Skupin <mail@hskupin.info>"
+criteria = "safe-to-deploy"
+user-id = 22262
+start = "2020-11-03"
+end = "2024-03-31"
+notes = "Maintained by the DevTools team at Mozilla and has no unsafe code."
+
+[[audits.aa-stroke]]
+who = "Lee Salzman <lsalzman@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+notes = "Written and maintained by Gfx team at Mozilla."
+
+[[audits.aho-corasick]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.7.18 -> 0.7.20"
+
+[[audits.alsa]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.4.3 -> 0.7.0"
+
+[[audits.android_logger]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.11.0"
+notes = "Small crate, wrapping Android log functionality, reviewed by janerik"
+
+[[audits.android_logger]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.11.0 -> 0.11.1"
+notes = "Small crate, wrapping Android log functionality, now switched to properly using MaybeUninit"
+
+[[audits.android_logger]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.11.1 -> 0.11.3"
+
+[[audits.android_logger]]
+who = "Chris H-C <chutten@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.11.3 -> 0.12.0"
+notes = "Small wrapper crate. This update fixes log level filtering."
+
+[[audits.android_system_properties]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+notes = "I wrote this crate, reviewed by jimb. It is mostly a Rust port of some C++ code we already ship."
+
+[[audits.android_system_properties]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.2 -> 0.1.4"
+
+[[audits.android_system_properties]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.4 -> 0.1.5"
+
+[[audits.anyhow]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.57 -> 1.0.61"
+
+[[audits.anyhow]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "1.0.58 -> 1.0.57"
+notes = "No functional differences, just CI config and docs."
+
+[[audits.anyhow]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.61 -> 1.0.62"
+
+[[audits.anyhow]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.62 -> 1.0.68"
+
+[[audits.anyhow]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.68 -> 1.0.69"
+
+[[audits.app_units]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.7.1"
+notes = """
+I'm pretty familiar with this crate. It provides a fixed-point numeric type.
+The code is pretty straight-forward, there's no unsafe code at all.
+"""
+
+[[audits.app_units]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+version = "0.7.3"
+
+[[audits.app_units]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+delta = "0.7.1 -> 0.7.2"
+notes = "Adding repr(transparent) plus a couple minor clean-ups, no functional changes from 0.7.1."
+
+[[audits.arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.1.0 -> 1.1.1"
+
+[[audits.arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.1.1 -> 1.1.3"
+
+[[audits.arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.1.3 -> 1.2.0"
+
+[[audits.arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.2.0 -> 1.2.3"
+
+[[audits.ash]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.37.0+1.3.209 -> 0.37.1+1.3.235"
+notes = """
+Nicolas Silva, Jim Blandy, and Teodor Tanasoaia audited ash master
+branch commits from e43e9c0c to 6bd82768 inclusive.
+"""
+
+[[audits.ash]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.37.1+1.3.235 -> 0.37.2+1.3.238"
+
+[[audits.ash]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.37.2+1.3.238 -> 0.37.3+1.3.251"
+
+[[audits.ashmem]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+notes = """
+Small unsafe wrapper around Android 8.0's ASharedMemory native API that falls
+back to older private ioctl-based API at runtime on earlier OS releases.  The
+shim code is small and doesn't inspect the API arguments, so is unlikely to
+expose any safety issues beyond those presented by the native OS API.
+"""
+
+[[audits.askama]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.11.1"
+notes = """
+Just contains some traits and re-exports for use by a broader package of related
+crates. No unsafe code or ambient capability usage.
+"""
+
+[[audits.async-task]]
+who = "Nika Layzell <nika@thelayzells.com>"
+criteria = "safe-to-deploy"
+delta = "4.0.3 -> 4.0.3@git:f6488e35beccb26eb6e85847b02aa78a42cd3d0e"
+notes = "Recorded by bholley, confirmed over slack."
+
+[[audits.async-task]]
+who = "Nika Layzell <nika@thelayzells.com>"
+criteria = "safe-to-deploy"
+delta = "4.0.3 -> 4.3.0"
+notes = "Main addition is the new FallibleTask type, which I implemented. No risky unsafe code changes."
+
+[[audits.async-trait]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.56 -> 0.1.57"
+
+[[audits.async-trait]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.57 -> 0.1.60"
+
+[[audits.async-trait]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.60 -> 0.1.64"
+
+[[audits.atomic_refcell]]
+who = "Bobby Holley <bholley@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.1.8"
+notes = "I maintain this crate and have reviewed every line."
+
+[[audits.atomic_refcell]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.8 -> 0.1.9"
+
+[[audits.audio-mixer]]
+who = "Chun-Min Chang <chun.m.chang@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+notes = "audio-mixer is a Mozilla-developed package."
+
+[[audits.authenticator]]
+who = "John M. Schanck <jschanck@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.4.0-alpha.13"
+notes = "Maintained by the CryptoEng team at Mozilla."
+
+[[audits.autocfg]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "1.1.0"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.base64]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.13.0 -> 0.13.1"
+
+[[audits.bindgen]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.59.2"
+notes = "I'm the primary author and maintainer of the crate."
+
+[[audits.bindgen]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+delta = "0.59.2 -> 0.63.0"
+
+[[audits.bindgen]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.63.0 -> 0.64.0"
+
+[[audits.bindgen]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.64.0 -> 0.66.1"
+
+[[audits.bit-set]]
+who = "Aria Beingessner <a.beingessner@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.5.2"
+notes = "Another crate I own via contain-rs that is ancient and maintenance mode, no known issues."
+
+[[audits.bit-set]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.2 -> 0.5.3"
+
+[[audits.bit-vec]]
+who = "Aria Beingessner <a.beingessner@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.6.3"
+notes = "Another crate I own via contain-rs that is ancient and in maintenance mode but otherwise perfectly fine."
+
+[[audits.bitflags]]
+who = "Alex Franchuk <afranchuk@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "1.3.2 -> 2.0.2"
+notes = "Removal of some unsafe code/methods. No changes to externals, just some refactoring (mostly internal)."
+
+[[audits.bitflags]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "2.0.2 -> 2.1.0"
+
+[[audits.bitflags]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "2.2.1 -> 2.3.2"
+
+[[audits.block-buffer]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.2 -> 0.10.3"
+
+[[audits.build-parallel]]
+who = "Jeff Muizelaar <jmuizelaar@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+
+[[audits.bumpalo]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-run"
+delta = "3.9.1 -> 3.10.0"
+notes = """
+Some nontrivial functional changes but certainly meets the no-malware bar of
+safe-to-run. If we needed safe-to-deploy for this in m-c I'd ask Nick to re-
+certify this version, but we don't, so this is fine for now.
+"""
+
+[[audits.bumpalo]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "3.11.1 -> 3.12.0"
+
+[[audits.bytes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.1.0 -> 1.2.1"
+
+[[audits.bytes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.2.1 -> 1.3.0"
+
+[[audits.bytes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.3.0 -> 1.4.0"
+
+[[audits.camino]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.9 -> 1.1.1"
+
+[[audits.camino]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.1.1 -> 1.1.2"
+
+[[audits.cargo_metadata]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.15.2"
+notes = "I reviewed the whole code base. Parser for the output of cargo-metadata, relying mostly on serde. No unsafe code used."
+
+[[audits.cargo_metadata]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.15.2 -> 0.15.3"
+
+[[audits.chardetng]]
+who = "Henri Sivonen <hsivonen@hsivonen.fi>"
+criteria = "safe-to-deploy"
+version = "0.1.9"
+notes = "I, Henri Sivonen, wrote this (safe-code-only) crate for Gecko even though the crate is published via crates.io."
+
+[[audits.chardetng]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.1.9 -> 0.1.9@git:3484d3e3ebdc8931493aa5df4d7ee9360a90e76b"
+
+[[audits.chardetng_c]]
+who = "Henri Sivonen <hsivonen@hsivonen.fi>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+notes = "I, Henri Sivonen, wrote this crate for Gecko even though it is published via crates.io. The buffer input assumes Rust slice constraints for the start pointer. In Gecko, this is taken care of by mozilla::Span, but the C API doesn't conform to idiomatic C constraints on this point."
+
+[[audits.chardetng_c]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.1.2 -> 0.1.2@git:ed8a4c6f900a90d4dbc1d64b856e61490a1c3570"
+
+[[audits.clang-sys]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.3.3 -> 1.4.0"
+
+[[audits.clang-sys]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.4.0 -> 1.6.0"
+
+[[audits.clap_lex]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.0 -> 0.2.2"
+
+[[audits.clap_lex]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.2 -> 0.2.4"
+
+[[audits.comedy]]
+who = "Nick Alexander <nalexander@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.2.0"
+notes = """
+The comedy crate was written by Adam Gashlin for Mozilla's use.  The entire
+comedy 0.2.0 crate is full of `unsafe` code and makes many assumptions about
+memory and layout, but there is no particular processing of untrusted input
+here.
+"""
+
+[[audits.cookie]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.16.0 -> 0.16.2"
+
+[[audits.core-graphics]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.22.3 -> 0.23.1"
+
+[[audits.core-graphics-types]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.1.1 -> 0.1.2"
+
+[[audits.core-text]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "19.2.0 -> 20.0.0"
+
+[[audits.coreaudio-sys]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.10 -> 0.2.11"
+
+[[audits.coreaudio-sys]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.11 -> 0.2.12"
+
+[[audits.cose]]
+who = "Mathew Hodson <mathew.hodson@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.1.4 -> 0.1.4@git:43c22248d136c8b38fe42ea709d08da6355cf04b"
+
+[[audits.cpufeatures]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.2 -> 0.2.4"
+
+[[audits.cpufeatures]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.4 -> 0.2.5"
+
+[[audits.cpufeatures]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.2.7 -> 0.2.8"
+notes = "This release contains a single fix for an issue that affected Firefox"
+
+[[audits.crash-context]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.5.1"
+notes = "Mozilla employees contributed to this crate and the remaining code was fully audited"
+
+[[audits.crash-context]]
+who = "Alex Franchuk <afranchuk@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.5.1 -> 0.6.0"
+notes = """
+There are few changes. The main change is the removal of `winapi` in favor of
+manually-generated bindings (which are minimal). The few small bugfixes are
+sound.
+"""
+
+[[audits.crossbeam-channel]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.4 -> 0.5.6"
+
+[[audits.crossbeam-deque]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.8.1 -> 0.8.2"
+
+[[audits.crossbeam-epoch]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.8 -> 0.9.10"
+
+[[audits.crossbeam-epoch]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.10 -> 0.9.13"
+
+[[audits.crossbeam-epoch]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.13 -> 0.9.14"
+
+[[audits.crossbeam-queue]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+version = "0.3.8"
+
+[[audits.crossbeam-utils]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.8.8 -> 0.8.11"
+
+[[audits.crossbeam-utils]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.8.11 -> 0.8.14"
+
+[[audits.crypto-common]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.3 -> 0.1.6"
+
+[[audits.cssparser]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.29.6"
+notes = """
+I've reviewed or authored most of the recent changes to this library, and it
+was developed by other mozilla folks. Unsafe code there is reasonable (utf-8
+casts for serialization and parsing).
+"""
+
+[[audits.cssparser]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.31.0@git:6ce91afdf292c4290118843e7421e146f0a4c48b"
+notes = "Local changes authored by me that aren't published yet."
+
+[[audits.cssparser]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.29.6 -> 0.31.0"
+notes = """
+All the changes in this release were authored by Mozilla staff, except the
+uninit_array stuff, which looks fine.
+"""
+
+[[audits.cssparser]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.31.0 -> 0.31.2"
+
+[[audits.cssparser-macros]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.6.0"
+notes = """
+Trivial crate with a single proc macro to compute the max length of the inputs
+to a match expression.
+"""
+
+[[audits.cssparser-macros]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.6.0@git:6ce91afdf292c4290118843e7421e146f0a4c48b"
+notes = "We are pulling this package from a non crates.io source until the changes are published. No changes were made to the code."
+
+[[audits.cssparser-macros]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.6.0 -> 0.6.1"
+
+[[audits.cstr]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.2.10"
+notes = """
+I've reviewed the code of the crate thoroughly. It generates an unsafe block
+which is statically guaranteed to be safe. Inputs to the macro have to be
+static so there's no uncontrolled input whatsoever.
+"""
+
+[[audits.cstr]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.10 -> 0.2.11"
+
+[[audits.cubeb]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+version = "0.10.1"
+notes = """
+Mozilla-developed package.
+"""
+
+[[audits.cubeb]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.1 -> 0.10.2"
+
+[[audits.cubeb]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.2 -> 0.10.3"
+
+[[audits.cubeb-backend]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+version = "0.10.1"
+notes = """
+Mozilla-developed package.
+"""
+
+[[audits.cubeb-backend]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.1 -> 0.10.2"
+
+[[audits.cubeb-backend]]
+who = "Paul Adenot <paul@paul.cx>"
+criteria = "safe-to-deploy"
+delta = "0.10.2 -> 0.10.3"
+notes = """
+Mozilla-developed package.
+"""
+
+[[audits.cubeb-core]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+version = "0.10.1"
+notes = """
+Mozilla-developed package.
+"""
+
+[[audits.cubeb-core]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.1 -> 0.10.2"
+
+[[audits.cubeb-core]]
+who = "Paul Adenot <paul@paul.cx>"
+criteria = "safe-to-deploy"
+delta = "0.10.2 -> 0.10.3"
+notes = """
+Mozilla-developed package.
+"""
+
+[[audits.cubeb-sys]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+version = "0.10.1"
+notes = """
+Mozilla-developed package.
+"""
+
+[[audits.cubeb-sys]]
+who = "Matthew Gregan <kinetik@flim.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.1 -> 0.10.2"
+
+[[audits.cubeb-sys]]
+who = "Paul Adenot <paul@paul.cx>"
+criteria = "safe-to-deploy"
+delta = "0.10.2 -> 0.10.3"
+notes = """
+Mozilla-developed package.
+"""
+
+[[audits.d3d12]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.4.1 -> 0.5.0"
+notes = "The commits between 0.4.1 and 0.5.0 were all audited by Dzmitry Malyshau or myself."
+
+[[audits.d3d12]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.5.0 -> 0.5.0@git:a990c93ec64eeab78f2292763d0715da9dba1d59"
+
+[[audits.d3d12]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.5.0@git:a990c93ec64eeab78f2292763d0715da9dba1d59 -> 0.6.0@git:b940b1d71ab7083ae80eec697872672dc1f2bd32"
+
+[[audits.d3d12]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.6.0@git:b940b1d71ab7083ae80eec697872672dc1f2bd32 -> 0.7.0"
+
+[[audits.darling]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.13.4 -> 0.14.2"
+
+[[audits.darling]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.14.2 -> 0.14.3"
+
+[[audits.darling]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.14.3 -> 0.20.1"
+
+[[audits.darling_core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.13.4 -> 0.14.2"
+
+[[audits.darling_core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.14.2 -> 0.14.3"
+
+[[audits.darling_core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.14.3 -> 0.20.1"
+
+[[audits.darling_macro]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.13.4 -> 0.14.2"
+
+[[audits.darling_macro]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.14.2 -> 0.14.3"
+
+[[audits.darling_macro]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.14.3 -> 0.20.1"
+
+[[audits.data-encoding]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "2.3.2 -> 2.3.3"
+
+[[audits.debugid]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.8.0"
+notes = "This crates was written by Sentry and I've fully audited it as Firefox crash reporting machinery relies on it."
+
+[[audits.derive_arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.1.0 -> 1.1.1"
+
+[[audits.derive_arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.1.1 -> 1.1.3"
+
+[[audits.derive_arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.1.3 -> 1.2.1"
+
+[[audits.derive_arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.2.1 -> 1.2.3"
+
+[[audits.derive_arbitrary]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.3.0 -> 1.3.1"
+
+[[audits.devd-rs]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.4 -> 0.3.5"
+
+[[audits.devd-rs]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.5 -> 0.3.6"
+
+[[audits.digest]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.3 -> 0.10.6"
+
+[[audits.displaydoc]]
+who = "Makoto Kato <m_kato@ga2.so-net.ne.jp>"
+criteria = "safe-to-deploy"
+version = "0.2.3"
+notes = """
+This crate is convenient macros to implement core::fmt::Display trait.
+Although `unsafe` is used for test code to call `libc::abort()`, it has no `unsafe` code in this crate. And there is no file access.
+It meets the criteria for safe-to-deploy.
+"""
+
+[[audits.displaydoc]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.3 -> 0.2.4"
+
+[[audits.dogear]]
+who = "Sammy Khamis <skhamis@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.4.0 -> 0.5.0"
+notes = "The repository for this crate belongs in the Mozilla org."
+
+[[audits.dtoa-short]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.3.3"
+
+[[audits.dwrote]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.11.0"
+notes = "All code written or reviewed by Mozilla staff."
+
+[[audits.either]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.6.1 -> 1.7.0"
+
+[[audits.either]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.7.0 -> 1.8.0"
+
+[[audits.either]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.8.0 -> 1.8.1"
+
+[[audits.encoding_c]]
+who = "Henri Sivonen <hsivonen@hsivonen.fi>"
+criteria = "safe-to-deploy"
+version = "0.9.8"
+notes = "I, Henri Sivonen, wrote encoding_c for Gecko even though it is published via crates.io. There are two caveats: 1) the C API is designed to be used together with mozilla::Span and is unidiomatic for zero-length inputs otherwise. 2) It is idiomatic in C and C++ to pass uninitialized buffers as output buffers. This is generally documented to be UB in Rust, but idiomatic C and C++ usage here relies on this not actually being UB for buffers of integers (which these buffers are). See https://github.com/hsivonen/encoding_rs/issues/79#issuecomment-1211870361"
+
+[[audits.encoding_c_mem]]
+who = "Henri Sivonen <hsivonen@hsivonen.fi>"
+criteria = "safe-to-deploy"
+version = "0.2.6"
+notes = """
+I, Henri Sivonen, wrote encoding_c_mem for Gecko even though it is published via crates.io. There are two caveats: 1) the C API is designed to be used together with mozilla::Span and is unidiomatic for zero-length inputs otherwise. 2) It is idiomatic in C and C
+++ to pass uninitialized buffers as output buffers. This is generally documented to be UB in Rust, but idiomatic C and C++ usage here relies on this not actually being UB for buffers of integers (which these buffers are). See https://github.com/hsivonen/encoding_rs/i
+ssues/79#issuecomment-1211870361
+"""
+
+[[audits.encoding_rs]]
+who = "Henri Sivonen <hsivonen@hsivonen.fi>"
+criteria = "safe-to-deploy"
+version = "0.8.31"
+notes = "I, Henri Sivonen, wrote encoding_rs for Gecko and have reviewed contributions by others. There are two caveats to the certification: 1) The crate does things that are documented to be UB but that do not appear to actually be UB due to integer types differing from the general rule; https://github.com/hsivonen/encoding_rs/issues/79 . 2) It would be prudent to re-review the code that reinterprets buffers of integers as SIMD vectors; see https://github.com/hsivonen/encoding_rs/issues/87 ."
+
+[[audits.encoding_rs]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.8.31 -> 0.8.32"
+
+[[audits.enum-primitive-derive]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.2.2"
+
+[[audits.enumset]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.11 -> 1.0.12"
+
+[[audits.enumset]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.12 -> 1.1.2"
+
+[[audits.enumset_derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.6.0 -> 0.6.1"
+
+[[audits.enumset_derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.6.1 -> 0.8.1"
+
+[[audits.env_logger]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.0 -> 0.9.3"
+
+[[audits.env_logger]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.9.3 -> 0.10.0"
+
+[[audits.extend]]
+who = "Ben Dean-Kawamura <bdk@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "1.1.2"
+notes = "Inspected the crate and noted that the impl block comes directly from the proc-macro input.  If no new code can be added by this crate, I don't think there can be any issues."
+
+[[audits.extend]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.1.2 -> 1.2.0"
+
+[[audits.fallible_collections]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.4.4 -> 0.4.5"
+
+[[audits.fallible_collections]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.4.5 -> 0.4.6"
+notes = "The changes in this version are mine."
+
+[[audits.fastrand]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.7.0 -> 1.8.0"
+
+[[audits.fastrand]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.8.0 -> 1.9.0"
+
+[[audits.filetime_win]]
+who = "Nick Alexander <nalexander@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.2.0"
+notes = """
+filetime_win was written by Adam Gashlin for Mozilla's use.  The `unsafe` code
+blocks in filetime_win 0.2.0 are straight-forward invocations of `mem::zeroed`
+and expected invocations of Win32 APIs (with error handling as appropriate).
+"""
+
+[[audits.flagset]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+version = "0.4.3"
+notes = "Uses no ambient capabilities, vetted the one instance of unsafe."
+
+[[audits.flate2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.24 -> 1.0.25"
+
+[[audits.fluent]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.16.0"
+
+[[audits.fluent-bundle]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.15.2"
+
+[[audits.fluent-fallback]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.6.0"
+
+[[audits.fluent-fallback]]
+who = "Greg Tatum <tatum.creative@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.6.0 -> 0.7.0"
+
+[[audits.fluent-langneg]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.13.0"
+
+[[audits.fluent-pseudo]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.3.1"
+
+[[audits.fluent-syntax]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.11.0"
+
+[[audits.fluent-testing]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-run"
+version = "0.0.2"
+
+[[audits.fluent-testing]]
+who = "Greg Tatum <tatum.creative@gmail.com>"
+criteria = "safe-to-run"
+delta = "0.0.2 -> 0.0.3"
+
+[[audits.fnv]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "1.0.7"
+notes = "Simple hasher implementation with no unsafe code."
+
+[[audits.foreign-types]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.2 -> 0.5.0"
+
+[[audits.foreign-types-macros]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.2.3"
+
+[[audits.foreign-types-shared]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.1.1 -> 0.3.1"
+
+[[audits.fs-err]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "2.7.0 -> 2.8.1"
+
+[[audits.fs-err]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "2.8.1 -> 2.9.0"
+
+[[audits.futures]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.26 -> 0.3.28"
+
+[[audits.futures-channel]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures-channel]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures-channel]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures-channel]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.26"
+
+[[audits.futures-channel]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.28"
+
+[[audits.futures-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures-core]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.26"
+
+[[audits.futures-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.28"
+
+[[audits.futures-executor]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures-executor]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures-executor]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures-executor]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.23"
+
+[[audits.futures-executor]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.28"
+
+[[audits.futures-io]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures-io]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures-io]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures-io]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.23"
+
+[[audits.futures-io]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.28"
+
+[[audits.futures-macro]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures-macro]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures-macro]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures-macro]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.26 -> 0.3.28"
+
+[[audits.futures-sink]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures-sink]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures-sink]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures-sink]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.23"
+
+[[audits.futures-sink]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.27 -> 0.3.28"
+
+[[audits.futures-task]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures-task]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures-task]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures-task]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.26 -> 0.3.28"
+
+[[audits.futures-util]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.21 -> 0.3.23"
+
+[[audits.futures-util]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.23 -> 0.3.25"
+
+[[audits.futures-util]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.futures-util]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.26 -> 0.3.28"
+
+[[audits.fxhash]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.2.1"
+notes = "Straightforward crate with no unsafe code, does what it says on the tin."
+
+[[audits.generic-array]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.14.5 -> 0.14.6"
+
+[[audits.getrandom]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.6 -> 0.2.7"
+
+[[audits.getrandom]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.7 -> 0.2.8"
+
+[[audits.getrandom]]
+who = "Yannis Juglaret <yjuglaret@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.2.8 -> 0.2.9"
+
+[[audits.gleam]]
+who = "Jamie Nicol <jnicol@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.13.1 -> 0.15.0"
+
+[[audits.glob]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.0 -> 0.3.1"
+
+[[audits.glsl]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "6.0.1 -> 6.0.2"
+notes = "I'm the author of the changes in this version of the crate."
+
+[[audits.goblin]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.1.3 -> 0.5.4"
+notes = "Several bugfixes since 2019. This version is also in use by Mozilla's crash reporting tooling, e.g. minidump-writer"
+
+[[audits.goblin]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.5.4 -> 0.6.0"
+notes = "Mostly bug fixes and some added functionality"
+
+[[audits.gpu-alloc]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.5.3 -> 0.6.0"
+
+[[audits.gpu-alloc-types]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.2.0 -> 0.3.0"
+
+[[audits.gpu-descriptor]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.2 -> 0.2.3"
+
+[[audits.guid_win]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.2.0"
+notes = """
+This crate has some unsafe code for the FFI bits, which I've reviewed carefully.
+It uses the deprecated mem::uninitialized(), which is generally sketchy. However
+the usage is pretty straightforward and while it's technically UB, it seems no
+more likely to lead to miscompilation than any other use of mem::uninitialized.
+"""
+
+[[audits.h2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.3.13 -> 0.3.14"
+
+[[audits.h2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.3.14 -> 0.3.15"
+
+[[audits.half]]
+who = "John M. Schanck <jschanck@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "1.8.2"
+notes = """
+This crate contains unsafe code for bitwise casts to/from binary16 floating-point
+format. I've reviewed these and found no issues. There are no uses of ambient
+capabilities.
+"""
+
+[[audits.hashbrown]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+version = "0.12.3"
+notes = "This version is used in rust's libstd, so effectively we're already trusting it"
+
+[[audits.hashlink]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.8.1"
+
+[[audits.headers]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.3.7 -> 0.3.8"
+
+[[audits.headers-core]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.2.0"
+notes = "Trivial crate, no unsafe code."
+
+[[audits.heck]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.4.0 -> 0.4.1"
+
+[[audits.hermit-abi]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.19 -> 0.2.6"
+
+[[audits.hex]]
+who = "Simon Friedberger <simon@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.4.3"
+
+[[audits.http]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.2.8 -> 0.2.9"
+
+[[audits.httparse]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.7.1 -> 1.8.0"
+
+[[audits.hyper]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.14.19 -> 0.14.20"
+
+[[audits.hyper]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.14.20 -> 0.14.22"
+
+[[audits.hyper]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.14.22 -> 0.14.23"
+
+[[audits.hyper]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.14.23 -> 0.14.24"
+
+[[audits.idna]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.0 -> 0.2.3"
+notes = "Backwards diff with some algorithm changes, no unsafe code."
+
+[[audits.indexmap]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.8.2 -> 1.9.1"
+
+[[audits.indexmap]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.9.1 -> 1.9.2"
+
+[[audits.inherent]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.1 -> 1.0.2"
+
+[[audits.inherent]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.2 -> 1.0.3"
+
+[[audits.inherent]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.3 -> 1.0.4"
+
+[[audits.inplace_it]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.3 -> 0.3.4"
+
+[[audits.intl-memoizer]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.5.1"
+
+[[audits.intl_pluralrules]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "7.0.1"
+
+[[audits.intl_pluralrules]]
+who = "Makoto Kato <m_kato@ga2.so-net.ne.jp>"
+criteria = "safe-to-deploy"
+delta = "7.0.1 -> 7.0.2"
+
+[[audits.itertools]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.3 -> 0.10.5"
+
+[[audits.itoa]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.2 -> 1.0.3"
+
+[[audits.itoa]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.3 -> 1.0.5"
+
+[[audits.jobserver]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.24 -> 0.1.25"
+
+[[audits.keccak]]
+who = "Simon Friedberger <simon@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.1.2 -> 0.1.3"
+
+[[audits.libc]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.126 -> 0.2.132"
+
+[[audits.libc]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.132 -> 0.2.138"
+
+[[audits.libc]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.138 -> 0.2.139"
+
+[[audits.libloading]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.7.3 -> 0.7.4"
+
+[[audits.linked-hash-map]]
+who = "Aria Beingessner <a.beingessner@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.5.4"
+notes = "I own this crate (I am contain-rs) and 0.5.4 passes miri. This code is very old and used by lots of people, so I'm pretty confident in it, even though it's in maintenance-mode and missing some nice-to-have APIs."
+
+[[audits.linked-hash-map]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.5.4 -> 0.5.6"
+
+[[audits.lmdb-rkv]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.14.0"
+notes = "Victor and Myk developed this crate at Mozilla."
+
+[[audits.lock_api]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.4.7 -> 0.4.9"
+
+[[audits.log]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+version = "0.4.17"
+
+[[audits.mach2]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.4.1"
+
+[[audits.malloc_buf]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.0.6"
+notes = """
+Very small crate for managing malloc-ed buffers, primarily for use in the objc crate.
+There is an edge-case condition that passes slice::from_raw_parts(0x1, 0) which I'm
+not entirely certain is technically sound, but in either case I am reasonably confident
+it's not exploitable.
+"""
+
+[[audits.malloc_size_of_derive]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+notes = """
+This was originally servo code which I put on crates.io some years ago but didn't
+examine at the time, so I examined it now. I didn't perform a full logic review
+but convinced myself that any generated code will be entirely safe to deploy.
+"""
+
+[[audits.matches]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.9"
+notes = "This is a trivial crate."
+
+[[audits.matches]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.9 -> 0.1.10"
+
+[[audits.md-5]]
+who = "Dana Keeler <dkeeler@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.10.5"
+
+[[audits.memmap2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.4 -> 0.5.7"
+
+[[audits.memmap2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.7 -> 0.5.8"
+
+[[audits.memmap2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.8 -> 0.5.9"
+
+[[audits.memoffset]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.6.5 -> 0.7.1"
+
+[[audits.metal]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.23.1 -> 0.24.0"
+notes = "This audit treats Dzmitry Malyshau (kvark) as a trusted reviewer."
+
+[[audits.metal]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.24.0 -> 0.25.0"
+
+[[audits.midir]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.7.0@git:519e651241e867af3391db08f9ae6400bc023e18"
+
+[[audits.minidump-common]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.15.2"
+notes = "The code in this crate was written or reviewed by Mozilla employees."
+
+[[audits.minidump-writer]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.7.0"
+notes = "The code in this crate was written or reviewed by Mozilla employees, the crate it evolved from was written specifically for gecko."
+
+[[audits.minidump-writer]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.7.0@git:59179c83ba62e4378619c6967c0b8c0c077cac2d"
+
+[[audits.minidump-writer]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.7.0@git:7d76616d27b9dc87fe3a94639b8b4f947d52a6aa"
+
+[[audits.minidump-writer]]
+who = "Alex Franchuk <afranchuk@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.8.0"
+notes = "The code in this crate was written or reviewed by Mozilla employees, the crate it evolved from was written specifically for gecko."
+
+[[audits.miniz_oxide]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.3 -> 0.6.2"
+
+[[audits.mio]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-run"
+delta = "0.6.21 -> 0.6.23"
+
+[[audits.moz_cbor]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+notes = "Developed by Mozilla staff."
+
+[[audits.naga]]
+who = "Dzmitry Malyshau <kvark@fastmail.com>"
+criteria = "safe-to-deploy"
+version = "0.8.0"
+notes = """
+This crate, up through the indicated version, was written or reviewed
+by Dzmitry Malyshau while he was a Mozilla employee. Dzmitry left
+Mozilla at the beginning of February 2022. This audit statement was
+collected by Jim Blandy, a Mozilla employee, over email in July 2022:
+Dzmitry was shown, and agreed to, the 'safe-to-deploy' text.
+"""
+
+[[audits.naga]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.8.0 -> 0.9.0"
+
+[[audits.naga]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.9.0 -> 0.10.0"
+
+[[audits.naga]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.10.0 -> 0.10.0@git:e98bd9264c3a6b04dff15a6b1213c0c80201740a"
+
+[[audits.naga]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.10.0@git:1be8024bda3594987b417bead5024b98be9ab521 -> 0.11.0@git:f0edae8ce9e55eeef489fc53b10dc95fb79561cc"
+
+[[audits.naga]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.10.0@git:e98bd9264c3a6b04dff15a6b1213c0c80201740a -> 0.10.0@git:1be8024bda3594987b417bead5024b98be9ab521"
+
+[[audits.naga]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.11.0@git:4b796b157cb2b67b0ab166a2238fe4e9473bfd52 -> 0.11.0@git:9742f1616c3e3dd2cc9a5880616fc886c391bb9f"
+
+[[audits.naga]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.11.0@git:9742f1616c3e3dd2cc9a5880616fc886c391bb9f -> 0.11.0@git:f59668ccfaf7bdb3a7e43d84363a21c77357b2fe"
+
+[[audits.naga]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.11.0@git:f0edae8ce9e55eeef489fc53b10dc95fb79561cc -> 0.11.0@git:4b796b157cb2b67b0ab166a2238fe4e9473bfd52"
+
+[[audits.naga]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.11.0@git:f59668ccfaf7bdb3a7e43d84363a21c77357b2fe -> 0.12.0@git:b99d58ea435090e561377949f428bce2c18451bb"
+
+[[audits.naga]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.12.0@git:76003dc0035d53a474d366dcdf49d2e4d12e921f -> 0.12.0@git:409239c0e2313bfd0dc4fd64f8c3021185ccef1b"
+
+[[audits.naga]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.12.0@git:b99d58ea435090e561377949f428bce2c18451bb -> 0.12.0@git:76003dc0035d53a474d366dcdf49d2e4d12e921f"
+
+[[audits.net2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.2.37 -> 0.2.38"
+
+[[audits.new_debug_unreachable]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "1.0.4"
+notes = "This is a trivial crate."
+
+[[audits.nix]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0 -> 0.25.0"
+notes = "Plenty of new bindings but also several important bug fixes (including buffer overflows). New unsafe sections are restricted to wrappers and are no more dangerous than calling the C functions."
+
+[[audits.nix]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.25.0 -> 0.25.1"
+
+[[audits.nix]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.25.1 -> 0.26.2"
+
+[[audits.nom]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "7.1.1 -> 7.1.3"
+
+[[audits.nss-gk-api]]
+who = "John M. Schanck <jschanck@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.2.1"
+notes = "Maintained by the CryptoEng team at Mozilla."
+
+[[audits.ntapi]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.7 -> 0.4.0"
+
+[[audits.num]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.4.0"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-bigint]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.2.6"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-bigint]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.4.3"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-complex]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.4.2"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-derive]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.3.3"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.3 -> 0.4.0"
+
+[[audits.num-integer]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.1.45"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-iter]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.1.43"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-macros]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.1.40"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-rational]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.4.1"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num-traits]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "0.2.15"
+notes = "All code written or reviewed by Josh Stone."
+
+[[audits.num_cpus]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.13.1 -> 1.14.0"
+
+[[audits.num_cpus]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.14.0 -> 1.15.0"
+
+[[audits.object]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.28.4 -> 0.30.0"
+
+[[audits.object]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.30.0 -> 0.30.3"
+
+[[audits.once_cell]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.12.0 -> 1.13.1"
+
+[[audits.once_cell]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.13.1 -> 1.16.0"
+
+[[audits.once_cell]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.16.0 -> 1.17.1"
+
+[[audits.ordered-float]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "3.0.0 -> 3.4.0"
+
+[[audits.origin-trial-token]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.1.1"
+notes = """
+I'm the author of the crate. The only unsafe code is a view over a byte array
+which is properly validated.
+
+Cryptography shenanigans are delegated to the caller so there's no possible
+unsoundness there.
+"""
+
+[[audits.os_str_bytes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "6.1.0 -> 6.3.0"
+
+[[audits.os_str_bytes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "6.3.0 -> 6.4.1"
+
+[[audits.packed_simd_2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.7 -> 0.3.8"
+
+[[audits.packed_simd_2]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.8 -> 0.3.8@git:412f9a0aa556611de021bde89dee8fefe6e0fbbd"
+
+[[audits.parking_lot_core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.8.5 -> 0.8.6"
+
+[[audits.paste]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.7 -> 1.0.8"
+
+[[audits.paste]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.8 -> 1.0.11"
+
+[[audits.peeking_take_while]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "1.0.0 -> 0.1.2"
+notes = "Small refactor of some simple iterator logic, no unsafe code or capabilities."
+
+[[audits.phf]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.1 -> 0.11.2"
+
+[[audits.phf_codegen]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.0 -> 0.11.2"
+
+[[audits.phf_generator]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.0 -> 0.11.2"
+
+[[audits.phf_macros]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.0 -> 0.11.2"
+
+[[audits.phf_shared]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.0 -> 0.11.2"
+
+[[audits.pin-project]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.0.10 -> 1.0.12"
+
+[[audits.pin-project]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.0.12 -> 1.1.0"
+
+[[audits.pin-project-internal]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.0.10 -> 1.0.12"
+
+[[audits.pin-project-internal]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.0.12 -> 1.1.0"
+
+[[audits.pkcs11-bindings]]
+who = "Dana Keeler <dkeeler@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+notes = """
+This crate consists of declarations of types and constants that are
+auto-generated by running bindgen on the PKCS#11 specification headers. Other
+than the tests generated by bindgen, it consists of no runnable code.
+"""
+
+[[audits.pkcs11-bindings]]
+who = "John M. Schanck <jmschanck@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.1"
+
+[[audits.pkcs11-bindings]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.1 -> 0.1.4"
+
+[[audits.pkcs11-bindings]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.4 -> 0.1.5"
+
+[[audits.pkg-config]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.3.25 -> 0.3.26"
+
+[[audits.plane-split]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+version = "0.18.0"
+notes = "Mozilla-developed package, no unsafe code, no access to file system, network or other far reaching APIs."
+
+[[audits.ppv-lite86]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.16 -> 0.2.17"
+
+[[audits.precomputed-hash]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.1"
+notes = "This is a trivial crate."
+
+[[audits.prio]]
+who = "Simon Friedberger <simon@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.8.4"
+notes = "The crate does not use any unsafe code or ambient capabilities and thus meets the criteria for safe-to-deploy. The cryptography itself should be considered experimental at this phase and is currently undergoing a thorough audit organized by Cloudflare."
+
+[[audits.prio]]
+who = "Simon Friedberger <simon@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.9.1"
+
+[[audits.proc-macro-hack]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.19 -> 0.5.20+deprecated"
+
+[[audits.proc-macro2]]
+who = "Nika Layzell <nika@thelayzells.com>"
+criteria = "safe-to-deploy"
+version = "1.0.39"
+notes = """
+`proc-macro2` acts as either a thin(-ish) wrapper around the std-provided
+`proc_macro` crate, or as a fallback implementation of the crate, depending on
+where it is used.
+
+If using this crate on older versions of rustc (1.56 and earlier), it will
+temporarily replace the panic handler while initializing in order to detect if
+it is running within a `proc_macro`, which could lead to surprising behaviour.
+This should not be an issue for more recent compiler versions, which support
+`proc_macro::is_available()`.
+
+The `proc-macro2` crate's fallback behaviour is not identical to the complex
+behaviour of the rustc compiler (e.g. it does not perform unicode normalization
+for identifiers), however it behaves well enough for its intended use-case
+(tests and scripts processing rust code).
+
+`proc-macro2` does not use unsafe code, however exposes one `unsafe` API to
+allow bypassing checks in the fallback implementation when constructing
+`Literal` using `from_str_unchecked`. This was intended to only be used by the
+`quote!` macro, however it has been removed
+(https://github.com/dtolnay/quote/commit/f621fe64a8a501cae8e95ebd6848e637bbc79078),
+and is likely completely unused. Even when used, this API shouldn't be able to
+cause unsoundness.
+"""
+
+[[audits.proc-macro2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.39 -> 1.0.43"
+
+[[audits.proc-macro2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.43 -> 1.0.49"
+
+[[audits.proc-macro2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.49 -> 1.0.51"
+
+[[audits.profiling]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.6 -> 1.0.7"
+
+[[audits.qcms]]
+who = "Jeff Muizelaar <jmuizelaar@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.2.0"
+
+[[audits.quote]]
+who = "Nika Layzell <nika@thelayzells.com>"
+criteria = "safe-to-deploy"
+version = "1.0.18"
+notes = """
+`quote` is a utility crate used by proc-macros to generate TokenStreams
+conveniently from source code. The bulk of the logic is some complex
+interlocking `macro_rules!` macros which are used to parse and build the
+`TokenStream` within the proc-macro.
+
+This crate contains no unsafe code, and the internal logic, while difficult to
+read, is generally straightforward. I have audited the the quote macros, ident
+formatter, and runtime logic.
+"""
+
+[[audits.quote]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.18 -> 1.0.21"
+
+[[audits.quote]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.21 -> 1.0.23"
+
+[[audits.radium]]
+who = "Nika Layzell <nika@thelayzells.com>"
+criteria = "safe-to-deploy"
+version = "0.5.3"
+notes = """
+I am no longer the primary maintainer of `radium`, however I have audited the
+code to ensure it is still correct. The implementation contains no `unsafe`
+logic, and will not abstract away `Sync` trait bounds.
+
+The core logic is very simple, and acts as an abstraction trait for `Cell<T>`
+and `AtomicT`.
+"""
+
+[[audits.rand_core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.6.3 -> 0.6.4"
+
+[[audits.range-alloc]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+notes = "Dzmitry authored this crate while he was staff at Mozilla."
+
+[[audits.range-alloc]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.2 -> 0.1.3"
+
+[[audits.range-map]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.2.0"
+
+[[audits.raw-window-handle]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+version = "0.5.0"
+notes = "I looked through all the sources of the v0.5.0 crate."
+
+[[audits.rayon]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "1.5.3"
+notes = "All code written or reviewed by Josh Stone or Niko Matsakis."
+
+[[audits.rayon]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.5.3 -> 1.6.1"
+
+[[audits.rayon-core]]
+who = "Josh Stone <jistone@redhat.com>"
+criteria = "safe-to-deploy"
+version = "1.9.3"
+notes = "All code written or reviewed by Josh Stone or Niko Matsakis."
+
+[[audits.rayon-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.9.3 -> 1.10.1"
+
+[[audits.rayon-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.10.1 -> 1.10.2"
+
+[[audits.redox_syscall]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.13 -> 0.2.16"
+
+[[audits.regex]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.5.6 -> 1.6.0"
+
+[[audits.regex]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.6.0 -> 1.7.0"
+
+[[audits.regex]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.7.0 -> 1.7.1"
+
+[[audits.regex-syntax]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.6.26 -> 0.6.27"
+
+[[audits.regex-syntax]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.6.27 -> 0.6.28"
+
+[[audits.rkv]]
+who = "Chris H-C <chutten@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.18.2"
+notes = "Maintained by Jan-Erik and :krosylight."
+
+[[audits.rkv]]
+who = "Chris H-C <chutten@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.18.4"
+
+[[audits.ron]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.7.1"
+
+[[audits.ron]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.7.1 -> 0.8.0"
+
+[[audits.rure]]
+who = "Nika Layzell <nika@thelayzells.com>"
+criteria = "safe-to-deploy"
+version = "0.2.2"
+notes = """
+This is a fairly straightforward FFI wrapper crate for `regex`, maintained by
+the `regex` developers in the same repository.
+
+This crate is explicitly designed for FFI use, and should not be used directly
+by Rust code. The exported `extern \"C\"` functions are not marked as `unsafe`,
+meaning that it is technically incorrect to use them from within Rust code,
+however they are reasonable to use from C code.
+
+The unsafe code in this crate heavily depends on the C caller maintaining
+invariants, however these invariants are clearly documented in the `rure.h`
+file, bundled with the crate.
+
+I have checked the signatures of each function both in C++ and in the Rust to
+ensure they match.  In some places, the c `rure.h` header file is missing a
+`const` qualifier which could be present given the Rust code, however this will
+have no impact on ABI, and is fairly normal for FFI crates.
+
+Panics are handled in all Rust FFI methods, meaning that projects which do not
+disable unwinding will still consistently abort (using `libc::abort()`) if a
+panic occurs in the Rust code.
+"""
+
+[[audits.rusqlite]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.27.0 -> 0.28.0"
+
+[[audits.rust_cascade]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.4.0 -> 1.5.0"
+
+[[audits.rust_decimal]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.24.0 -> 1.25.0"
+
+[[audits.rust_decimal]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.25.0 -> 1.26.1"
+
+[[audits.rust_decimal]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.26.1 -> 1.27.0"
+
+[[audits.rust_decimal]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.27.0 -> 1.28.1"
+
+[[audits.rustc-hash]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "1.1.0"
+notes = "Straightforward crate with no unsafe code, does what it says on the tin."
+
+[[audits.rustc_version]]
+who = "Nika Layzell <nika@thelayzells.com>"
+criteria = "safe-to-run"
+version = "0.4.0"
+notes = """
+Straightforward crate which runs `$RUSTC -vV` and parses the output into a
+machine-interpretable form for build scripts.
+"""
+
+[[audits.rustversion]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "1.0.9"
+notes = """
+This crate has a build-time component and procedural macro logic, which I looked
+at enough to convince myself it wasn't going to do anything dramatically wrong.
+I don't think logic bugs in the version parsing etc can realistically introduce
+a security vulnerability.
+"""
+
+[[audits.rustversion]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.0.9 -> 1.0.11"
+
+[[audits.ryu]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.10 -> 1.0.11"
+
+[[audits.ryu]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.11 -> 1.0.12"
+
+[[audits.safemem]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-run"
+version = "0.3.3"
+notes = "I didn't review the allocation code carefully but it's not malicious."
+
+[[audits.scoped-tls]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.0.0 -> 1.0.1"
+
+[[audits.scroll]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.10.2 -> 0.11.0"
+notes = "Small changes to exposed traits, that look reasonable and have additional buffer boundary checks. No unsafe code touched."
+
+[[audits.scroll_derive]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.10.5 -> 0.11.0"
+notes = "No code changes. Tagged together with its parent crate scroll."
+
+[[audits.scroll_derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.11.0 -> 0.11.1"
+
+[[audits.selectors]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.22.0"
+notes = """
+This crate is basically developed in-tree. Mozilla employees have either
+reviewed or written virtually all of the code.
+"""
+
+[[audits.semver]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.9 -> 1.0.10"
+
+[[audits.semver]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.10 -> 1.0.13"
+
+[[audits.semver]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.13 -> 1.0.16"
+
+[[audits.semver]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "1.0.17 -> 1.0.16"
+
+[[audits.serde]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.137 -> 1.0.143"
+
+[[audits.serde]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.143 -> 1.0.144"
+
+[[audits.serde]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.144 -> 1.0.151"
+
+[[audits.serde]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.151 -> 1.0.152"
+
+[[audits.serde_bytes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.11.6 -> 0.11.7"
+
+[[audits.serde_bytes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.11.7 -> 0.11.8"
+
+[[audits.serde_bytes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.11.8 -> 0.11.9"
+
+[[audits.serde_cbor]]
+who = "R. Martinho Fernandes <bugs@rmf.io>"
+criteria = "safe-to-deploy"
+version = "0.11.1"
+
+[[audits.serde_cbor]]
+who = "John M. Schanck <jschanck@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.11.1 -> 0.11.2"
+
+[[audits.serde_derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.137 -> 1.0.143"
+
+[[audits.serde_derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.143 -> 1.0.144"
+
+[[audits.serde_derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.144 -> 1.0.151"
+
+[[audits.serde_derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.151 -> 1.0.152"
+
+[[audits.serde_json]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.81 -> 1.0.83"
+
+[[audits.serde_json]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.83 -> 1.0.85"
+
+[[audits.serde_json]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.85 -> 1.0.91"
+
+[[audits.serde_json]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.91 -> 1.0.93"
+
+[[audits.serde_repr]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.8 -> 0.1.9"
+
+[[audits.serde_repr]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.9 -> 0.1.10"
+
+[[audits.serde_with]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.14.0 -> 3.0.0"
+
+[[audits.serde_with_macros]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.5.2 -> 3.0.0"
+
+[[audits.serde_yaml]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.8.24 -> 0.8.26"
+
+[[audits.servo_arc]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "0.1.1"
+notes = "Developed in-tree, effectively."
+
+[[audits.sfv]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.2 -> 0.9.3"
+
+[[audits.sha1]]
+who = "Dana Keeler <dkeeler@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.10.5"
+
+[[audits.sha1]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.10.0 -> 0.10.5"
+
+[[audits.sha2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.10.2 -> 0.10.6"
+
+[[audits.sha3]]
+who = "Simon Friedberger <simon@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.10.6 -> 0.10.7"
+
+[[audits.slab]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.4.6 -> 0.4.7"
+
+[[audits.slab]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.4.7 -> 0.4.8"
+
+[[audits.smallbitvec]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "2.5.0"
+notes = "All code written or reviewed by Mozilla staff."
+
+[[audits.smallbitvec]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "2.5.0 -> 2.5.1"
+
+[[audits.smallvec]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.8.0 -> 1.9.0"
+
+[[audits.smallvec]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.9.0 -> 1.10.0"
+
+[[audits.smart-default]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.6.0"
+
+[[audits.socket2]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.4.4 -> 0.4.7"
+
+[[audits.subtle]]
+who = "Simon Friedberger <simon@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "2.5.0"
+notes = "The goal is to provide some constant-time correctness for cryptographic implementations. The approach is reasonable, it is known to be insufficient but this is pointed out in the documentation."
+
+[[audits.svg_fmt]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.4.1"
+notes = "Simple string processing with no unsafe code or ambient capability usage."
+
+[[audits.syn]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.96 -> 1.0.99"
+
+[[audits.syn]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.99 -> 1.0.107"
+
+[[audits.synstructure]]
+who = "Nika Layzell <nika@thelayzells.com>"
+criteria = "safe-to-deploy"
+version = "0.12.6"
+notes = """
+I am the primary author of the `synstructure` crate, and its current
+maintainer. The one use of `unsafe` is unnecessary, but documented and
+harmless. It will be removed in the next version.
+"""
+
+[[audits.synstructure]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.12.6 -> 0.13.0"
+
+[[audits.termcolor]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.1.3 -> 1.2.0"
+
+[[audits.textwrap]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.15.0 -> 0.15.2"
+
+[[audits.textwrap]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.15.2 -> 0.16.0"
+
+[[audits.thin-vec]]
+who = "Aria Beingessner <a.beingessner@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.2.5"
+notes = "I own this crate, and most of its versions were codeveloped and reviewed by Nika Layzell. This version was not explicitly reviewed by her, but it was specifically a release that made the code pass miri and was reviewed by me. Firefox uses it in the gecko-ffi configuration which is less thoroughly tested and more dangerous but we're reasonably confident in it. The real danger is from C++ code failing to use it correctly in FFI but that's just how FFI is."
+
+[[audits.thin-vec]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.5 -> 0.2.7"
+
+[[audits.thin-vec]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.7 -> 0.2.12"
+
+[[audits.thiserror]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.31 -> 1.0.32"
+
+[[audits.thiserror]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.32 -> 1.0.38"
+
+[[audits.thiserror-impl]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.31 -> 1.0.32"
+
+[[audits.thiserror-impl]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.32 -> 1.0.38"
+
+[[audits.threadbound]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.3 -> 0.1.4"
+
+[[audits.threadbound]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.4 -> 0.1.5"
+
+[[audits.time]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.44 -> 0.1.45"
+
+[[audits.time]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.3.9 -> 0.3.17"
+
+[[audits.time-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+version = "0.1.0"
+
+[[audits.time-macros]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.2.4 -> 0.2.6"
+
+[[audits.tinystr]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.3.4"
+
+[[audits.tinystr]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.6.0"
+
+[[audits.tinystr]]
+who = "Makoto Kato <m_kato@ga2.so-net.ne.jp>"
+criteria = "safe-to-deploy"
+version = "0.7.0"
+notes = "One of original auther was Zibi Braniecki who worked at Mozilla and maintained by ICU4X developers (Google and Mozilla). I've vetted the one instance of unsafe code."
+
+[[audits.tinystr]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.7.1"
+
+[[audits.tokio-macros]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "1.8.0 -> 1.8.2"
+
+[[audits.tokio-stream]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.9 -> 0.1.11"
+
+[[audits.tokio-stream]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.11 -> 0.1.12"
+
+[[audits.toml]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.5.7 -> 0.5.9"
+
+[[audits.toml]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.9 -> 0.5.10"
+
+[[audits.toml]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.5.10 -> 0.5.11"
+
+[[audits.topological-sort]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+notes = "Simple algorithm crate with no unsafe code or capability usage."
+
+[[audits.tower-service]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.3.1 -> 0.3.2"
+
+[[audits.tracing]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.35 -> 0.1.36"
+
+[[audits.tracing]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.36 -> 0.1.37"
+
+[[audits.tracing-attributes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.21 -> 0.1.22"
+
+[[audits.tracing-attributes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.22 -> 0.1.23"
+
+[[audits.tracing-attributes]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.23 -> 0.1.24"
+
+[[audits.tracing-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.27 -> 0.1.29"
+
+[[audits.tracing-core]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.1.29 -> 0.1.30"
+
+[[audits.tracy-rs]]
+who = "Glenn Watson <git@intuitionlibrary.com>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+
+[[audits.try-lock]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.2.3 -> 0.2.4"
+
+[[audits.typed-arena-nomut]]
+who = "Lee Salzman <lsalzman@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+
+[[audits.typenum]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.15.0 -> 1.16.0"
+
+[[audits.uluru]]
+who = "Emilio Cobos Álvarez <emilio@crisal.io>"
+criteria = "safe-to-deploy"
+version = "3.0.0"
+notes = """
+I've reviewed multiple patches in this crate, including the initial
+implementation back in the day. It has no unsafe code at all nowadays.
+"""
+
+[[audits.unic-langid]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.9.0"
+
+[[audits.unic-langid]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.0 -> 0.9.1"
+
+[[audits.unic-langid-impl]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.9.0"
+
+[[audits.unic-langid-impl]]
+who = "Makoto Kato <m_kato@ga2.so-net.ne.jp>"
+criteria = "safe-to-deploy"
+delta = "0.9.0 -> 0.9.1"
+
+[[audits.unic-langid-macros]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.9.0"
+
+[[audits.unic-langid-macros]]
+who = "Makoto Kato <m_kato@ga2.so-net.ne.jp>"
+criteria = "safe-to-deploy"
+delta = "0.9.0 -> 0.9.1"
+
+[[audits.unic-langid-macros-impl]]
+who = "Zibi Braniecki <zibi@unicode.org>"
+criteria = "safe-to-deploy"
+version = "0.9.0"
+
+[[audits.unic-langid-macros-impl]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.9.0 -> 0.9.1"
+
+[[audits.unicode-ident]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.0 -> 1.0.1"
+
+[[audits.unicode-ident]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.1 -> 1.0.3"
+
+[[audits.unicode-ident]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.0.3 -> 1.0.6"
+
+[[audits.unicode-normalization]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.19 -> 0.1.20"
+notes = "I am the author of most of these changes upstream, and prepared the release myself, at which point I looked at the other changes since 0.1.19."
+
+[[audits.unicode-normalization]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.20 -> 0.1.21"
+
+[[audits.unicode-normalization]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.21 -> 0.1.22"
+
+[[audits.unicode-segmentation]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.9.0 -> 1.10.0"
+
+[[audits.unicode-width]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.1.9 -> 0.1.10"
+
+[[audits.unicode-xid]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.2.3 -> 0.2.4"
+
+[[audits.uniffi]]
+who = "Travis Long <tlong@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.19.3"
+notes = "Maintained by the Glean and Application Services teams"
+
+[[audits.uniffi]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.3 -> 0.19.6"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi]]
+who = "Perry McManis <pmcmanis@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.6 -> 0.20.0"
+
+[[audits.uniffi]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.20.0 -> 0.21.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.21.0 -> 0.21.1"
+notes = "No changes."
+
+[[audits.uniffi]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.21.1 -> 0.23.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_bindgen]]
+who = "Travis Long <tlong@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.19.3"
+notes = "Maintained by the Glean and Application Services teams."
+
+[[audits.uniffi_bindgen]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.3 -> 0.19.6"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_bindgen]]
+who = "Perry McManis <pmcmanis@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.6 -> 0.20.0"
+
+[[audits.uniffi_bindgen]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.20.0 -> 0.21.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_bindgen]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.21.0 -> 0.21.1"
+notes = "I authored the changes in this version."
+
+[[audits.uniffi_bindgen]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.21.1 -> 0.23.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_build]]
+who = "Travis Long <tlong@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.19.3"
+notes = "Maintained by the Glean and Application Services teams."
+
+[[audits.uniffi_build]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.3 -> 0.19.6"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_build]]
+who = "Perry McManis <pmcmanis@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.6 -> 0.20.0"
+
+[[audits.uniffi_build]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.20.0 -> 0.21.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_build]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.21.0 -> 0.21.1"
+notes = "No changes."
+
+[[audits.uniffi_build]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.21.1 -> 0.23.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_checksum_derive]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+version = "0.21.1"
+notes = "I authored this crate."
+
+[[audits.uniffi_checksum_derive]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.21.1 -> 0.23.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_core]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.23.0"
+notes = "Maintained by the Glean and Application Services teams."
+
+[[audits.uniffi_macros]]
+who = "Travis Long <tlong@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.19.3"
+notes = "Maintained by the Glean and Application Services teams."
+
+[[audits.uniffi_macros]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.3 -> 0.19.6"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_macros]]
+who = "Perry McManis <pmcmanis@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.6 -> 0.20.0"
+
+[[audits.uniffi_macros]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.20.0 -> 0.21.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_macros]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.21.0 -> 0.21.1"
+notes = "No changes."
+
+[[audits.uniffi_macros]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.21.1 -> 0.23.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_meta]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.19.6"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_meta]]
+who = "Perry McManis <pmcmanis@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.19.6 -> 0.20.0"
+
+[[audits.uniffi_meta]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.20.0 -> 0.21.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_meta]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "0.21.0 -> 0.21.1"
+notes = "I authored the changes in this version."
+
+[[audits.uniffi_meta]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.21.1 -> 0.23.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uniffi_testing]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.23.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.uuid]]
+who = "Gabriele Svelto <gsvelto@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.8.2 -> 1.2.2"
+
+[[audits.uuid]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-deploy"
+delta = "1.2.2 -> 1.3.0"
+
+[[audits.void]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "1.0.2"
+notes = "Very small crate, just hosts the Void type for easier cross-crate interfacing."
+
+[[audits.warp]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.3.2 -> 0.3.3"
+
+[[audits.warp]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-run"
+delta = "0.3.3 -> 0.3.3@git:4af45fae95bc98b0eba1ef0db17e1dac471bb23d"
+
+[[audits.wasm-encoder]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+version = "0.7.0"
+notes = "Maintained by the Bytecode Alliance, with contributions from Mozilla. This has no unsafe code and uses no ambient capabilities."
+
+[[audits.wasm-encoder]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+delta = "0.7.0 -> 0.14.0"
+notes = "wasm-encoder has no unsafe code and uses no ambient capabilities."
+
+[[audits.wasm-encoder]]
+who = "Yury Delendik <ydelendik@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0 -> 0.15.0"
+
+[[audits.wasm-encoder]]
+who = "Yury Delendik <ydelendik@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0 -> 0.17.0"
+
+[[audits.wasm-encoder]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+delta = "0.19.0 -> 0.19.1"
+
+[[audits.wasm-smith]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+version = "0.11.2"
+notes = "Maintained by the Bytecode Alliance, with contributions from Mozilla. I've vetted the one instance of unsafe code."
+
+[[audits.wasm-smith]]
+who = "Yury Delendik <ydelendik@mozilla.com>"
+criteria = "safe-to-run"
+delta = "0.11.2 -> 0.11.3"
+
+[[audits.wasm-smith]]
+who = "Yury Delendik <ydelendik@mozilla.com>"
+criteria = "safe-to-run"
+delta = "0.11.4 -> 0.11.5"
+
+[[audits.wasm-smith]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-run"
+delta = "0.11.7 -> 0.11.8"
+
+[[audits.wasmparser]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+version = "0.87.0"
+notes = "Maintained by the Bytecode Alliance, with contributions from Mozilla. I've vetted the one instance of unsafe code."
+
+[[audits.wasmparser]]
+who = "Yury Delendik <ydelendik@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.87.0 -> 0.88.0"
+
+[[audits.wasmparser]]
+who = "Yury Delendik <ydelendik@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.89.1 -> 0.91.0"
+
+[[audits.wasmparser]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+delta = "0.93.0 -> 0.94.0"
+
+[[audits.wast]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+version = "44.0.0"
+
+[[audits.wast]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+version = "44.0.0"
+notes = "Maintained by the Bytecode Alliance, with contributions from Mozilla. wast has no unsafe code and the only ambient capability it uses is to read the full contents of a file that is given to it."
+
+[[audits.wast]]
+who = "Yury Delendik <ydelendik@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "44.0.0 -> 45.0.0"
+
+[[audits.wast]]
+who = "Yury Delendik <ydelendik@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "46.0.0 -> 47.0.0"
+
+[[audits.wast]]
+who = "Ryan Hunt <rhunt@eqrion.net>"
+criteria = "safe-to-deploy"
+delta = "48.0.0 -> 49.0.0"
+
+[[audits.wast]]
+who = "Ben Visness <bvisness@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "55.0.0 -> 56.0.0"
+
+[[audits.webrtc-sdp]]
+who = "Byron Campen <docfaraday@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.3.9 -> 0.3.10"
+
+[[audits.weedle2]]
+who = "Travis Long <tlong@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "3.0.0"
+notes = "Maintained by the Glean and Application Services teams."
+
+[[audits.weedle2]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "3.0.0 -> 4.0.0"
+notes = "Maintained by the Glean and Application Services team."
+
+[[audits.wgpu-core]]
+who = "Dzmitry Malyshau <kvark@fastmail.com>"
+criteria = "safe-to-deploy"
+version = "0.12.0"
+notes = """
+This crate, up through the indicated version, was written or reviewed
+by Dzmitry Malyshau while he was a Mozilla employee. Dzmitry left
+Mozilla at the beginning of February 2022. This audit statement was
+collected by Jim Blandy, a Mozilla employee, over email in July 2022:
+Dzmitry was shown, and agreed to, the 'safe-to-deploy' text.
+"""
+
+[[audits.wgpu-core]]
+who = "Jim Blandy <jimb@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.12.0 -> 0.13.0"
+
+[[audits.wgpu-core]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.13.0 -> 0.14.0"
+notes = "Audit by Erich Gubler, Jim Blandy, Nicolas Silva, and Teodor Tanasoaia."
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0 -> 0.14.0@git:fac4731288117d951d0944d96cf0b00fa006dd6c"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0@git:24a904256e225b20b11fb30f914ef53212a2909e -> 0.15.0@git:48d8666de002c7bfddbe85a2596f7748b4cc18b4"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0@git:fac4731288117d951d0944d96cf0b00fa006dd6c -> 0.14.0@git:24a904256e225b20b11fb30f914ef53212a2909e"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:41de797c745d317e93b9cf50e7446faff7f65954 -> 0.15.0@git:581b22e6a026ac92589be2f36a30357600f9d02c"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:48d8666de002c7bfddbe85a2596f7748b4cc18b4 -> 0.15.0@git:41de797c745d317e93b9cf50e7446faff7f65954"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:581b22e6a026ac92589be2f36a30357600f9d02c -> 0.15.0@git:b33731c44c9dd3bfb79d889e7a699c26c3929cd3"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:73b4257b17cc62ecc8df6d6aa3730bd9c6cba4b9 -> 0.15.0@git:f3bf0f782e4dfc561d48e758e1f1e04f77860925"
+
+[[audits.wgpu-core]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:74303308cd6030071889e865c40aa638214ed938 -> 0.15.0@git:73b4257b17cc62ecc8df6d6aa3730bd9c6cba4b9"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:b33731c44c9dd3bfb79d889e7a699c26c3929cd3 -> 0.15.0@git:74303308cd6030071889e865c40aa638214ed938"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:f3bf0f782e4dfc561d48e758e1f1e04f77860925 -> 0.16.0@git:25cb9f61e9a6be572ee42536bbe57aa5f759a700"
+
+[[audits.wgpu-core]]
+who = "Erich Gubler <erichdongubler@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:25cb9f61e9a6be572ee42536bbe57aa5f759a700 -> 0.16.0@git:f71a1bc736fde37509262ca03e91d8f56a13aeb5"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:dcad7dfba92dd85c3ca21bb553a61834e01b04f5 -> 0.16.0@git:e4eb5b38ecb5646ec354c16ff1128f7e49c0f020"
+
+[[audits.wgpu-core]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:e4eb5b38ecb5646ec354c16ff1128f7e49c0f020 -> 0.16.0@git:1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+
+[[audits.wgpu-core]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:f71a1bc736fde37509262ca03e91d8f56a13aeb5 -> 0.16.0@git:dcad7dfba92dd85c3ca21bb553a61834e01b04f5"
+
+[[audits.wgpu-hal]]
+who = "Dzmitry Malyshau <kvark@fastmail.com>"
+criteria = "safe-to-deploy"
+version = "0.12.0"
+notes = """
+This crate, up through the indicated version, was written or reviewed
+by Dzmitry Malyshau while he was a Mozilla employee. Dzmitry left
+Mozilla at the beginning of February 2022. This audit statement was
+collected by Jim Blandy, a Mozilla employee, over email in July 2022:
+Dzmitry was shown, and agreed to, the 'safe-to-deploy' text.
+"""
+
+[[audits.wgpu-hal]]
+who = "Jim Blandy <jimb@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.12.0 -> 0.13.0"
+
+[[audits.wgpu-hal]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.13.0 -> 0.14.0"
+notes = "Audit by Erich Gubler, Jim Blandy, Nicolas Silva, and Teodor Tanasoaia."
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0 -> 0.14.0@git:fac4731288117d951d0944d96cf0b00fa006dd6c"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0@git:24a904256e225b20b11fb30f914ef53212a2909e -> 0.15.1@git:48d8666de002c7bfddbe85a2596f7748b4cc18b4"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0@git:fac4731288117d951d0944d96cf0b00fa006dd6c -> 0.14.0@git:24a904256e225b20b11fb30f914ef53212a2909e"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.1@git:41de797c745d317e93b9cf50e7446faff7f65954 -> 0.15.1@git:581b22e6a026ac92589be2f36a30357600f9d02c"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.1@git:48d8666de002c7bfddbe85a2596f7748b4cc18b4 -> 0.15.1@git:41de797c745d317e93b9cf50e7446faff7f65954"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.1@git:581b22e6a026ac92589be2f36a30357600f9d02c -> 0.15.1@git:b33731c44c9dd3bfb79d889e7a699c26c3929cd3"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.1@git:73b4257b17cc62ecc8df6d6aa3730bd9c6cba4b9 -> 0.15.1@git:f3bf0f782e4dfc561d48e758e1f1e04f77860925"
+
+[[audits.wgpu-hal]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.1@git:74303308cd6030071889e865c40aa638214ed938 -> 0.15.1@git:73b4257b17cc62ecc8df6d6aa3730bd9c6cba4b9"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.1@git:b33731c44c9dd3bfb79d889e7a699c26c3929cd3 -> 0.15.1@git:74303308cd6030071889e865c40aa638214ed938"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.1@git:f3bf0f782e4dfc561d48e758e1f1e04f77860925 -> 0.16.0@git:25cb9f61e9a6be572ee42536bbe57aa5f759a700"
+
+[[audits.wgpu-hal]]
+who = "Erich Gubler <erichdongubler@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:25cb9f61e9a6be572ee42536bbe57aa5f759a700 -> 0.16.0@git:f71a1bc736fde37509262ca03e91d8f56a13aeb5"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:dcad7dfba92dd85c3ca21bb553a61834e01b04f5 -> 0.16.0@git:e4eb5b38ecb5646ec354c16ff1128f7e49c0f020"
+
+[[audits.wgpu-hal]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:e4eb5b38ecb5646ec354c16ff1128f7e49c0f020 -> 0.16.0@git:1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+
+[[audits.wgpu-hal]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:f71a1bc736fde37509262ca03e91d8f56a13aeb5 -> 0.16.0@git:dcad7dfba92dd85c3ca21bb553a61834e01b04f5"
+
+[[audits.wgpu-types]]
+who = "Dzmitry Malyshau <kvark@fastmail.com>"
+criteria = "safe-to-deploy"
+version = "0.12.0"
+notes = """
+This crate, up through the indicated version, was written or reviewed
+by Dzmitry Malyshau while he was a Mozilla employee. Dzmitry left
+Mozilla at the beginning of February 2022. This audit statement was
+collected by Jim Blandy, a Mozilla employee, over email in July 2022:
+Dzmitry was shown, and agreed to, the 'safe-to-deploy' text.
+"""
+
+[[audits.wgpu-types]]
+who = "Jim Blandy <jimb@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.12.0 -> 0.13.0"
+
+[[audits.wgpu-types]]
+who = "Jim Blandy <jimb@red-bean.com>"
+criteria = "safe-to-deploy"
+delta = "0.13.0 -> 0.14.0"
+notes = "Audit by Erich Gubler, Jim Blandy, Nicolas Silva, and Teodor Tanasoaia."
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0 -> 0.14.0@git:fac4731288117d951d0944d96cf0b00fa006dd6c"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0@git:24a904256e225b20b11fb30f914ef53212a2909e -> 0.15.0@git:48d8666de002c7bfddbe85a2596f7748b4cc18b4"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.14.0@git:fac4731288117d951d0944d96cf0b00fa006dd6c -> 0.14.0@git:24a904256e225b20b11fb30f914ef53212a2909e"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:41de797c745d317e93b9cf50e7446faff7f65954 -> 0.15.0@git:581b22e6a026ac92589be2f36a30357600f9d02c"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:48d8666de002c7bfddbe85a2596f7748b4cc18b4 -> 0.15.0@git:41de797c745d317e93b9cf50e7446faff7f65954"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:581b22e6a026ac92589be2f36a30357600f9d02c -> 0.15.0@git:b33731c44c9dd3bfb79d889e7a699c26c3929cd3"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:73b4257b17cc62ecc8df6d6aa3730bd9c6cba4b9 -> 0.15.0@git:f3bf0f782e4dfc561d48e758e1f1e04f77860925"
+
+[[audits.wgpu-types]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:74303308cd6030071889e865c40aa638214ed938 -> 0.15.0@git:73b4257b17cc62ecc8df6d6aa3730bd9c6cba4b9"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:b33731c44c9dd3bfb79d889e7a699c26c3929cd3 -> 0.15.0@git:74303308cd6030071889e865c40aa638214ed938"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.15.0@git:f3bf0f782e4dfc561d48e758e1f1e04f77860925 -> 0.16.0@git:25cb9f61e9a6be572ee42536bbe57aa5f759a700"
+
+[[audits.wgpu-types]]
+who = "Erich Gubler <erichdongubler@gmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:25cb9f61e9a6be572ee42536bbe57aa5f759a700 -> 0.16.0@git:f71a1bc736fde37509262ca03e91d8f56a13aeb5"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:dcad7dfba92dd85c3ca21bb553a61834e01b04f5 -> 0.16.0@git:e4eb5b38ecb5646ec354c16ff1128f7e49c0f020"
+
+[[audits.wgpu-types]]
+who = "Nicolas Silva <nical@fastmail.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:e4eb5b38ecb5646ec354c16ff1128f7e49c0f020 -> 0.16.0@git:1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+
+[[audits.wgpu-types]]
+who = "Teodor Tanasoaia <ttanasoaia@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.16.0@git:f71a1bc736fde37509262ca03e91d8f56a13aeb5 -> 0.16.0@git:dcad7dfba92dd85c3ca21bb553a61834e01b04f5"
+
+[[audits.whatsys]]
+who = "Bobby Holley <bobbyholley@gmail.com>"
+criteria = "safe-to-deploy"
+version = "0.1.2"
+notes = """
+Contains platform-specific FFI code for apple, mac, and windows. The windows code
+also contains a small C file compiled at build-time. I audited all of it and it
+looks correct.
+"""
+
+[[audits.whatsys]]
+who = "Jan-Erik Rediger <jrediger@mozilla.com>"
+criteria = "safe-to-deploy"
+delta = "0.1.2 -> 0.3.1"
+notes = "Maintained by me. I have written or reviewed all of the code."
+
+[[audits.winreg]]
+who = "Ray Kraesig <rkraesig@mozilla.com>"
+criteria = "safe-to-run"
+version = "0.10.1"
+notes = """
+This crate uses a lot of `unsafe`; not all of it is necessary, and not all of it
+is correct. (In particular, the alignment of data buffers does not seem to be
+correctly ensured at type-conversion time.) However, the code is not deceptive,
+and any more subtle issues do not appear to be exploitable -- certainly not from
+a test environment.
+"""
+
+[[audits.wpf-gpu-raster]]
+who = "Lee Salzman <lsalzman@mozilla.com>"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+notes = "Written and maintained by Gfx team at Mozilla."
+
+[[audits.xmldecl]]
+who = "Henri Sivonen <hsivonen@hsivonen.fi>"
+criteria = "safe-to-deploy"
+version = "0.2.0"
+notes = "I, Henri Sivonen, wrote this crate myself for Gecko even though it's published on crates.io."
+
+[[audits.zip]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.6.2 -> 0.6.3"
+
+[[audits.zip]]
+who = "Mike Hommey <mh+mozilla@glandium.org>"
+criteria = "safe-to-run"
+delta = "0.6.3 -> 0.6.4"
+
+[[trusted.aho-corasick]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-03-28"
+end = "2024-05-03"
+
+[[trusted.async-trait]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-07-23"
+end = "2024-04-25"
+
+[[trusted.atomic]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2019-02-22"
+end = "2024-05-05"
+
+[[trusted.byteorder]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-06-09"
+end = "2024-05-03"
+
+[[trusted.bytes]]
+criteria = "safe-to-deploy"
+user-id = 6741 # Alice Ryhl (Darksonn)
+start = "2021-01-11"
+end = "2024-05-05"
+
+[[trusted.clap]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2021-12-08"
+end = "2024-06-02"
+
+[[trusted.clap_builder]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2023-03-28"
+end = "2024-06-02"
+
+[[trusted.clap_derive]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2021-12-08"
+end = "2024-06-02"
+
+[[trusted.clap_lex]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2022-04-15"
+end = "2024-06-02"
+
+[[trusted.dtoa]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-05-02"
+end = "2024-04-25"
+
+[[trusted.flate2]]
+criteria = "safe-to-deploy"
+user-id = 4333 # Josh Triplett (joshtriplett)
+start = "2020-09-30"
+end = "2024-05-05"
+
+[[trusted.headers]]
+criteria = "safe-to-deploy"
+user-id = 359 # Sean McArthur (seanmonstar)
+start = "2019-09-09"
+end = "2024-04-25"
+
+[[trusted.httparse]]
+criteria = "safe-to-deploy"
+user-id = 359 # Sean McArthur (seanmonstar)
+start = "2019-07-03"
+end = "2024-04-25"
+
+[[trusted.indexmap]]
+criteria = "safe-to-deploy"
+user-id = 539 # Josh Stone (cuviper)
+start = "2020-01-15"
+end = "2024-05-05"
+
+[[trusted.inherent]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-07-14"
+end = "2024-04-25"
+
+[[trusted.iovec]]
+criteria = "safe-to-deploy"
+user-id = 10 # Carl Lerche (carllerche)
+start = "2019-10-09"
+end = "2024-05-05"
+
+[[trusted.itoa]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-05-02"
+end = "2024-04-25"
+
+[[trusted.jobserver]]
+criteria = "safe-to-deploy"
+user-id = 1 # Alex Crichton (alexcrichton)
+start = "2019-03-15"
+end = "2024-05-05"
+
+[[trusted.libc]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2021-01-27"
+end = "2024-05-05"
+
+[[trusted.lock_api]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2019-05-04"
+end = "2024-05-05"
+
+[[trusted.memchr]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-07-07"
+end = "2024-05-03"
+
+[[trusted.mime]]
+criteria = "safe-to-deploy"
+user-id = 359 # Sean McArthur (seanmonstar)
+start = "2019-09-09"
+end = "2024-04-25"
+
+[[trusted.mio]]
+criteria = "safe-to-deploy"
+user-id = 10 # Carl Lerche (carllerche)
+start = "2019-05-15"
+end = "2024-05-06"
+
+[[trusted.num_cpus]]
+criteria = "safe-to-deploy"
+user-id = 359 # Sean McArthur (seanmonstar)
+start = "2019-06-10"
+end = "2024-04-25"
+
+[[trusted.ordered-float]]
+criteria = "safe-to-deploy"
+user-id = 2017 # Matt Brubeck (mbrubeck)
+start = "2019-03-13"
+end = "2024-05-06"
+
+[[trusted.parking_lot]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2019-05-04"
+end = "2024-05-05"
+
+[[trusted.parking_lot_core]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2019-05-04"
+end = "2024-05-05"
+
+[[trusted.paste]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-19"
+end = "2024-04-25"
+
+[[trusted.proc-macro-hack]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-04-16"
+end = "2024-04-25"
+
+[[trusted.proc-macro2]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-04-23"
+end = "2024-05-30"
+
+[[trusted.quote]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-04-09"
+end = "2024-05-30"
+
+[[trusted.regex]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-02-27"
+end = "2024-05-03"
+
+[[trusted.regex-syntax]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-03-30"
+end = "2024-05-03"
+
+[[trusted.ryu]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-05-02"
+end = "2024-04-25"
+
+[[trusted.same-file]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-07-16"
+end = "2024-05-03"
+
+[[trusted.scopeguard]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2020-02-16"
+end = "2024-05-05"
+
+[[trusted.serde]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-01"
+end = "2024-04-25"
+
+[[trusted.serde_bytes]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-02-25"
+end = "2024-04-25"
+
+[[trusted.serde_derive]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-01"
+end = "2024-04-25"
+
+[[trusted.serde_json]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-02-28"
+end = "2024-04-25"
+
+[[trusted.serde_repr]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-04-26"
+end = "2024-04-25"
+
+[[trusted.serde_yaml]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-05-02"
+end = "2024-04-25"
+
+[[trusted.smallvec]]
+criteria = "safe-to-deploy"
+user-id = 2017 # Matt Brubeck (mbrubeck)
+start = "2019-10-28"
+end = "2024-05-06"
+
+[[trusted.syn]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-01"
+end = "2024-04-25"
+
+[[trusted.termcolor]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-06-04"
+end = "2024-05-03"
+
+[[trusted.thiserror]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-10-09"
+end = "2024-04-25"
+
+[[trusted.thiserror-impl]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-10-09"
+end = "2024-04-25"
+
+[[trusted.threadbound]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2020-06-16"
+end = "2024-04-25"
+
+[[trusted.tokio-macros]]
+criteria = "safe-to-deploy"
+user-id = 6741 # Alice Ryhl (Darksonn)
+start = "2020-10-26"
+end = "2024-05-05"
+
+[[trusted.tokio-util]]
+criteria = "safe-to-deploy"
+user-id = 6741 # Alice Ryhl (Darksonn)
+start = "2021-01-12"
+end = "2024-05-05"
+
+[[trusted.toml]]
+criteria = "safe-to-deploy"
+user-id = 1 # Alex Crichton (alexcrichton)
+start = "2019-05-16"
+end = "2024-05-06"
+
+[[trusted.unicode-ident]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2021-10-02"
+end = "2024-04-25"
+
+[[trusted.walkdir]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-06-09"
+end = "2024-05-03"
+
+[[trusted.warp]]
+criteria = "safe-to-deploy"
+user-id = 359 # Sean McArthur (seanmonstar)
+start = "2019-03-20"
+end = "2024-05-08"
+
+[[trusted.wasi]]
+criteria = "safe-to-deploy"
+user-id = 1 # Alex Crichton (alexcrichton)
+start = "2020-06-03"
+end = "2024-05-05"
+
+[[trusted.winapi-util]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2020-01-11"
+end = "2024-05-03"

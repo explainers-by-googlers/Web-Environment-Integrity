@@ -1,0 +1,9 @@
+---
+updatebot:
+    description: >
+      "Ensure moz.yaml files are valid"
+    extensions: ['yaml']
+    include: ['.']
+    type: external-file
+    level: error
+    payload: updatebot.validate_yaml:lint

@@ -1,0 +1,53 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+webidl Document;
+webidl Selection;
+
+[scriptable, uuid(45686299-ae2b-46bc-9502-c56c35691ab9)]
+interface nsISelectionListener : nsISupports
+{
+  const short NO_REASON=0;
+  const short DRAG_REASON=1;
+  const short MOUSEDOWN_REASON=2;/*bitflags*/
+  const short MOUSEUP_REASON=4;/*bitflags*/
+  const short KEYPRESS_REASON=8;/*bitflags*/
+  const short SELECTALL_REASON=16;
+  const short COLLAPSETOSTART_REASON=32;
+  const short COLLAPSETOEND_REASON=64;
+  const short IME_REASON=128;
+  // JS_REASON is set if the selection change is directly caused by a call
+  // of Selection API or Range API.
+  const short JS_REASON=256;
+
+  // Values of nsSelectionAmount.
+  // Reflects the granularity in which the selection caret has moved.
+  const long CHARACTER_AMOUNT = 0;
+  const long CLUSTER_AMOUNT = 1;
+  const long WORD_AMOUNT = 2;
+  const long WORDNOSPACE_AMOUNT = 3;
+  const long LINE_AMOUNT = 4;
+  const long BEGINLINE_AMOUNT = 5;
+  const long ENDLINE_AMOUNT = 6;
+  const long NO_AMOUNT = 7;
+  const long PARAGRAPH_AMOUNT = 8;
+
+  [can_run_script]
+  void notifySelectionChanged(in Document doc, in Selection sel,
+                              in short reason, in long amount);
+};
+
+%{C++
+namespace mozilla {
+
+/**
+ * Returning names of `nsISelectionListener::*_REASON` in aReasons.
+ */
+nsCString SelectionChangeReasonsToCString(int16_t aReasons);
+
+} // namespace mozilla
+%}

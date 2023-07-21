@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<!--
+Repeated reload an iframe. When iframe's script is loaded from the bytecode
+cache, dynamic module import should still resolve modules based on the
+script's URL.
+-->
+<head>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+
+  <script>
+    const iframeId = "test_iframe";
+
+    var checkResult = null;
+
+    async function startTest() {
+      SimpleTest.waitForExplicitFinish();
+
+      // Setting dom.expose_test_interfaces pref causes the
+      // nsScriptLoadRequest to fire event on script tags, with information
+      // about its internal state. The ScriptLoader source send events to
+      // trace these and resolve a promise with the path taken by the
+      // script loader.
+      //
+      // Setting dom.script_loader.bytecode_cache.strategy to -1 causes the
+      // nsScriptLoadRequest to force all the conditions necessary to make a
+      // script be saved as bytecode in the alternate data storage provided
+      // by the channel (necko cache).
+      await SpecialPowers.pushPrefEnv({
+        set: [
+          ['dom.script_loader.bytecode_cache.enabled', true],
+          ['dom.expose_test_interfaces', true],
+          ["dom.script_loader.bytecode_cache.strategy", -1]
+        ]});
+
+      for (let i = 0; i < 3; i++) {
+        let iframe = document.getElementById(iframeId);
+        if (iframe) {
+          document.body.removeChild(iframe);
+        }
+
+        iframe = document.createElement("iframe");
+        document.body.appendChild(iframe);
+        iframe.id = iframeId;
+
+        let iwin = iframe.contentWindow;
+
+        let eventPromise = new Promise(resolve => {
+          // Both regular script and imported module scripts are encoded/decoded
+          // Wait for 2 encode/load events to be fired.
+          let count = 0;
+          if (i == 0) {
+            iwin.addEventListener("scriptloader_bytecode_saved", event => {
+              count++;
+              ok(true, "Bytecode encoding succeeded");
+              if (count == 2) {
+                resolve();
+              }
+            });
+          } else {
+            iwin.addEventListener("scriptloader_load_bytecode", event => {
+              count++;
+              ok(true, "Script loaded from bytecode");
+              if (count == 2) {
+                resolve();
+              }
+            });
+          }
+
+          iwin.addEventListener("scriptloader_bytecode_failed", () => {
+            ok(false, "Bytecode encoding failed");
+            SimpleTest.finish();
+          });
+        });
+
+        let resultPromise = new Promise(resolve => {
+          checkResult = resolve;
+        });
+
+        iframe.src = "bug1656248_frame.html";
+
+        let [_, result] = await Promise.all([eventPromise, resultPromise]);
+
+        is(result, 42, `Module was loaded successfully (${i})`);
+      }
+
+      SimpleTest.finish();
+    }
+  </script>
+</head>
+
+<body onload="startTest()"></body>

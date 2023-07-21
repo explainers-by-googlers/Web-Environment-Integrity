@@ -1,0 +1,85 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+EXPORTS += [
+    "DXVA2Manager.h",
+    "MFTDecoder.h",
+    "WMF.h",
+    "WMFAudioMFTManager.h",
+    "WMFDataEncoderUtils.h",
+    "WMFDecoderModule.h",
+    "WMFEncoderModule.h",
+    "WMFMediaDataDecoder.h",
+    "WMFMediaDataEncoder.h",
+    "WMFUtils.h",
+    "WMFVideoMFTManager.h",
+]
+
+if CONFIG["MOZ_WMF_MEDIA_ENGINE"]:
+    EXPORTS += [
+        "MFMediaEngineAudioStream.h",
+        "MFMediaEngineDecoderModule.h",
+        "MFMediaEngineExtra.h",
+        "MFMediaEngineStream.h",
+        "MFMediaEngineVideoStream.h",
+        "MFMediaSource.h",
+    ]
+    UNIFIED_SOURCES += [
+        "MFMediaEngineAudioStream.cpp",
+        "MFMediaEngineDecoderModule.cpp",
+        "MFMediaEngineExtension.cpp",
+        "MFMediaEngineNotify.cpp",
+        "MFMediaEngineStream.cpp",
+        "MFMediaEngineVideoStream.cpp",
+        "MFMediaSource.cpp",
+    ]
+
+if CONFIG["MOZ_WMF_CDM"]:
+    EXPORTS += [
+        "MFCDMExtra.h",
+        "MFCDMProxy.h",
+        "MFCDMSession.h",
+        "MFContentProtectionManager.h",
+        "MFPMPHostWrapper.h",
+    ]
+    UNIFIED_SOURCES += [
+        "MFCDMProxy.cpp",
+        "MFCDMSession.cpp",
+        "MFContentProtectionManager.cpp",
+        "MFPMPHostWrapper.cpp",
+    ]
+
+UNIFIED_SOURCES += [
+    "DXVA2Manager.cpp",
+    "MFTDecoder.cpp",
+    "MFTEncoder.cpp",
+    "WMFAudioMFTManager.cpp",
+    "WMFDecoderModule.cpp",
+    "WMFEncoderModule.cpp",
+    "WMFMediaDataDecoder.cpp",
+    "WMFVideoMFTManager.cpp",
+]
+
+SOURCES += [
+    "WMFUtils.cpp",
+]
+
+LOCAL_INCLUDES += [
+    "../../ipc/",
+    "/gfx/cairo/cairo/src",
+    "/media/libyuv/libyuv/include",
+]
+
+TEST_DIRS += [
+    "gtest",
+]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+FINAL_LIBRARY = "xul"
+
+# Add libFuzzer configuration directives
+include("/tools/fuzzing/libfuzzer-config.mozbuild")

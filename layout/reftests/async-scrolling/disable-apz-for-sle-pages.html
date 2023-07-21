@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html class="reftest-wait reftest-snapshot-all reftest-no-flush" reftest-async-scroll
+      reftest-async-scroll-y="200">
+ <head>
+  <title>Check that the apz.disable_for_sle_pages pref behaves as expected</title>
+  <script>
+    // Upon load, this page invokes scrollTo() for a transparent element
+    // repeatedly. It triggers scroll events, which run the scroll listener
+    // below. The scroll listener updates the background-position-x of the div
+    // to make the div a scroll-linked-effect. The scroll-linked effect detector
+    // should then report that the document contains such an effect, which will
+    // disable APZ on the page. That in turn will cause the
+    // reftest-async-scroll-y to get ignored, and that's what the reftest checks
+    // for.
+
+    function start() {
+        let scrollPosition = 1;
+
+        scroller.addEventListener('scroll', function() {
+            // NOTE: Changing background-position-x doesn't change rendering for
+            // this element.
+            document.getElementById('scroll-linked-effect').style.backgroundPositionX =
+                scroller.scrollTop + "px";
+            if (scrollPosition == 1) {
+              setTimeout(done, 0);
+            }
+            scrollPosition++;
+            scroller.scrollTo(0, scrollPosition);
+        });
+
+        scroller.scrollTo(0, scrollPosition);
+    }
+    addEventListener('load', start, false);
+
+    function done() {
+        document.documentElement.classList.remove('reftest-wait');
+    }
+  </script>
+ </head>
+ <body style="height: 5000px; background-image:url(repeatable-diagonal-gradient.png);">
+  <div id="scroller" style="overflow: auto; width: 100px; height: 100px; scrollbar-width: none;">
+    <div style="height: 5000px;"></div>
+  </div>
+  <div id="scroll-linked-effect" style="position: absolute; top: 100px; left: 100px; width: 100px; height: 100px; background-color: green"></div>
+ </body>
+</html>

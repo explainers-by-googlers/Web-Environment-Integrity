@@ -1,0 +1,146 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Toolkit", "General")
+
+# These component dirs are built for all apps (including suite)
+if CONFIG["MOZ_HAS_REMOTE"]:
+    DIRS += ["remote"]
+
+DIRS += [
+    "aboutcheckerboard",
+    "aboutmemory",
+    "aboutprocesses",
+    "alerts",
+    "antitracking",
+    "apppicker",
+    "asyncshutdown",
+    "backgroundhangmonitor",
+    "bitsdownload",
+    "browser",
+    "cascade_bloom_filter",
+    "certviewer",
+    "cleardata",
+    "clearsitedata",
+    "cookiebanners",
+    "commandlines",
+    "contentprefs",
+    "contextualidentity",
+    "crashes",
+    "crashmonitor",
+    "credentialmanagement",
+    "downloads",
+    "enterprisepolicies",
+    "extensions",
+    "featuregates",
+    "formautofill",
+    "finalizationwitness",
+    "find",
+    "forgetaboutsite",
+    "glean",
+    "httpsonlyerror",
+    "jsoncpp/src/lib_json",
+    "kvstore",
+    "mediasniffer",
+    "mozintl",
+    "mozprotocol",
+    "parentalcontrols",
+    "passwordmgr",
+    "pdfjs",
+    "pictureinpicture",
+    "places",
+    "processtools",
+    "processsingleton",
+    "promiseworker",
+    "prompts",
+    "protobuf",
+    "remotebrowserutils",
+    "reflect",
+    "reputationservice",
+    "resistfingerprinting",
+    "search",
+    "sessionstore",
+    "shell",
+    "startup",
+    "statusfilter",
+    "telemetry",
+    "translation",
+    "translations",
+    "thumbnails",
+    "timermanager",
+    "tooltiptext",
+    "typeaheadfind",
+    "utils",
+    "url-classifier",
+    "urlformatter",
+    "viewsource",
+    "windowcreator",
+    "windowwatcher",
+    "workerloader",
+    "xulstore",
+]
+
+if CONFIG["NS_PRINTING"]:
+    DIRS += ["printing"]
+
+if CONFIG["MOZ_BUILD_APP"] != "mobile/android":
+    DIRS += [
+        "aboutconfig",
+        "narrate",
+        "reader",
+        "viaduct",
+        "uniffi-js",
+        "uniffi-bindgen-gecko-js/components",
+    ]
+
+if CONFIG["BUILD_CTYPES"]:
+    DIRS += ["ctypes"]
+
+DIRS += ["autocomplete", "printingui", "satchel", "captivedetect"]
+
+if CONFIG["OS_TARGET"] != "Android":
+    DIRS += ["terminator"]
+
+if CONFIG["MOZ_UPDATE_AGENT"]:
+    DIRS += ["taskscheduler"]
+
+DIRS += ["build"]
+
+if CONFIG["NIGHTLY_BUILD"]:
+    DIRS += ["shopping"]
+
+if CONFIG["MOZ_WIDGET_TOOLKIT"] == "windows":
+    DIRS += ["aboutthirdparty", "aboutwindowsmessages", "gfx"]
+
+if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
+    EXTRA_JS_MODULES += [
+        "DefaultCLH.sys.mjs",
+    ]
+
+    XPCOM_MANIFESTS += [
+        "components.conf",
+    ]
+
+if CONFIG["MOZ_BUILD_APP"] == "browser":
+    DIRS += ["normandy", "messaging-system"]
+
+DIRS += ["nimbus"]
+
+if CONFIG["MOZ_BACKGROUNDTASKS"]:
+    DIRS += ["backgroundtasks"]
+
+# This is only packaged for browser since corrupt JAR and XPI files tend to be a desktop-OS problem.
+if CONFIG["MOZ_BUILD_APP"] == "browser":
+    DIRS += ["corroborator"]
+
+if CONFIG["MOZ_UNIFFI_FIXTURES"]:
+    DIRS += ["uniffi-bindgen-gecko-js/fixtures"]
+
+
+UNIFIED_SOURCES += [
+    "/toolkit/components/antitracking/ContentBlockingAllowList.cpp",
+]

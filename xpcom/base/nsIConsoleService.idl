@@ -1,0 +1,78 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+interface nsIConsoleListener;
+interface nsIConsoleMessage;
+
+[scriptable, builtinclass, uuid(0eb81d20-c37e-42d4-82a8-ca9ae96bdf52)]
+interface nsIConsoleService : nsISupports
+{
+    void logMessage(in nsIConsoleMessage message);
+
+    // This helper function executes `function` and redirects any exception
+    // that may be thrown while running it to the DevTools Console currently
+    // debugging `targetGlobal`.
+    //
+    // This helps flag the nsIScriptError with a particular innerWindowID
+    // which is especially useful for WebExtension content scripts
+    // where script are running in a Sandbox whose prototype is the content window.
+    // We expect content script exception to be flaged with the content window
+    // innerWindowID in order to appear in the tab's DevTools.
+    [implicit_jscontext]
+    jsval callFunctionAndLogException(in jsval targetGlobal, in jsval function);
+
+    // This is a variant of LogMessage which allows the caller to determine
+    // if the message should be output to an OS-specific log. This is used on
+    // B2G to control whether the message is logged to the android log or not.
+    cenum OutputMode : 8 {
+        SuppressLog = 0,
+        OutputToLog
+    };
+    void logMessageWithMode(in nsIConsoleMessage message,
+                            in nsIConsoleService_OutputMode mode);
+
+    /**
+     * Convenience method for logging simple messages.
+     */
+    void logStringMessage(in wstring message);
+
+    /**
+     * Get an array of all the messages logged so far.
+     */
+    Array<nsIConsoleMessage> getMessageArray();
+
+    /**
+     * To guard against stack overflows from listeners that could log
+     * messages (it's easy to do this inadvertently from listeners
+     * implemented in JavaScript), we don't call any listeners when
+     * another error is already being logged.
+     */
+    void registerListener(in nsIConsoleListener listener);
+
+    /**
+     * Each registered listener should also be unregistered.
+     */
+    void unregisterListener(in nsIConsoleListener listener);
+
+    /**
+     * Clear the message buffer (e.g. for privacy reasons).
+     */
+    void reset();
+
+    /**
+     * Clear the message buffer for a given window.
+     */
+    void resetWindow(in uint64_t windowInnerId);
+};
+
+
+%{ C++
+#define NS_CONSOLESERVICE_CID \
+{ 0x7e3ff85c, 0x1dd2, 0x11b2, { 0x8d, 0x4b, 0xeb, 0x45, 0x2c, 0xb0, 0xff, 0x40 }}
+
+#define NS_CONSOLESERVICE_CONTRACTID "@mozilla.org/consoleservice;1"
+%}

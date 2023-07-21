@@ -1,0 +1,8 @@
+[
+  [
+    "warning",
+    "potentially unintended semicolon",
+    "bugprone-suspicious-semicolon"
+  ],
+  { "reliability": "high" }
+]

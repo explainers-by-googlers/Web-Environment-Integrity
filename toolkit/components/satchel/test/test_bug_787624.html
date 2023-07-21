@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for Layout of Form History Autocomplete: Bug 787624</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <script type="text/javascript" src="satchel_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+  <style>
+    .container {
+        border: 1px solid #333;
+        width: 80px;
+        height: 26px;
+        position: absolute;
+        z-index: 2;
+    }
+
+    .subcontainer {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .subcontainer input {
+        width: 120px;
+        margin: 2px 6px;
+        padding-right: 4px;
+        border: none;
+        height: 22px;
+        z-index: 1;
+        outline: 1px dashed #555
+    }
+  </style>
+</head>
+<body>
+Form History Layout test: form field autocomplete: Bug 787624
+<p id="display"></p>
+
+<!-- we presumably can't hide the content for this test. -->
+<div id="content">
+  <!-- in this form, the input field is partially hidden and can scroll -->
+  <div class="container">
+    <div class="subcontainer">
+      <form id="form1" onsubmit="return false;">
+        <input  type="text" name="field1">
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+add_setup(async () => {
+  await updateFormHistory([
+    { op: "remove" },
+    { op: "add", fieldname: "field1", value: "value1" },
+    { op: "add", fieldname: "field1", value: "value2" },
+  ]);
+});
+
+add_task(async function test_popup_not_move_input() {
+  const input = document.querySelector("#form1 > input");
+  const rect = input.getBoundingClientRect();
+  await openPopupOn(input);
+  const newRect = input.getBoundingClientRect();
+  isDeeply(
+    [newRect.left, newRect.top],
+    [rect.left, rect.top],
+    "popup does not disturb the input position");
+});
+
+</script>
+</body>
+</html>

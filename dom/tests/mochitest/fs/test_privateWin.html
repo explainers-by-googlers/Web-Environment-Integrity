@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OPFS private window test</title>
+
+<script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"></script>
+<link rel="stylesheet" type="text/css" href="chrome://mochikit/content/tests/SimpleTest/test.css"?>
+
+<script type="text/javascript">
+
+const contentPage = "http://mochi.test:8888/chrome/dom/fs/test/mochitest/page_blank.html";
+
+function testOnPrivateWindow(aCallback) {
+  let mainWindow = window.browsingContext.topChromeWindow;
+  let win = mainWindow.OpenBrowserWindow({private: true});
+  win.addEventListener("load", function() {
+    win.addEventListener("DOMContentLoaded", function onInnerLoad() {
+      if (win.content.location.href == "about:privatebrowsing") {
+        win.gBrowser.loadURI(Services.io.newURI(contentPage), {
+           triggeringPrincipal: Services.scriptSecurityManager.createNullPrincipal({}),
+        });
+        return;
+      }
+      win.removeEventListener("DOMContentLoaded", onInnerLoad, true);
+      SimpleTest.executeSoon(function() { aCallback(win); });
+    }, true);
+  }, {capture: true, once: true});
+}
+
+function doTest() {
+  testOnPrivateWindow(async function(privateWin) {
+    try {
+      let root = await privateWin.navigator.storage.getDirectory();
+      ok(false, "Didn't block storage.getDirectory() in private browsing");
+    } catch(e) {
+      ok(true, "blocked storage.getDirectory() in private browsing");
+      is(e.name, "SecurityError", "Threw right type error");
+    }
+    privateWin.close();
+    SimpleTest.finish();
+  });
+}
+
+function startTest() {
+  SpecialPowers.pushPrefEnv({'set': [["dom.fs.enabled", true]]}, doTest);
+}
+
+SimpleTest.waitForExplicitFinish();
+
+</script>
+
+</head>
+
+<body onload="startTest();">
+
+</body>
+</html>

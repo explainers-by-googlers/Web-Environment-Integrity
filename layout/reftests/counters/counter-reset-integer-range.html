@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<title>Expected integer range</title>
+<style>
+
+span::after { content: counter(c); }
+
+</style>
+<span style="counter-reset: c 0"></span>
+<span style="counter-reset: c 2147483647"></span>
+<span style="counter-reset: c 2147483648"></span>
+<span style="counter-reset: c 2147483649"></span>
+<span style="counter-reset: c -2147483647"></span>
+<!--
+  We use std::numeric_limits<int32_t>::min() as an internal "magic" value to
+  implement the content based <ol reversed> start value. So the following two
+  values are outside our supported range and should be clamped to the valid
+  range per spec.
+-->
+<span style="counter-reset: c -2147483648"></span>
+<span style="counter-reset: c -2147483649"></span>

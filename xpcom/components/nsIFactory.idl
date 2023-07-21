@@ -1,0 +1,27 @@
+/* -*- Mode: IDL; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+/**
+ * A class factory allows the creation of nsISupports derived
+ * components without specifying a concrete base class.
+ */
+
+[scriptable, object, uuid(1bb40a56-9223-41e6-97d4-da97bdeb6a4d)]
+interface nsIFactory :  nsISupports {
+   /**
+    * Creates an instance of a component.
+    *
+    * @param iid    The IID of the interface being requested in
+    *               the component which is being currently created.
+    * @param result [out] Pointer to the newly created instance, if successful.
+    * @throws NS_NOINTERFACE - Interface not accessible.
+    *         NS_ERROR* - Method failure.
+    */
+    void createInstance(in nsIIDRef iid,
+                        [retval, iid_is(iid)] out nsQIResult result);
+
+};

@@ -1,0 +1,145 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+interface nsIURI;
+
+[ref] native const_OriginAttributesRef(const mozilla::OriginAttributes);
+
+[scriptable, uuid(275127f8-dbd7-4681-afbf-6df0c6587a01)]
+interface nsISiteSecurityService : nsISupports
+{
+    const uint32_t Success = 0;
+    const uint32_t ERROR_UNKNOWN = 1;
+    // ERROR_UNTRUSTWORTHY_CONNECTION was 2 (the caller is now responsible for
+    // checking this)
+    const uint32_t ERROR_COULD_NOT_PARSE_HEADER = 3;
+    const uint32_t ERROR_NO_MAX_AGE = 4;
+    const uint32_t ERROR_MULTIPLE_MAX_AGES = 5;
+    const uint32_t ERROR_INVALID_MAX_AGE = 6;
+    const uint32_t ERROR_MULTIPLE_INCLUDE_SUBDOMAINS = 7;
+    const uint32_t ERROR_INVALID_INCLUDE_SUBDOMAINS = 8;
+    // The constants that were removed below were used in HPKP processing
+    // (which has been removed entirely).
+    // ERROR_INVALID_PIN was 9
+    // ERROR_MULTIPLE_REPORT_URIS was 10
+    // ERROR_PINSET_DOES_NOT_MATCH_CHAIN was 11
+    // ERROR_NO_BACKUP_PIN was 12
+    const uint32_t ERROR_COULD_NOT_SAVE_STATE = 13;
+    // ERROR_ROOT_NOT_BUILT_IN was 14
+
+    /**
+     * Parses a given HTTP header and records the results internally.
+     * Currently one header type is supported: HSTS (aka STS).
+     * The format of the HSTS header is defined by the HSTS specification:
+     * https://tools.ietf.org/html/rfc6797
+     * and allows a host to specify that future HTTP requests should be
+     * upgraded to HTTPS.
+     * The caller is responsible for first determining that the header was
+     * delivered via a trustworthy connection (namely, https with no errors).
+     *
+     * @param aSourceURI the URI of the resource with the HTTP header.
+     * @param aHeader the HTTP response header specifying security data.
+     * @param aOriginAttributes the origin attributes that isolate this origin,
+     *                          (note that this implementation does not isolate
+     *                          by userContextId because of the risk of man-in-
+     *                          the-middle attacks before trust-on-second-use
+     *                          happens).
+     *                          If mPrivateBrowsingId > 0, information gathered
+     *                          from this header will not be saved persistently.
+     * @param aMaxAge the parsed max-age directive of the header.
+     * @param aIncludeSubdomains the parsed includeSubdomains directive.
+     * @param aFailureResult a more specific failure result if NS_ERROR_FAILURE
+                             was returned.
+     * @return NS_OK            if it succeeds
+     *         NS_ERROR_FAILURE if it can't be parsed
+     *         NS_SUCCESS_LOSS_OF_INSIGNIFICANT_DATA
+     *                          if there are unrecognized tokens in the header.
+     */
+    [binaryname(ProcessHeader), noscript, must_use]
+    void processHeaderNative(in nsIURI aSourceURI,
+                             in ACString aHeader,
+                             in const_OriginAttributesRef aOriginAttributes,
+                             [optional] out unsigned long long aMaxAge,
+                             [optional] out boolean aIncludeSubdomains,
+                             [optional] out uint32_t aFailureResult);
+
+    [binaryname(ProcessHeaderScriptable), implicit_jscontext, optional_argc,
+     must_use]
+    void processHeader(in nsIURI aSourceURI,
+                       in ACString aHeader,
+                       [optional] in jsval aOriginAttributes,
+                       [optional] out unsigned long long aMaxAge,
+                       [optional] out boolean aIncludeSubdomains,
+                       [optional] out uint32_t aFailureResult);
+
+    // Helper enum for use with resetState.
+    cenum ResetStateBy : 8 {
+      // reset state for the exact domain
+      ExactDomain,
+      // reset state for any domain rooted by the given domain
+      // (e.g. foo.example.com if given example.com)
+      RootDomain,
+      // reset all state associated with the given base domain (e.g. data
+      // partitioned by total cookie protection)
+      BaseDomain,
+    };
+
+    /**
+     * Resets HSTS state a host, including the includeSubdomains state that
+     * would affect subdomains. This essentially removes the state for the
+     * domain tree rooted at this host. If any preloaded information is present
+     * for that host, that information will then be used instead of any other
+     * previously existing state.
+     *
+     * @param aURI    the URI of the target host
+     * @param aOriginAttributes the origin attributes that isolate this origin,
+     *                          (note that this implementation does not isolate
+     *                          by userContextId because of the risk of man-in-
+     *                          the-middle attacks before trust-on-second-use
+     *                          happens).
+     * @param aScope  The scope of state to reset. See ResetStateBy. Defaults
+     *                to ExactDomain.
+     */
+    [implicit_jscontext, optional_argc, must_use]
+    void resetState(in nsIURI aURI,
+                    [optional] in jsval aOriginAttributes,
+                    [optional] in nsISiteSecurityService_ResetStateBy aScope);
+
+    /**
+     * Checks whether or not the URI's hostname has HSTS set.
+     * For example:
+     * The URI is an HSTS URI if either the host has the HSTS state set, or one
+     * of its super-domains has the HSTS "includeSubdomains" flag set.
+     * NOTE: this function makes decisions based only on the
+     * host contained in the URI, and disregards other portions of the URI
+     * such as path and port.
+     *
+     * @param aURI the URI to query for STS state.
+     * @param aOriginAttributes the origin attributes that isolate this origin,
+     *                          (note that this implementation does not isolate
+     *                          by userContextId because of the risk of man-in-
+     *                          the-middle attacks before trust-on-second-use
+     *                          happens).
+     */
+    [binaryname(IsSecureURI), noscript, must_use]
+    boolean isSecureURINative(in nsIURI aURI,
+                              in const_OriginAttributesRef aOriginAttributes);
+
+    [binaryname(IsSecureURIScriptable), implicit_jscontext, optional_argc,
+     must_use]
+    boolean isSecureURI(in nsIURI aURI, [optional] in jsval aOriginAttributes);
+
+    /**
+     * Removes all non-preloaded HSTS state by resetting to factory-original
+     * settings.
+     */
+    [must_use]
+    void clearAll();
+};
+
+%{C++
+#define NS_SSSERVICE_CONTRACTID "@mozilla.org/ssservice;1"
+%}

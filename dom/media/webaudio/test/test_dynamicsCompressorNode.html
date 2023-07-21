@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test DynamicsCompressorNode</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<pre id="test">
+<script class="testbody" type="text/javascript">
+
+function near(a, b, msg) {
+  ok(Math.abs(a - b) < 1e-4, msg);
+}
+
+SimpleTest.waitForExplicitFinish();
+addLoadEvent(function() {
+  var context = new AudioContext();
+
+  var osc = context.createOscillator();
+  var sp = context.createScriptProcessor();
+
+  var compressor = new DynamicsCompressorNode(context);
+
+  osc.connect(compressor);
+  osc.connect(sp);
+  compressor.connect(context.destination);
+
+  is(compressor.channelCount, 2, "compressor node has 2 input channels by default");
+  is(compressor.channelCountMode, "clamped-max", "Correct channelCountMode for the compressor node");
+  is(compressor.channelInterpretation, "speakers", "Correct channelCountInterpretation for the compressor node");
+
+  // Verify default values
+  ok(compressor.threshold instanceof AudioParam, "treshold is an AudioParam");
+  near(compressor.threshold.defaultValue, -24, "Correct default value for threshold");
+  ok(compressor.knee instanceof AudioParam, "knee is an AudioParam");
+  near(compressor.knee.defaultValue, 30, "Correct default value for knee");
+  ok(compressor.ratio instanceof AudioParam, "knee is an AudioParam");
+  near(compressor.ratio.defaultValue, 12, "Correct default value for ratio");
+  is(typeof compressor.reduction, "number", "reduction is a number");
+  near(compressor.reduction, 0, "Correct default value for reduction");
+  ok(compressor.attack instanceof AudioParam, "attack is an AudioParam");
+  near(compressor.attack.defaultValue, 0.003, "Correct default value for attack");
+  ok(compressor.release instanceof AudioParam, "release is an AudioParam");
+  near(compressor.release.defaultValue, 0.25, "Correct default value for release");
+
+  compressor.threshold.value = -80;
+
+  osc.start();
+  var iteration = 0;
+  sp.onaudioprocess = function(e) {
+    if (iteration > 10) {
+      ok(compressor.reduction < 0,
+         "Feeding a full-scale sine to a compressor should result in an db" +
+         "reduction.");
+      sp.onaudioprocess = null;
+      osc.stop(0);
+
+      SimpleTest.finish();
+    }
+    iteration++;
+  }
+});
+
+</script>
+</pre>
+</body>
+</html>

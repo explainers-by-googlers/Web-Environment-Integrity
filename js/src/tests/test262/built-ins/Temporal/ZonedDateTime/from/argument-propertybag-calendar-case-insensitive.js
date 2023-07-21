@@ -1,0 +1,18 @@
+// |reftest| skip-if(!this.hasOwnProperty('Temporal')) -- Temporal is not enabled unconditionally
+// Copyright (C) 2022 Igalia, S.L. All rights reserved.
+// This code is governed by the BSD license found in the LICENSE file.
+
+/*---
+esid: sec-temporal.zoneddatetime.from
+description: The calendar name is case-insensitive
+features: [Temporal]
+---*/
+
+const calendar = "IsO8601";
+
+const timeZone = new Temporal.TimeZone("UTC");
+const arg = { year: 1970, monthCode: "M01", day: 1, timeZone, calendar };
+const result = Temporal.ZonedDateTime.from(arg);
+assert.sameValue(result.calendarId, "iso8601", "Calendar is case-insensitive");
+
+reportCompare(0, 0);

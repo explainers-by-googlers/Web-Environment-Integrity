@@ -1,0 +1,15 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><script>
+<![CDATA[
+function onLoad() {
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // text node in the <textarea> which is the deepest last child of the <body>.
+  const textarea = document.querySelector("textarea");
+  getSelection().collapse(textarea.lastChild, textarea.lastChild.length);
+  document.execCommand("selectAll");
+  document.execCommand("selectAll");
+  document.execCommand("inserthtml", false, "<span><div>");
+  const span = document.createElementNS("http://www.w3.org/1999/xhtml", "span");
+  textarea.appendChild(span);
+}
+]]>
+</script></head><div contenteditable="true"></div><body onload="onLoad();"><textarea>f</textarea></body></html>

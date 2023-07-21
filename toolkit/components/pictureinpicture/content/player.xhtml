@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      windowtype="Toolkit:PictureInPicture"
+      chromemargin="0,0,0,0"
+      >
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="chrome://global/skin/pictureinpicture/player.css"/>
+    <link rel="localization" href="toolkit/pictureinpicture/pictureinpicture.ftl"/>
+    <link rel="localization" href="browser/browserSets.ftl"/>
+    <script src="chrome://global/content/pictureinpicture/player.js"></script>
+    <title data-l10n-id="pictureinpicture-player-title"></title>
+  </head>
+
+  <body>
+    <xul:commandset>
+      <xul:command id="View:PictureInPicture" oncommand="Player.onCommand(event);"/>
+      <xul:command id="View:Fullscreen" oncommand="Player.fullscreenModeToggle(event);"/>
+    </xul:commandset>
+
+    <xul:keyset>
+      <xul:key id="closeShortcut" key="W" modifiers="accel"/>
+      <xul:key id="muteShortcut" key="↓" modifiers="accel"/>
+      <xul:key id="unMuteShortcut" key="↑" modifiers="accel"/>
+#ifndef XP_MACOSX
+      <xul:key data-l10n-id="picture-in-picture-toggle-shortcut" command="View:PictureInPicture" modifiers="accel,shift"/>
+      <xul:key data-l10n-id="picture-in-picture-toggle-shortcut-alt" command="View:PictureInPicture" modifiers="accel,shift"/>
+#else
+      <xul:key data-l10n-id="picture-in-picture-toggle-shortcut-mac" command="View:PictureInPicture" modifiers="accel,alt,shift"/>
+      <xul:key data-l10n-id="picture-in-picture-toggle-shortcut-mac-alt" command="View:PictureInPicture" modifiers="accel,alt,shift"/>
+#endif
+      <xul:key id="fullscreenToggleShortcut" data-l10n-id="pictureinpicture-toggle-fullscreen-shortcut" command="View:Fullscreen"/>
+    </xul:keyset>
+
+    <div class="player-holder">
+      <xul:browser type="content" primary="true" remote="true" remoteType="web" id="browser" tabindex="-1"></xul:browser>
+    </div>
+    <div id="controls" dir="ltr">
+      <button id="close"
+      class="control-item control-button tooltip-under-controls" data-l10n-attrs="tooltip"
+#ifdef XP_MACOSX
+      mac="true"
+      tabindex="9"
+#else
+      tabindex="10"
+#endif
+      />
+      <button id="unpip"
+      class="control-item control-button tooltip-under-controls" data-l10n-id="pictureinpicture-unpip-btn" data-l10n-attrs="tooltip"
+#ifdef XP_MACOSX
+      mac="true"
+      tabindex="10"
+#else
+      tabindex="9"
+#endif
+      />
+    <div id="controls-bottom-gradient" class="control-item"></div>
+    <div id="controls-bottom">
+      <div class="controls-bottom-upper">
+          <div class="scrubber-no-drag">
+            <input id="scrubber" class="control-item" min="0" max="1" step=".001" type="range" tabindex="11" hidden="true"/>
+          </div>
+      </div>
+      <div class="controls-bottom-lower">
+        <div class="start-controls">
+          <div id="timestamp" class="control-item" hidden="true"></div>
+        </div>
+        <div class="center-controls">
+          <button id="seekBackward" class="control-item control-button tooltip-over-controls center-tooltip" hidden="true" data-l10n-id="pictureinpicture-seekbackward-btn" data-l10n-attrs="tooltip" tabindex="12"></button>
+          <button id="playpause" class="control-item control-button tooltip-over-controls center-tooltip" tabindex="1"
+                  data-l10n-id="pictureinpicture-pause-btn" data-l10n-attrs="tooltip"/>
+          <button id="seekForward" class="control-item control-button tooltip-over-controls center-tooltip" hidden="true" data-l10n-id="pictureinpicture-seekforward-btn" data-l10n-attrs="tooltip" tabindex="2"></button>
+        </div>
+        <div class="end-controls">
+          <button id="audio" class="control-item control-button tooltip-over-controls center-tooltip" hidden="true" data-l10n-attrs="tooltip" tabindex="3"/>
+          <input id="audio-scrubber" class="control-item" min="0" max="1" step=".001" type="range" tabindex="4" hidden="true"/>
+          <button id="closed-caption" class="control-item control-button tooltip-over-controls center-tooltip closed-caption" hidden="true" disabled="true" data-l10n-id="pictureinpicture-subtitles-btn" data-l10n-attrs="tooltip" tabindex="5"></button>
+          <div id="settings" class="hide panel">
+            <fieldset class="box panel-fieldset">
+              <legend class="a11y-only panel-legend" data-l10n-id="pictureinpicture-subtitles-panel-accessible"></legend>
+              <div class="subtitle-grid">
+                <label id="subtitles-toggle-label" data-l10n-id="pictureinpicture-subtitles-label" class="bold" for="subtitles-toggle"></label>
+                <label class="switch">
+                  <input id="subtitles-toggle" type="checkbox" tabindex="6" checked=""/>
+                  <span class="slider" role="presentation"></span>
+                </label>
+              </div>
+              <div class="grey-line"></div>
+              <fieldset class="font-size-selection panel-fieldset">
+                <legend data-l10n-id="pictureinpicture-font-size-label" class="bold panel-legend"></legend>
+                <div id="font-size-selection-radio-small" class="font-size-selection-radio">
+                  <input id="small" type="radio" name="cc-size" tabindex="7"/>
+                  <label data-l10n-id="pictureinpicture-font-size-small" for="small"></label>
+                </div>
+                <div id="font-size-selection-radio-medium" class="font-size-selection-radio">
+                  <input id="medium" type="radio" name="cc-size" tabindex="7"/>
+                  <label data-l10n-id="pictureinpicture-font-size-medium" for="medium"></label>
+                </div>
+                <div id="font-size-selection-radio-large" class="font-size-selection-radio">
+                  <input id="large" type="radio" name="cc-size" tabindex="7"/>
+                  <label data-l10n-id="pictureinpicture-font-size-large" for="large"></label>
+                </div>
+              </fieldset>
+            </fieldset>
+            <div class="arrow"></div>
+          </div>
+          <button id="fullscreen" class="control-item control-button tooltip-over-controls inline-end-tooltip" hidden="true" data-l10n-attrs="tooltip" tabindex="8"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>

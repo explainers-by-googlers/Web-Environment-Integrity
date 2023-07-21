@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Dynamic change to readonly doesn't prevent datalist to keep working</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <script src="satchel_common.js"></script>
+  <link rel="stylesheet" href="/tests/SimpleTest/test.css" />
+</head>
+
+<body>
+  <input readonly list="suggest" type="text" name="field1">
+  <datalist id="suggest">
+    <option value="First"></option>
+    <option value="Second"></option>
+    <option value="Secomundo"></option>
+  </datalist>
+<script>
+
+add_task(async function readonly() {
+  const { input } = await openPopupOn("input", { expectPopup: false });
+  ok(input.readOnly, "Input should be readonly");
+
+  input.removeAttribute("readonly");
+  await new Promise(resolve => SimpleTest.executeSoon(resolve));
+  // AttributeChanged takes control of the input again off a runnable...
+  ok(!input.readOnly, "Input should not be readonly");
+  is(document.activeElement, input, "Should still be focused");
+  await openPopupOn(input);
+  assertAutocompleteItems("First", "Second", "Secomundo");
+  assertValueAfterKeys(
+    input,
+    ["KEY_ArrowDown", "KEY_Enter"],
+    "First");
+});
+
+</script>
+</body>
+
+</html>

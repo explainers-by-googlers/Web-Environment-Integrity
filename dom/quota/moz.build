@@ -1,0 +1,135 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Core", "Storage: Quota Manager")
+
+DIRS += ["test"]
+
+XPIDL_SOURCES += [
+    "nsIQuotaCallbacks.idl",
+    "nsIQuotaManagerService.idl",
+    "nsIQuotaRequests.idl",
+    "nsIQuotaResults.idl",
+]
+
+XPIDL_MODULE = "dom_quota"
+
+EXPORTS.mozilla.dom += [
+    "QMResult.h",
+    "StorageManager.h",
+]
+
+EXPORTS.mozilla.dom.quota += [
+    "ActorsParent.h",
+    "Assertions.h",
+    "AssertionsImpl.h",
+    "CachingDatabaseConnection.h",
+    "CheckedUnsafePtr.h",
+    "CipherStrategy.h",
+    "Client.h",
+    "ClientImpl.h",
+    "CommonMetadata.h",
+    "Config.h",
+    "Constants.h",
+    "DebugOnlyMacro.h",
+    "DecryptingInputStream.h",
+    "DecryptingInputStream_impl.h",
+    "DirectoryLock.h",
+    "DummyCipherStrategy.h",
+    "EncryptedBlock.h",
+    "EncryptingOutputStream.h",
+    "EncryptingOutputStream_impl.h",
+    "FileStreams.h",
+    "FileUtils.h",
+    "FirstInitializationAttempts.h",
+    "FirstInitializationAttemptsImpl.h",
+    "ForwardDecls.h",
+    "InitializationTypes.h",
+    "IPCStreamCipherStrategy.h",
+    "NSSCipherStrategy.h",
+    "OriginScope.h",
+    "PersistenceType.h",
+    "QuotaCommon.h",
+    "QuotaManager.h",
+    "QuotaManagerImpl.h",
+    "QuotaManagerService.h",
+    "QuotaObject.h",
+    "QuotaParent.h",
+    "RemoteQuotaObjectChild.h",
+    "RemoteQuotaObjectParent.h",
+    "RemoteQuotaObjectParentTracker.h",
+    "RemoveParen.h",
+    "ResultExtensions.h",
+    "ScopedLogExtraInfo.h",
+    "SerializationHelpers.h",
+    "StorageHelpers.h",
+    "StreamUtils.h",
+    "UsageInfo.h",
+]
+
+XPCOM_MANIFESTS += [
+    "components.conf",
+]
+
+UNIFIED_SOURCES += [
+    "ActorsChild.cpp",
+    "ActorsParent.cpp",
+    "Assertions.cpp",
+    "CachingDatabaseConnection.cpp",
+    "CanonicalQuotaObject.cpp",
+    "Client.cpp",
+    "ClientUsageArray.cpp",
+    "DecryptingInputStream.cpp",
+    "DirectoryLockImpl.cpp",
+    "EncryptingOutputStream.cpp",
+    "FileStreams.cpp",
+    "FileUtils.cpp",
+    "GroupInfo.cpp",
+    "GroupInfoPair.cpp",
+    "InitializationTypes.cpp",
+    "NormalOriginOperationBase.cpp",
+    "nsIndexedDBProtocolHandler.cpp",
+    "NSSCipherStrategy.cpp",
+    "OriginInfo.cpp",
+    "OriginOperationBase.cpp",
+    "OriginOperations.cpp",
+    "PersistenceType.cpp",
+    "QMResult.cpp",
+    "QuotaCommon.cpp",
+    "QuotaManagerService.cpp",
+    "QuotaObject.cpp",
+    "QuotaParent.cpp",
+    "QuotaRequestBase.cpp",
+    "QuotaRequests.cpp",
+    "QuotaResults.cpp",
+    "QuotaUsageRequestBase.cpp",
+    "RemoteQuotaObject.cpp",
+    "RemoteQuotaObjectChild.cpp",
+    "RemoteQuotaObjectParent.cpp",
+    "SanitizationUtils.cpp",
+    "ScopedLogExtraInfo.cpp",
+    "StorageHelpers.cpp",
+    "StorageManager.cpp",
+    "StreamUtils.cpp",
+]
+
+IPDL_SOURCES += [
+    "IPCQuotaObject.ipdlh",
+    "PQuota.ipdl",
+    "PQuotaRequest.ipdl",
+    "PQuotaUsageRequest.ipdl",
+    "PRemoteQuotaObject.ipdl",
+]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+FINAL_LIBRARY = "xul"
+
+LOCAL_INCLUDES += [
+    "/caps",
+    "/dom/fs/include",
+]

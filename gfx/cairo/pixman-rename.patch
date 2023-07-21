@@ -1,0 +1,24 @@
+diff --git a/gfx/cairo/libpixman/src/pixman.h b/gfx/cairo/libpixman/src/pixman.h
+--- a/gfx/cairo/libpixman/src/pixman.h
++++ b/gfx/cairo/libpixman/src/pixman.h
+@@ -64,16 +64,20 @@ SOFTWARE.
+  * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  * PERFORMANCE OF THIS SOFTWARE.
+  */
+ 
+ #ifndef PIXMAN_H__
+ #define PIXMAN_H__
+ 
++#ifdef MOZILLA_VERSION
++#include "cairo/pixman-rename.h"
++#endif
++
+ #include <pixman-version.h>
+ 
+ #ifdef  __cplusplus
+ #define PIXMAN_BEGIN_DECLS extern "C" {
+ #define PIXMAN_END_DECLS }
+ #else
+ #define PIXMAN_BEGIN_DECLS
+ #define PIXMAN_END_DECLS

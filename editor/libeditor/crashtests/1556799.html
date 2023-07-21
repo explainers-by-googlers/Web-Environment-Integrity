@@ -1,0 +1,18 @@
+<script>
+function onError() {
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // text node in the <dl> which is the last deepest child of the <body>.
+  const dl =  document.querySelector("dl");
+  getSelection().collapse(dl.lastChild, dl.lastChild.length);
+  getSelection().selectAllChildren(
+    document.querySelector("img")
+  );
+  document.execCommand("insertUnorderedList");
+  document.execCommand("enableObjectResizing");
+}
+</script>
+<dd contenteditable="true">
+<audio src="data:text/html,foo" onerror="onError()">
+<img></img>
+<dl>
+</dl></audio><dd></body>

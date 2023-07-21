@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+  Any copyright is dedicated to the Public Domain.
+  http://creativecommons.org/publicdomain/zero/1.0/
+-->
+<window title="DOM Worker Threads Test"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"/>
+  <script src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"/>
+  <script type="application/javascript" src="dom_worker_helper.js"/>
+
+  <script type="application/javascript">
+  <![CDATA[
+
+    add_task(async function classic_worker_test() {
+      let worker = window.classicWorker = new ChromeWorker("chromeWorker_worker.js");
+      await new Promise((resolve, reject) => {
+        worker.onmessage = function(event) {
+          is(event.data, "Done!", "Got the done message!");
+          resolve();
+        };
+        worker.onerror = function(event) {
+          ok(false, "Classic Worker had an error: " + event.message);
+          worker.terminate();
+          reject();
+        };
+        worker.postMessage("go");
+      });
+    });
+
+    add_task(async function module_worker_test() {
+      waitForWorkerFinish();
+
+      let worker = window.moduleWorker = new ChromeWorker("chromeWorker_worker.sys.mjs", { type: "module" });
+      await new Promise((resolve, reject) => {
+        worker.onmessage = function(event) {
+          is(event.data, "Done!", "Got the done message!");
+          resolve();
+        };
+        worker.onerror = function(event) {
+          ok(false, "Module Worker had an error: " + event.message);
+          worker.terminate();
+          reject();
+        };
+        worker.postMessage("go");
+      });
+    });
+  ]]>
+  </script>
+
+  <body xmlns="http://www.w3.org/1999/xhtml">
+    <p id="display"></p>
+    <div id="content" style="display:none;"></div>
+    <pre id="test"></pre>
+  </body>
+  <label id="test-result"/>
+</window>

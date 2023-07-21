@@ -1,0 +1,223 @@
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+include protocol PDNSRequest;
+include protocol PSocketProcessBridge;
+include protocol PProfiler;
+include protocol PWebrtcTCPSocket;
+include protocol PHttpTransaction;
+include protocol PHttpConnectionMgr;
+include protocol PInputChannelThrottleQueue;
+include protocol PBackgroundStarter;
+include protocol PAltService;
+include protocol PAltSvcTransaction;
+include protocol PTRRService;
+include protocol PProxyConfigLookup;
+include protocol PNativeDNSResolverOverride;
+include protocol PProxyAutoConfig;
+
+#if defined(MOZ_SANDBOX) && defined(MOZ_DEBUG) && defined(ENABLE_TESTS)
+include protocol PSandboxTesting;
+#endif
+
+include MemoryReportTypes;
+include NeckoChannelParams;
+include PrefsTypes;
+include PSMIPCTypes;
+
+include "mozilla/ipc/ByteBufUtils.h";
+
+using mozilla::dom::NativeThreadId from "mozilla/dom/NativeThreadId.h";
+using mozilla::dom::TabId from "mozilla/dom/ipc/IdType.h";
+using mozilla::Telemetry::HistogramAccumulation from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::KeyedHistogramAccumulation from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::ScalarAction from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::KeyedScalarAction from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::ChildEventData from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::DiscardedData from "mozilla/TelemetryComms.h";
+using base::ProcessId from "base/process.h";
+using mozilla::OriginAttributes from "mozilla/ipc/BackgroundUtils.h";
+using PRTime from "prtime.h";
+[RefCounted] using class nsIURI from "mozilla/ipc/URIUtils.h";
+using struct nsID from "nsID.h";
+using mozilla::net::SocketInfo from "mozilla/net/DashboardTypes.h";
+using mozilla::net::DNSCacheEntries from "mozilla/net/DashboardTypes.h";
+using mozilla::net::HttpRetParams from "mozilla/net/DashboardTypes.h";
+using nsIDNSService::DNSFlags from "nsIDNSService.h";
+
+#if defined(XP_WIN)
+[MoveOnly] using mozilla::UntrustedModulesData from "mozilla/UntrustedModulesData.h";
+[MoveOnly] using mozilla::ModulePaths from "mozilla/UntrustedModulesData.h";
+[MoveOnly] using mozilla::ModulesMapResult from "mozilla/UntrustedModulesData.h";
+#endif  // defined(XP_WIN)
+
+namespace mozilla {
+namespace net {
+
+struct HttpHandlerInitArgs {
+  nsCString mLegacyAppName;
+  nsCString mLegacyAppVersion;
+  nsCString mPlatform;
+  nsCString mOscpu;
+  nsCString mMisc;
+  nsCString mProduct;
+  nsCString mProductSub;
+  nsCString mAppName;
+  nsCString mAppVersion;
+  nsCString mCompatFirefox;
+  nsCString mCompatDevice;
+  nsCString mDeviceModelId;
+};
+
+struct SocketDataArgs
+{
+  uint64_t totalSent;
+  uint64_t totalRecv;
+  SocketInfo[] info;
+};
+
+struct SocketPorcessInitAttributes {
+  bool mOffline;
+  bool mConnectivity;
+  bool mInitSandbox;
+#if defined(XP_WIN)
+  bool mIsReadyForBackgroundProcessing;
+#endif
+  FileDescriptor? mSandboxBroker;
+};
+
+[NeedsOtherPid]
+sync protocol PSocketProcess
+{
+  manages PDNSRequest;
+  manages PWebrtcTCPSocket;
+  manages PHttpTransaction;
+  manages PHttpConnectionMgr;
+  manages PInputChannelThrottleQueue;
+  manages PAltService;
+  manages PAltSvcTransaction;
+  manages PTRRService;
+  manages PProxyConfigLookup;
+  manages PNativeDNSResolverOverride;
+
+parent:
+  async InitCrashReporter(NativeThreadId threadId);
+  async AddMemoryReport(MemoryReport aReport);
+  // Messages for sending telemetry to parent process.
+  async AccumulateChildHistograms(HistogramAccumulation[] accumulations);
+  async AccumulateChildKeyedHistograms(KeyedHistogramAccumulation[] accumulations);
+  async UpdateChildScalars(ScalarAction[] actions);
+  async UpdateChildKeyedScalars(KeyedScalarAction[] actions);
+  async RecordChildEvents(ChildEventData[] events);
+  async RecordDiscardedData(DiscardedData data);
+
+  /* tabId is only required for web-proxy support, which isn't always needed */
+  async PWebrtcTCPSocket(TabId? tabId);
+  async ObserveHttpActivity(HttpActivityArgs aActivityArgs,
+                            uint32_t aActivityType,
+                            uint32_t aActivitySubtype,
+                            PRTime   aTimestamp,
+                            uint64_t aExtraSizeData,
+                            nsCString aExtraStringData);
+  async InitBackground(Endpoint<PBackgroundStarterParent> aEndpoint);
+  async PAltService();
+  async PProxyConfigLookup(nullable nsIURI aUri, uint32_t aFlags);
+  async CachePushCheck(nullable nsIURI aPushedURL,
+                       OriginAttributes aOriginAttributes,
+                       nsCString aRequestString)
+    returns (bool aAccepted);
+
+  async ExcludeHttp2OrHttp3(HttpConnectionInfoCloneArgs aArgs);
+
+  async OnConsoleMessage(nsString aMessage);
+
+  // Sent from time-to-time to limit the amount of telemetry vulnerable to loss
+  // Buffer contains bincoded Rust structs.
+  // https://firefox-source-docs.mozilla.org/toolkit/components/glean/dev/ipc.html
+  async FOGData(ByteBuf buf);
+
+#if defined(XP_WIN)
+  async GetModulesTrust(ModulePaths aModPaths, bool aRunAtNormalPriority)
+      returns (ModulesMapResult? modMapResult);
+#endif  // defined(XP_WIN)
+
+child:
+  async Init(SocketPorcessInitAttributes aAttributes);
+  async PreferenceUpdate(Pref pref);
+  async RequestMemoryReport(uint32_t generation,
+                            bool anonymize,
+                            bool minimizeMemoryUsage,
+                            FileDescriptor? DMDFile)
+      returns (uint32_t aGeneration);
+  async SetOffline(bool offline);
+  async SetConnectivity(bool connectivity);
+  async InitLinuxSandbox(FileDescriptor? sandboxBroker);
+  async InitSocketProcessBridgeParent(ProcessId processId, Endpoint<PSocketProcessBridgeParent> endpoint);
+  async InitProfiler(Endpoint<PProfilerChild> aEndpoint);
+#if defined(MOZ_SANDBOX) && defined(MOZ_DEBUG) && defined(ENABLE_TESTS)
+  async InitSandboxTesting(Endpoint<PSandboxTestingChild> aEndpoint);
+#endif
+  // test-only
+  async SocketProcessTelemetryPing();
+
+  async PHttpTransaction();
+  async PHttpConnectionMgr(HttpHandlerInitArgs aArgs);
+  async UpdateDeviceModelId(nsCString aModelId);
+
+  async OnHttpActivityDistributorActivated(bool aIsActivated);
+  async OnHttpActivityDistributorObserveProxyResponse(bool aIsEnabled);
+  async OnHttpActivityDistributorObserveConnection(bool aIsEnabled);
+  async PInputChannelThrottleQueue(uint32_t meanBytesPerSecond,
+                                   uint32_t maxBytesPerSecond);
+  async PAltSvcTransaction(HttpConnectionInfoCloneArgs aConnInfo,
+                           uint32_t aCaps);
+  async ClearSessionCache() returns (void_t ok);
+  async PTRRService(bool aCaptiveIsPassed,
+                    bool aParentalControlEnabled,
+                    nsCString[] aDNSSuffixList);
+  async PNativeDNSResolverOverride();
+  async NotifyObserver(nsCString aTopic, nsString aData);
+
+  async GetSocketData()
+    returns (SocketDataArgs data);
+  async GetDNSCacheEntries()
+    returns (DNSCacheEntries[] entries);
+   async GetHttpConnectionData()
+    returns (HttpRetParams[] params);
+
+  async InitProxyAutoConfigChild(Endpoint<PProxyAutoConfigChild> endpoint);
+
+  async RecheckIPConnectivity();
+  async RecheckDNS();
+
+  // Tells the Socket process to flush any pending telemetry.
+  // Used in tests and ping assembly. Buffer contains bincoded Rust structs.
+  // https://firefox-source-docs.mozilla.org/toolkit/components/glean/dev/ipc.html
+  async FlushFOGData() returns (ByteBuf buf);
+
+  // Test-only method.
+  // Asks the Socket process to trigger test-only instrumentation.
+  // The unused returned value is to have a promise we can await.
+  async TestTriggerMetrics() returns (bool unused);
+
+#if defined(XP_WIN)
+  async GetUntrustedModulesData() returns (UntrustedModulesData? data);
+
+  /**
+  * This method is used to notifty a child process to start
+  * processing module loading events in UntrustedModulesProcessor.
+  * This should be called when the parent process has gone idle.
+  */
+  async UnblockUntrustedModulesThread();
+#endif  // defined(XP_WIN)
+
+both:
+  async PDNSRequest(nsCString hostName, nsCString trrServer, int32_t port,
+                    uint16_t type, OriginAttributes originAttributes,
+                    DNSFlags flags);
+};
+
+} // namespace net
+} // namespace mozilla

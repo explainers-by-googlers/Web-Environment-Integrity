@@ -1,0 +1,81 @@
+/* -*- Mode: Groovy; c-basic-offset: 4; tab-width: 20; indent-tabs-mode: nil; -*-
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+// The JNI wrapper generation tasks depend on the JAR creation task of the :annotations project.
+evaluationDependsOn(':annotations')
+
+// Whether to include compiled artifacts: `lib/**/*.so` and `assets/omni.ja`.
+// Multi-locale packaging wants to include compiled artifacts but *not* rebuild
+// them: see also `rootProject.{machStagePackage,geckoBinariesOnlyIf}`.
+def hasCompileArtifacts() {
+    return project.mozconfig.substs.COMPILE_ENVIRONMENT // Full builds.
+        || project.mozconfig.substs.MOZ_ARTIFACT_BUILDS // Artifact builds.
+        || System.getenv("MOZ_CHROME_MULTILOCALE") // Multi-locale packaging.
+}
+
+ext.configureVariantWithGeckoBinaries = { variant ->
+    if (hasCompileArtifacts()) {
+        // Local (read, not 'official') builds want to reflect developer changes to
+        // the omnijar sources, and (when compiling) to reflect developer changes to
+        // the native binaries.  To do this, the Gradle build calls out to the
+        // moz.build system, which can be re-entrant.  Official builds are driven by
+        // the moz.build system and should never be re-entrant in this way.
+        def assetGenTask = tasks.findByName("generate${variant.name.capitalize()}Assets")
+        def jniLibFoldersTask = tasks.findByName("merge${variant.name.capitalize()}JniLibFolders")
+        if (!mozconfig.substs.MOZILLA_OFFICIAL && (variant.productFlavors*.name).contains('withGeckoBinaries')) {
+            assetGenTask.dependsOn rootProject.machStagePackage
+            jniLibFoldersTask.dependsOn rootProject.machStagePackage
+        }
+    }
+}
+
+ext.configureLibraryVariantWithJNIWrappers = { variant, module ->
+    // BundleLibRuntime prepares the library for further processing to be
+    // incorporated in an app. We use this version to create the JNI wrappers.
+    def jarTask = tasks["bundleLibRuntimeToJar${variant.name.capitalize()}"]
+    def bundleJar = jarTask.outputs.files.find({ it.name == 'classes.jar' })
+
+    def annotationProcessorsJarTask = project(':annotations').jar
+
+    def wrapperTask
+    if (System.env.IS_LANGUAGE_REPACK == '1') {
+        // Single-locale l10n repacks set `IS_LANGUAGE_REPACK=1` and don't
+        // really have a build environment.
+        wrapperTask = task("generateJNIWrappersFor${module}${variant.name.capitalize()}")
+    } else {
+        wrapperTask = task("generateJNIWrappersFor${module}${variant.name.capitalize()}", type: JavaExec) {
+            classpath annotationProcessorsJarTask.archivePath
+        
+            // Configure the classpath at evaluation-time, not at
+            // configuration-time: see above comment.
+            doFirst {
+                classpath variant.javaCompileProvider.get().classpath
+            }
+    
+            mainClass = 'org.mozilla.gecko.annotationProcessors.AnnotationProcessor'
+            args module
+            args bundleJar
+            
+            workingDir "${topobjdir}/widget/android"
+
+            inputs.file(bundleJar)
+            inputs.file(annotationProcessorsJarTask.archivePath)
+            inputs.property("module", module)
+
+            outputs.file("${topobjdir}/widget/android/GeneratedJNINatives.h")
+            outputs.file("${topobjdir}/widget/android/GeneratedJNIWrappers.cpp")
+            outputs.file("${topobjdir}/widget/android/GeneratedJNIWrappers.h")
+
+            dependsOn jarTask
+            dependsOn annotationProcessorsJarTask
+        }
+    }
+
+    if (module == 'Generated') {
+        tasks["bundle${variant.name.capitalize()}Aar"].dependsOn wrapperTask
+    } else {
+        tasks["assemble${variant.name.capitalize()}"].dependsOn wrapperTask
+    }
+}

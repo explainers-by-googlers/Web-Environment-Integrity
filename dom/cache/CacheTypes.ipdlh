@@ -1,0 +1,236 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+include protocol PCache;
+include protocol PCacheStreamControl;
+include IPCStream;
+include PBackgroundSharedTypes;
+
+include "mozilla/dom/cache/IPCUtils.h";
+include "mozilla/dom/FetchIPCTypes.h";
+include "mozilla/ipc/TransportSecurityInfoUtils.h";
+
+using mozilla::dom::HeadersGuardEnum from "mozilla/dom/HeadersBinding.h";
+using mozilla::dom::cache::Namespace from "mozilla/dom/cache/Types.h";
+using mozilla::dom::cache::OpenMode from "mozilla/dom/cache/Types.h";
+using mozilla::dom::ReferrerPolicy from "mozilla/dom/ReferrerPolicyBinding.h";
+using mozilla::dom::RequestCredentials from "mozilla/dom/RequestBinding.h";
+using mozilla::dom::RequestMode from "mozilla/dom/RequestBinding.h";
+using mozilla::dom::RequestCache from "mozilla/dom/RequestBinding.h";
+using mozilla::dom::RequestRedirect from "mozilla/dom/RequestBinding.h";
+using mozilla::dom::ResponseType from "mozilla/dom/ResponseBinding.h";
+using mozilla::void_t from "mozilla/ipc/IPCCore.h";
+using nsContentPolicyType from "nsIContentPolicy.h";
+using struct nsID from "nsID.h";
+using nsILoadInfo::CrossOriginEmbedderPolicy from "nsILoadInfo.h";
+[RefCounted] using class nsITransportSecurityInfo from "nsITransportSecurityInfo.h";
+
+namespace mozilla {
+namespace dom {
+namespace cache {
+
+struct CacheQueryParams
+{
+  bool ignoreSearch;
+  bool ignoreMethod;
+  bool ignoreVary;
+  bool cacheNameSet;
+  nsString cacheName;
+};
+
+struct CacheReadStream
+{
+  nsID id;
+  nullable PCacheStreamControl control;
+  IPCStream? stream;
+};
+
+struct HeadersEntry
+{
+  nsCString name;
+  nsCString value;
+};
+struct CacheRequest
+{
+  nsCString method;
+  nsCString urlWithoutQuery;
+  nsCString urlQuery;
+  nsCString urlFragment;
+  HeadersEntry[] headers;
+  HeadersGuardEnum headersGuard;
+  nsString referrer;
+  ReferrerPolicy referrerPolicy;
+  RequestMode mode;
+  RequestCredentials credentials;
+  CacheReadStream? body;
+  nsContentPolicyType contentPolicyType;
+  RequestCache requestCache;
+  RequestRedirect requestRedirect;
+  nsString integrity;
+  CrossOriginEmbedderPolicy loadingEmbedderPolicy;
+  PrincipalInfo? principalInfo;
+};
+
+struct CacheResponse
+{
+  ResponseType type;
+  nsCString[] urlList;
+  uint32_t status;
+  nsCString statusText;
+  HeadersEntry[] headers;
+  HeadersGuardEnum headersGuard;
+  CacheReadStream? body;
+  nullable nsITransportSecurityInfo securityInfo;
+  PrincipalInfo? principalInfo;
+  uint32_t paddingInfo;
+  int64_t paddingSize;
+  RequestCredentials credentials;
+};
+
+struct CacheRequestResponse
+{
+  CacheRequest request;
+  CacheResponse response;
+};
+
+struct CacheMatchArgs
+{
+  CacheRequest request;
+  CacheQueryParams params;
+  OpenMode openMode;
+};
+
+struct CacheMatchAllArgs
+{
+  CacheRequest? maybeRequest;
+  CacheQueryParams params;
+  OpenMode openMode;
+};
+
+struct CachePutAllArgs
+{
+  CacheRequestResponse[] requestResponseList;
+};
+
+struct CacheDeleteArgs
+{
+  CacheRequest request;
+  CacheQueryParams params;
+};
+
+struct CacheKeysArgs
+{
+  CacheRequest? maybeRequest;
+  CacheQueryParams params;
+  OpenMode openMode;
+};
+
+struct StorageMatchArgs
+{
+  CacheRequest request;
+  CacheQueryParams params;
+  OpenMode openMode;
+};
+
+struct StorageHasArgs
+{
+  nsString key;
+};
+
+struct StorageOpenArgs
+{
+  nsString key;
+};
+
+struct StorageDeleteArgs
+{
+  nsString key;
+};
+
+struct StorageKeysArgs
+{
+};
+
+union CacheOpArgs
+{
+  CacheMatchArgs;
+  CacheMatchAllArgs;
+  CachePutAllArgs;
+  CacheDeleteArgs;
+  CacheKeysArgs;
+  StorageMatchArgs;
+  StorageHasArgs;
+  StorageOpenArgs;
+  StorageDeleteArgs;
+  StorageKeysArgs;
+};
+
+struct CacheMatchResult
+{
+  CacheResponse? maybeResponse;
+};
+
+struct CacheMatchAllResult
+{
+  CacheResponse[] responseList;
+};
+
+struct CachePutAllResult
+{
+};
+
+struct CacheDeleteResult
+{
+  bool success;
+};
+
+struct CacheKeysResult
+{
+  CacheRequest[] requestList;
+};
+
+struct StorageMatchResult
+{
+  CacheResponse? maybeResponse;
+};
+
+struct StorageHasResult
+{
+  bool success;
+};
+
+struct StorageOpenResult
+{
+  nullable PCache actor;
+  Namespace ns;
+};
+
+struct StorageDeleteResult
+{
+  bool success;
+};
+
+struct StorageKeysResult
+{
+  nsString[] keyList;
+};
+
+union CacheOpResult
+{
+  void_t;
+  CacheMatchResult;
+  CacheMatchAllResult;
+  CachePutAllResult;
+  CacheDeleteResult;
+  CacheKeysResult;
+  StorageMatchResult;
+  StorageHasResult;
+  StorageOpenResult;
+  StorageDeleteResult;
+  StorageKeysResult;
+};
+
+} // namespace cache
+} // namespace dom
+} // namespace mozilla

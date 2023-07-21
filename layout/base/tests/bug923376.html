@@ -1,0 +1,16 @@
+<!doctype html>
+<html class="reftest-wait"><div contenteditable></div>
+<script src="/tests/SimpleTest/EventUtils.js"></script>
+<script>
+var div = document.body.firstChild;
+div.focus();
+var { maybeOnSpellCheck } = SpecialPowers.ChromeUtils.importESModule(
+  "resource://testing-common/AsyncSpellCheckTestHelper.sys.mjs"
+);
+maybeOnSpellCheck(div, function() {
+  div.innerHTML = 'something missspelled<br>something elsed#';
+  maybeOnSpellCheck(div, function() {
+    document.documentElement.removeAttribute("class");
+  });
+});
+</script>

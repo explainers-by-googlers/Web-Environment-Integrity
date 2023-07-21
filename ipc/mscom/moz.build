@@ -1,0 +1,42 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+EXPORTS.mozilla.mscom += [
+    "Aggregation.h",
+    "AgileReference.h",
+    "ApartmentRegion.h",
+    "COMWrappers.h",
+    "EnsureMTA.h",
+    "ProcessRuntime.h",
+    "ProfilerMarkers.h",
+    "Utils.h",
+]
+
+DIRS += [
+    "mozglue",
+]
+
+UNIFIED_SOURCES += [
+    "AgileReference.cpp",
+    "COMWrappers.cpp",
+    "EnsureMTA.cpp",
+    "ProcessRuntime.cpp",
+    "ProfilerMarkers.cpp",
+    "Utils.cpp",
+]
+
+LOCAL_INCLUDES += [
+    "/xpcom/base",
+    "/xpcom/build",
+]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+FINAL_LIBRARY = "xul"
+
+with Files("**"):
+    BUG_COMPONENT = ("Core", "IPC: MSCOM")
+    SCHEDULES.exclusive = ["windows"]

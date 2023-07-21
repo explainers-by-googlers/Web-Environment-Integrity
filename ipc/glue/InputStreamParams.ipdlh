@@ -1,0 +1,101 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+include ProtocolTypes;
+
+using struct mozilla::void_t from "mozilla/ipc/IPCCore.h";
+[RefCounted] using mozilla::ipc::DataPipeReceiver from "mozilla/ipc/DataPipe.h";
+[RefCounted] using mozilla::RemoteLazyInputStream from "mozilla/RemoteLazyInputStream.h";
+
+namespace mozilla {
+namespace ipc {
+
+struct HeaderEntry
+{
+  nsCString name;
+  nsCString value;
+};
+
+struct StringInputStreamParams
+{
+  nsCString data;
+};
+
+struct FileInputStreamParams
+{
+  FileDescriptor fileDescriptor;
+  int32_t behaviorFlags;
+  int32_t ioFlags;
+};
+
+struct MultiplexInputStreamParams
+{
+  InputStreamParams[] streams;
+  uint32_t currentStream;
+  nsresult status;
+  bool startedReadingCurrent;
+};
+
+struct SlicedInputStreamParams
+{
+  InputStreamParams stream;
+  uint64_t start;
+  uint64_t length;
+  uint64_t curPos;
+  bool closed;
+};
+
+struct RemoteLazyInputStreamParams
+{
+  nullable RemoteLazyInputStream stream;
+};
+
+struct DataPipeReceiverStreamParams
+{
+  nullable DataPipeReceiver pipe;
+};
+
+union InputStreamParams
+{
+  StringInputStreamParams;
+  FileInputStreamParams;
+  BufferedInputStreamParams;
+  MIMEInputStreamParams;
+  MultiplexInputStreamParams;
+  SlicedInputStreamParams;
+  RemoteLazyInputStreamParams;
+  InputStreamLengthWrapperParams;
+  EncryptedFileInputStreamParams;
+  DataPipeReceiverStreamParams;
+};
+
+struct EncryptedFileInputStreamParams
+{
+  FileInputStreamParams fileInputStreamParams;
+  uint8_t[] key;
+  uint32_t blockSize;
+};
+
+struct BufferedInputStreamParams
+{
+  InputStreamParams? optionalStream;
+  uint32_t bufferSize;
+};
+
+struct MIMEInputStreamParams
+{
+  InputStreamParams? optionalStream;
+  HeaderEntry[] headers;
+  bool startedReading;
+};
+
+struct InputStreamLengthWrapperParams
+{
+  InputStreamParams stream;
+  int64_t length;
+  bool consumed;
+};
+
+} // namespace ipc
+} // namespace mozilla

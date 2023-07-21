@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test autocomplete behavior when tabbing between form fields</title>
+  <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script type="text/javascript" src="/tests/SimpleTest/EventUtils.js"></script>
+  <script type="text/javascript" src="pwmgr_common.js"></script>
+  <script type="text/javascript" src="../../../satchel/test/satchel_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<p id="display"></p>
+
+<!-- we presumably can't hide the content for this test. -->
+<div id="content"></div>
+
+<pre id="test">
+<script class="testbody" type="text/javascript">
+const { TestUtils } = SpecialPowers.ChromeUtils.importESModule(
+  "resource://testing-common/TestUtils.sys.mjs"
+);
+
+const availableLogins = {
+  "exampleUser1": [location.origin, "https://autofill", null, "user1", "pass1", "uname", "pword"],
+  "subdomainUser1": ["https://sub." + location.host, "https://autofill", null, "user1", "pass1", "uname", "pword"],
+  "emptyUsername": [location.origin, "https://autofill", null, "", "pass2", "uname", "pword"],
+}
+
+const tests = [
+  {
+    name: "single_login_exact_origin_no_inputs",
+    logins: ["exampleUser1"],
+    expectedAutofillUsername: "user1",
+    expectedAutofillPassword: "pass1",
+    expectedACLabels: ["user1"],
+    typeUsername: null,
+    expectedTabbedUsername: "",
+    expectedTabbedPassword: "",
+  },
+  {
+    name: "single_login_exact_origin_initial_letter",
+    logins: ["exampleUser1"],
+    expectedAutofillUsername: "user1",
+    expectedAutofillPassword: "pass1",
+    expectedACLabels: ["user1"],
+    typeUsername: "u",
+    expectedTabbedUsername: "u",
+    expectedTabbedPassword: "",
+  },
+  {
+    name: "single_login_exact_origin_type_username",
+    logins: ["exampleUser1"],
+    expectedAutofillUsername: "user1",
+    expectedAutofillPassword: "pass1",
+    expectedACLabels: ["user1"],
+    typeUsername: "user1",
+    expectedTabbedUsername: "user1",
+    expectedTabbedPassword: "pass1",
+  },
+  {
+    name: "single_login_subdomain_no_inputs",
+    logins: ["subdomainUser1"],
+    expectedAutofillUsername: "",
+    expectedAutofillPassword: "",
+    expectedACLabels: ["user1"],
+    typeUsername: null,
+    expectedTabbedUsername: "",
+    expectedTabbedPassword: "",
+  },
+  {
+    name: "single_login_subdomain_type_username",
+    logins: ["subdomainUser1"],
+    expectedAutofillUsername: "",
+    expectedAutofillPassword: "",
+    expectedACLabels: ["user1"],
+    typeUsername: "user1",
+    expectedTabbedUsername: "user1",
+    expectedTabbedPassword: "",
+  },
+  {
+    name: "two_logins_one_with_empty_username",
+    logins: ["exampleUser1", "emptyUsername"],
+    expectedAutofillUsername: "user1",
+    expectedAutofillPassword: "pass1",
+    expectedACLabels: ["user1"],
+    typeUsername: "",
+    expectedTabbedUsername: "",
+    expectedTabbedPassword: "",
+  },
+];
+
+add_setup(async () => {
+  await SpecialPowers.pushPrefEnv({"set": [["signon.includeOtherSubdomainsInLookup", true]]});
+});
+
+async function testResultOfTabInteractions(testData) {
+  const logins = testData.logins.map(name => availableLogins[name]);
+  await setStoredLoginsAsync(...logins);
+
+  const form = createLoginForm({
+    action: "https://autofill"
+  });
+  await promiseFormsProcessedInSameProcess();
+
+  await SimpleTest.promiseFocus(window);
+
+  // check autofill results
+  checkForm(1, testData.expectedAutofillUsername, testData.expectedAutofillPassword);
+
+  SpecialPowers.wrap(form.pword).setUserInput("");
+  SpecialPowers.wrap(form.uname).setUserInput("");
+
+  info("Placing focus in the password field");
+  form.pword.focus();
+  await synthesizeKey("KEY_Tab", { shiftKey: true }); // blur pw, focus un
+
+  // moving focus shouldn't change anything
+  await ensureLoginFormStaysFilledWith(form.uname, "", form.pword, "");
+
+  info("waiting for AC results");
+  const results = await popupByArrowDown();
+  info("checking results");
+  checkAutoCompleteResults(results, testData.expectedACLabels,
+                           window.location.host, "Check all rows are correct");
+
+  if (testData.typeUsername) {
+    await sendString(testData.typeUsername);
+  }
+
+  // don't select anything from the AC menu
+  await synthesizeKey("KEY_Escape");
+  await TestUtils.waitForCondition(async () => {
+    let popupState = await getPopupState();
+    return !popupState.open;
+  }, "AutoComplete popup should have closed");
+
+  await synthesizeKey("KEY_Tab");
+
+  // wait until username and password are automatically filled in with the
+  // expected values...
+  await TestUtils.waitForCondition(() => {
+    return form.uname.value === testData.expectedTabbedUsername & form.pword.value === testData.expectedTabbedPassword;
+  }, "Username and password field should be filled");
+
+  // ...and if the value is not different from the original value in the form,
+  // make sure that the form keeps its values
+  if (testData.expectedTabbedPassword === "") {
+      await ensureLoginFormStaysFilledWith(form.uname, testData.expectedTabbedUsername, form.pword, testData.expectedTabbedPassword);
+  }
+
+  ok(form.pword.matches("input:focus"), "pword field is focused");
+}
+
+for (const testData of tests) {
+  const tmp = {
+    async [testData.name]() {
+      await testResultOfTabInteractions(testData);
+    },
+  };
+  add_task(tmp[testData.name]);
+}
+
+</script>
+</pre>
+</body>
+</html>

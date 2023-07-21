@@ -1,0 +1,38 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    description: "rust-size toolchain build"
+    worker-type: b-linux-gcp
+    worker:
+        max-run-time: 1800
+    run:
+        script: build-rust-based-toolchain.sh
+    fetches:
+        fetch:
+            - rust-size
+
+linux64-rust-size:
+    treeherder:
+        symbol: TL(rust-size)
+    run:
+        arguments: ['x86_64-unknown-linux-gnu']
+        toolchain-artifact: public/build/rust-size.tar.zst
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-toolchain
+            - sysroot-x86_64-linux-gnu
+
+win64-rust-size:
+    treeherder:
+        symbol: TW64(rust-size)
+    run:
+        arguments: ['x86_64-pc-windows-msvc']
+        toolchain-artifact: public/build/rust-size.tar.zst
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - linux64-rust-windows-toolchain
+            - vs-toolchain

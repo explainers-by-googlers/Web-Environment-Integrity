@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test for events while the form history popup is open</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <script type="text/javascript" src="satchel_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+Form History test: Test for events while the form history popup is open
+<p id="display"></p>
+
+<div id="content">
+  <form id="form1">
+    <input  type="text" name="field1">
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<script>
+
+add_setup(async () => {
+  await updateFormHistory([
+    { op: "remove" },
+    { op: "add", fieldname: "field1", value: "value1" },
+  ]);
+});
+
+add_task(async function popupEnterEvent() {
+  const form = document.querySelector("#form1");
+  const input = form.querySelector("input");
+  const expectedValue = "value1";
+
+  function handleEnter(e) {
+    if (e.keyCode != KeyEvent.DOM_VK_RETURN) {
+      return;
+    }
+
+    info("RETURN received for phase: " + e.eventPhase);
+    if (input.value == expectedValue) {
+      ok(true, "RETURN should be received when the popup is closed");
+      is(input.value, expectedValue, "Check input value when enter is pressed the 2nd time");
+      info("form should submit with the default handler");
+    } else {
+      ok(false, "RETURN keypress shouldn't have been received when a popup item is selected");
+    }
+  }
+
+  const submitTested = new Promise(resolve => {
+    SpecialPowers.addSystemEventListener(input, "keypress", handleEnter, true);
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      is(input.value, expectedValue, "Check input value in the submit handler");
+      SpecialPowers.removeSystemEventListener(input, "keypress", handleEnter, true);
+      resolve();
+    }, { once: true });
+  });
+
+  await openPopupOn(input, { inputValue: "value" });
+  synthesizeKey("KEY_ArrowDown");
+  synthesizeKey("KEY_Enter"); // select the first entry in the popup
+  synthesizeKey("KEY_Enter"); // try to submit the form with the filled value
+  await submitTested;
+});
+
+</script>
+</body>
+</html>

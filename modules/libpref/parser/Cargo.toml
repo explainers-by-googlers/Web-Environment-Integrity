@@ -1,0 +1,7 @@
+[package]
+name = "prefs_parser"
+version = "0.0.1"
+authors = ["Nicholas Nethercote <nnethercote@mozilla.com>"]
+license = "MPL-2.0"
+
+[dependencies]

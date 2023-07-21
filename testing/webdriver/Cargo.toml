@@ -1,0 +1,38 @@
+[package]
+edition = "2018"
+name = "webdriver"
+version = "0.48.0"
+authors = ["Mozilla"]
+include = ["/src"]
+description = "Library implementing the wire protocol for the W3C WebDriver specification."
+documentation = "https://docs.rs/webdriver"
+readme = "README.md"
+keywords = [
+    "automation",
+    "browser",
+    "protocol",
+    "w3c",
+    "webdriver",
+]
+license = "MPL-2.0"
+repository = "https://hg.mozilla.org/mozilla-central/file/tip/testing/webdriver"
+
+[features]
+default = ["server"]
+server = ["tokio", "tokio-stream", "warp"]
+
+[dependencies]
+base64 = "0.13"
+bytes = "1.0"
+cookie = { version = "0.16", default-features = false }
+http = "0.2"
+log = "0.4"
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"
+time = "0.3"
+tokio = { version = "1.0", features = ["rt", "net"], optional = true}
+tokio-stream = { version = "0.1", features = ["net"], optional = true}
+unicode-segmentation = "1.2"
+url = "2.0"
+warp = { version = "0.3", default-features = false, optional = true }

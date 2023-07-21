@@ -1,0 +1,21 @@
+[package]
+name = "uniffi-bindgen-gecko-js"
+version = "0.1.0"
+edition = "2018"
+license = "MPL-2.0"
+
+[[bin]]
+name = "uniffi-bindgen-gecko-js"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+askama = { version = "0.11", default-features = false, features = ["config"] }
+clap = { version = "4", default-features = false, features = ["std", "derive", "cargo"] }
+extend = "1.1"
+heck = "0.4"
+uniffi = { workspace = true }
+uniffi_bindgen = "0.23"
+serde = "1"
+toml = "0.5"
+camino = "1.0.8"

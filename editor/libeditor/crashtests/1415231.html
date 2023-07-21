@@ -1,0 +1,26 @@
+<script>
+function onLoad() {
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // text node in the <option> which is in the last child of the <body>.
+  const option = document.querySelector("option");
+  getSelection().collapse(option.firstChild, option.firstChild.length);
+  document.querySelector("ins").addEventListener(
+    "DOMNodeRemoved",
+    onDOMNodeRemoved
+  );
+  getSelection().setPosition(
+    document.querySelector("shadow")
+  );
+  document.execCommand("insertText", false, "1");
+}
+function onDOMNodeRemoved() {
+  document.execCommand("insertHorizontalRule");
+  document.execCommand("justifyCenter");
+}
+</script>
+<body onload="onLoad()">
+<li contenteditable>
+<shadow>
+<ins>
+<option>
+</li></shadow></ins></option></body>

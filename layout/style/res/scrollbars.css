@@ -1,0 +1,224 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+/* Rules required for style caching of anonymous content scrollbar parts */
+@supports -moz-bool-pref("layout.css.cached-scrollbar-styles.enabled") {
+  :is(scrollcorner, resizer, scrollbar, scrollbarbutton, slider):where(:-moz-native-anonymous) {
+    /* All scrollbar parts must not inherit any properties from the scrollable
+     * element (except for visibility and pointer-events), for the anonymous
+     * content style caching system to work.
+     */
+    all: initial;
+    visibility: inherit;
+    pointer-events: inherit;
+
+    /* These properties are not included in 'all'. */
+    -moz-context-properties: initial;
+    -moz-control-character-visibility: initial;
+    -moz-font-smoothing-background-color: initial;
+    -moz-min-font-size-ratio: initial;
+    -moz-box-collapse: initial;
+
+    math-depth: initial;
+    /* As long as inert implies pointer-events: none as it does now, we're
+     * good. */
+    -moz-inert: initial;
+
+    /* direction: initial is not sufficient, since its initial value can depend
+     * on the document's language. But we specify ltr explicitly below */
+
+    /* Similarly for font properties, whose initial values depend on the
+     * document's language.  Scrollbar parts don't have any text or rely on
+     * font metrics.
+     */
+    font: 16px sans-serif;
+
+    /* The initial value of justify-items is `legacy`, which makes it depend on
+     * the parent style.
+     *
+     * Reset it to something else.
+     */
+    justify-items: start;
+
+    /* Avoid `object > *` rule in html.css from setting a useless, non-initial
+     * value of vertical-align.
+     */
+    vertical-align: initial !important;
+  }
+
+  /* There are other rules that set the cursor on the scrollbar, expecting them
+   * to inherit into its children. Explicitly inherit it, overriding the
+   * 'all: initial;' declaration above.
+   */
+  :is(scrollbarbutton, slider, thumb):where(:-moz-native-anonymous) {
+    cursor: inherit;
+  }
+}
+
+scrollbar, scrollbarbutton, scrollcorner, slider, thumb, resizer {
+  /* We need a display value that doesn't get blockified to preserve the
+   * scrollbar sizing asserts. In practice it doesn't matter since these get
+   * special frames */
+  display: block;
+  box-sizing: border-box;
+
+  /* Our scrollbar layout uses physical coordinates, we wouldn't want an
+   * horizontal scrollbar to flip in rtl for example. */
+  direction: ltr;
+  writing-mode: initial;
+
+  -moz-user-focus: ignore;
+  /* Prevent -moz-user-modify declaration from designmode.css having an effect. */
+  -moz-user-modify: initial;
+  user-select: none;
+}
+
+
+/********** resizer **********/
+
+resizer {
+  position: relative;
+  z-index: 2147483647;
+
+  background: url("chrome://global/skin/icons/resizer.svg") no-repeat;
+  background-size: 100% 100%;
+  cursor: se-resize;
+  width: 15px;
+  height: 15px;
+}
+
+resizer[dir="bottom"][flip],
+resizer[dir="bottomleft"] {
+  transform: scaleX(-1);
+}
+
+resizer[dir="bottomleft"] {
+  cursor: sw-resize;
+}
+
+resizer[dir="top"],
+resizer[dir="bottom"] {
+  cursor: ns-resize;
+}
+
+resizer[dir="left"] {
+  transform: scaleX(-1);
+}
+
+resizer[dir="left"],
+resizer[dir="right"] {
+  cursor: ew-resize;
+}
+
+resizer[dir="topleft"] {
+  cursor: nw-resize;
+}
+
+resizer[dir="topright"] {
+  cursor: ne-resize;
+}
+
+thumb {
+  appearance: auto;
+  -moz-default-appearance: scrollbarthumb-horizontal;
+}
+
+thumb[orient="vertical"] {
+  -moz-default-appearance: scrollbarthumb-vertical;
+}
+
+scrollbar[disabled="true"] thumb {
+  visibility: hidden;
+}
+
+@media (-moz-platform: android) {
+  scrollbar, resizer, scrollcorner {
+    pointer-events: none;
+  }
+}
+
+scrollbar {
+  appearance: auto;
+  -moz-default-appearance: scrollbar-horizontal;
+  cursor: default;
+}
+
+scrollbar[orient="vertical"] {
+  -moz-default-appearance: scrollbar-vertical;
+}
+
+scrollbar[root="true"] {
+  position: relative;
+  z-index: 2147483647; /* largest positive value of a signed 32-bit integer */
+}
+
+@media (-moz-overlay-scrollbars) {
+  scrollbar:not([active="true"]),
+  scrollbar[disabled="true"] {
+    pointer-events: none;
+    opacity: 0;
+  }
+  scrollcorner {
+    pointer-events: none;
+  }
+}
+
+slider {
+  appearance: auto;
+  -moz-default-appearance: scrollbartrack-horizontal;
+}
+
+slider[orient="vertical"] {
+  -moz-default-appearance: scrollbartrack-vertical;
+}
+
+scrollbarbutton {
+  appearance: auto;
+  -moz-default-appearance: scrollbarbutton-right;
+}
+
+scrollbar[orient="vertical"] > scrollbarbutton {
+  -moz-default-appearance: scrollbarbutton-down;
+}
+
+scrollbarbutton[type="decrement"] {
+  -moz-default-appearance: scrollbarbutton-left;
+}
+
+scrollbar[orient="vertical"] > scrollbarbutton[type="decrement"] {
+  -moz-default-appearance: scrollbarbutton-up;
+}
+
+scrollcorner {
+  appearance: auto;
+  -moz-default-appearance: scrollcorner;
+  width: 16px;
+  cursor: default;
+}
+
+@media (-moz-scrollbar-start-backward: 0) {
+  scrollbarbutton[sbattr="scrollbar-up-top"] {
+    display: none;
+  }
+}
+
+@media (-moz-scrollbar-start-forward: 0) {
+  scrollbarbutton[sbattr="scrollbar-down-top"] {
+    display: none;
+  }
+}
+
+@media (-moz-scrollbar-end-backward: 0) {
+  scrollbarbutton[sbattr="scrollbar-up-bottom"] {
+    display: none;
+  }
+}
+
+@media (-moz-scrollbar-end-forward: 0) {
+  scrollbarbutton[sbattr="scrollbar-down-bottom"] {
+    display: none;
+  }
+}

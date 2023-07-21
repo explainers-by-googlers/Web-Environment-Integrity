@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!DOCTYPE window>
+
+<?xml-stylesheet href="chrome://global/content/resetProfile.css"?>
+<?xml-stylesheet href="chrome://global/skin/global.css"?>
+
+<window
+  id="resetProfileProgressDialog"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  data-l10n-id="refresh-profile-progress"
+  style="min-width: 30em"
+>
+  <vbox>
+    <linkset>
+      <html:link rel="localization" href="branding/brand.ftl" />
+      <html:link rel="localization" href="toolkit/global/resetProfile.ftl" />
+    </linkset>
+
+    <description
+      data-l10n-id="refresh-profile-progress-description"
+    ></description>
+    <html:progress />
+  </vbox>
+</window>

@@ -1,0 +1,27 @@
+{
+  "data": [
+    {
+      "webExtension": {
+        "id": "basic@search.mozilla.org"
+      },
+      "telemetryId": "telemetry",
+      "appliesTo": [
+        {
+          "included": { "everywhere": true },
+          "default": "yes"
+        }
+      ]
+    },
+    {
+      "webExtension": {
+        "id": "simple@search.mozilla.org"
+      },
+      "appliesTo": [
+        {
+          "included": { "everywhere": true },
+          "default": "yes"
+        }
+      ]
+    }
+  ]
+}

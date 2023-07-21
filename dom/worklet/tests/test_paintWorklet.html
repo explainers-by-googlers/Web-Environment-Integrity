@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Test for PaintWorklet</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
+  <script type="application/javascript" src="common.js"></script>
+</head>
+<body>
+
+<script type="application/javascript">
+
+function configureTest() {
+  const ConsoleAPIStorage = SpecialPowers.Cc[
+    "@mozilla.org/consoleAPI-storage;1"
+  ].getService(SpecialPowers.Ci.nsIConsoleAPIStorage);
+
+  function consoleListener() {
+    this.observe = this.observe.bind(this);
+    ConsoleAPIStorage.addLogEventListener(this.observe, SpecialPowers.wrap(document).nodePrincipal);
+  }
+
+  consoleListener.prototype  = {
+    observe(aSubject) {
+      var obj = aSubject.wrappedJSObject;
+      if (obj.arguments[0] == "So far so good") {
+        ok(true, "Message received \\o/");
+
+        ConsoleAPIStorage.removeLogEventListener(this.observe);
+        SimpleTest.finish();
+        return;
+      }
+    }
+  }
+
+  var cl = new consoleListener();
+
+  return SpecialPowers.pushPrefEnv({ "set": [["dom.paintWorklet.enabled", true]] });
+}
+
+// This function is called into an iframe.
+function runTestInIframe() {
+  paintWorklet.addModule("worklet_paintWorklet.js")
+}
+</script>
+</body>
+</html>

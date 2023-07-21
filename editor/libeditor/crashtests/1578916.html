@@ -1,0 +1,28 @@
+<script>
+function onLoad() {
+  const data = document.querySelector("data");
+  const source = document.querySelector("source");
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // <data> which is the deepest last child (and a container) of the <body>.
+  getSelection().collapse(data, data.childNodes.length);
+  source.appendChild(
+    document.body.firstChild  // The invisible text node
+  );
+  getSelection().setBaseAndExtent(
+    data.appendChild(source),
+    0,
+    source,
+    1
+  );
+  document.querySelector("audio")
+    .addEventListener("DOMCharacterDataModified", () => {
+      getSelection().removeAllRanges()
+    });
+  document.execCommand("delete");
+}
+</script>
+<body onload="onLoad()">
+<audio>
+<li contenteditable>
+<data>
+<source>

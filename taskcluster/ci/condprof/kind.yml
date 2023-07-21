@@ -1,0 +1,135 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+loader: gecko_taskgraph.loader.transform:loader
+
+kind-dependencies:
+    - build
+    - toolchain
+
+transforms:
+    - gecko_taskgraph.transforms.condprof:transforms
+    - gecko_taskgraph.transforms.job:transforms
+    - gecko_taskgraph.transforms.task:transforms
+
+job-defaults:
+    treeherder:
+        kind: other
+        tier: 2
+    scenarios:
+        - settled
+    run:
+        using: run-task
+        cwd: fetches/condprofile
+        checkout: false
+        tooltool-downloads: public
+    scopes:
+        - secrets:get:project/releng/gecko/build/level-{level}/conditioned-profiles
+    worker:
+        taskcluster-proxy: true
+        max-run-time: 10800
+jobs:
+    windows2012-64-firefox:
+        worker-type: b-win2022
+        description: Creates or updates conditioned profiles on Win64
+        run-on-projects: ['mozilla-central']
+        treeherder:
+            symbol: condprof(firefox)
+            platform: windows2012-64/opt
+        index:
+            product: firefox
+            job-name: condprof-win64
+        dependencies:
+            build: build-win64-shippable/opt
+        scenarios:
+            - settled
+            - full
+        fetches:
+            build:
+                - artifact: target.condprof.tests.tar.gz
+                - artifact: target.zip
+            toolchain:
+                - win64-geckodriver
+        run:
+            command: >-
+                python3.exe condprof/main.py
+                ${EXTRA_ARGS}
+                --geckodriver ${MOZ_FETCHES_DIR}/geckodriver.exe
+                --firefox ${MOZ_FETCHES_DIR}/firefox/firefox.exe
+                --scenario ${SCENARIO}
+                ../../archive
+        worker:
+            artifacts:
+                - name: public/condprof
+                  path: archive
+                  type: directory
+    linux64-firefox:
+        worker-type: b-linux-gcp
+        description: Creates or updates conditioned profiles on Linux
+        run-on-projects: ['mozilla-central']
+        treeherder:
+            symbol: condprof(firefox)
+            platform: linux64/opt
+        index:
+            product: firefox
+            job-name: condprof-linux64
+        dependencies:
+            build: build-linux64-shippable/opt
+        scenarios:
+            - settled
+            - full
+        fetches:
+            build:
+                - artifact: target.condprof.tests.tar.gz
+                - artifact: target.tar.bz2
+            toolchain:
+                - linux64-geckodriver
+        run:
+            command: >-
+                python3.7 -m venv . &&
+                bin/python3.7 condprof/main.py
+                ${EXTRA_ARGS}
+                --geckodriver ${MOZ_FETCHES_DIR}/geckodriver
+                --firefox ${MOZ_FETCHES_DIR}/firefox/firefox-bin
+                --scenario ${SCENARIO}
+                ../../archive
+        worker:
+            docker-image: {in-tree: condprof}
+            artifacts:
+                - name: public/condprof
+                  path: /builds/worker/archive
+                  type: directory
+    macosx64-firefox:
+        worker-type: t-osx-1015-r8
+        description: Creates or updates conditioned profiles on macOS
+        run-on-projects: ['mozilla-central']
+        treeherder:
+            symbol: condprof(firefox)
+            platform: macosx1015-64-qr/opt
+        index:
+            product: firefox
+            job-name: condprof-macosx64
+        dependencies:
+            build: build-macosx64-shippable/opt
+        fetches:
+            build:
+                - artifact: target.condprof.tests.tar.gz
+                - artifact: target.dmg
+                  extract: false
+            toolchain:
+                - macosx64-geckodriver
+        run:
+            command: >-
+                python3 -m venv . &&
+                bin/python3 condprof/main.py
+                ${EXTRA_ARGS}
+                --geckodriver ${MOZ_FETCHES_DIR}/geckodriver
+                --firefox ${MOZ_FETCHES_DIR}/target.dmg
+                --scenario ${SCENARIO}
+                ../../archive
+        worker:
+            artifacts:
+                - name: public/condprof
+                  path: archive
+                  type: directory

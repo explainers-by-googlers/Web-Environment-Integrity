@@ -1,0 +1,85 @@
+<html>
+<head>
+  <script type="text/javascript">
+function assert(cond, msg) {
+  if (!cond) {
+    throw msg;
+  }
+}
+
+assert.equal = function(m1, m2, msg) {
+  assert(
+    m1.is2D &&
+      m2.is2D &&
+      m1.a === m2.a &&
+      m1.b === m2.b &&
+      m1.c === m2.c &&
+      m1.d === m2.d &&
+      m1.e === m2.e &&
+      m1.f === m2.f,
+    msg
+  );
+};
+
+window.onload = function() {
+  var IM = new DOMMatrix([1, 0, 0, 1, 0, 0]);
+
+  try {
+    var ctx = document.getElementById("c1").getContext("2d");
+
+    assert.equal(ctx.getTransform(), IM, "Transform is identity by default");
+    assert.equal(
+      ctx.getTransform().invertSelf(),
+      IM,
+      "Inverse transform is identity by default"
+    );
+
+    var m = new DOMMatrix([1, 2, 3, 4, 5, 6]);
+    ctx.setTransform(m);
+    assert.equal(ctx.getTransform(), m, "Transform successfully set");
+
+    var badVals = [
+      ["string"],
+      [-1],
+      ["string", 1, 2, 3, 4, 5],
+      [{ obj: true }, 1, 2, 3, 4, 5],
+    ];
+    for (var i = 0; i < badVals.length; ++i) {
+      try {
+        ctx.setTransform(...badVals[i]);
+      } catch {}
+      assert.equal(
+        ctx.getTransform(),
+        m,
+        "Expected |setTransform(" + badVals[i] + ")| to not change transform"
+      );
+    }
+
+    ctx.setTransform(IM);
+    var noopVals = [
+      [Number.NaN, 1, 2, 3, 4, 5],
+      [Infinity, 1, 2, 3, 4, 5],
+    ];
+    for (var i = 0; i < noopVals.length; ++i) {
+      ctx.setTransform(...noopVals[i]);
+      assert.equal(
+        ctx.getTransform(),
+        IM,
+        "Illegal float values result in a no-op"
+      );
+    }
+
+    ctx.setTransform(m.a, m.b, m.c, m.d, m.e, m.f);
+    assert.equal(ctx.getTransform(), m, "setTransform() updates transform");
+  } catch (e) {
+    document.body.innerHTML = "FAIL: " + e.toString();
+    return;
+  }
+  document.body.innerHTML = "Pass";
+};
+  </script>
+</head>
+<body>
+  <div><canvas id="c1" width="300" height="300"></canvas></div>
+</body>
+</html>

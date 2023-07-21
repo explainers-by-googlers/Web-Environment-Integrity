@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test for input events in Login Manager</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script type="text/javascript" src="../../../satchel/test/satchel_common.js"></script>
+  <script type="text/javascript" src="pwmgr_common.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+Login Manager test: input events should fire.
+<p id="display"></p>
+<div id="content" style="display: none"></div>
+<pre id="test"></pre>
+<script>
+  add_setup(async () => {
+    await setStoredLoginsAsync(
+      [location.origin, location.origin, null, "testuser", "testpass", "uname", "pword"]
+    );
+  })
+
+  add_task(async function username_events() {
+    return new Promise(resolve => {
+      let inputFired = false;
+      const form = createLoginForm();
+      form.uname.oninput = e => {
+        is(e.target.value, "testuser", "Should get 'testuser' as value in input event");
+        inputFired = true;
+      };
+      form.uname.onchange = e => {
+        ok(inputFired, "Should get input event before change event for username field.");
+        is(e.target.value, "testuser", "Should get 'testuser' as value in change event");
+        resolve();
+      };
+    })
+  })
+
+  add_task(async function password_events() {
+    return new Promise(resolve => {
+      let inputFired = false;
+      const form = createLoginForm();
+      form.pword.oninput = e => {
+        is(e.target.value, "testpass", "Should get 'testpass' as value in input event");
+        inputFired = true;
+      };
+      form.pword.onchange = e => {
+        ok(inputFired, "Should get input event before change event for password field.");
+        is(e.target.value, "testpass", "Should get 'testpass' as value in change event");
+        resolve();
+      };
+    })
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+[
+  [
+    "warning",
+    "side effects in the 1st macro argument 'x' are repeated in macro expansion",
+    "bugprone-macro-repeated-side-effects"
+  ],
+  { "reliability": "high" }
+]

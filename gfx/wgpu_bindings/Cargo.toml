@@ -1,0 +1,63 @@
+[package]
+name = "wgpu_bindings"
+version = "0.1.0"
+authors = [
+	"Dzmitry Malyshau <kvark@mozilla.com>",
+	"Joshua Groves <josh@joshgroves.com>",
+]
+edition = "2018"
+license = "MPL-2.0"
+publish = false
+
+[lib]
+
+[features]
+default = []
+
+[dependencies.wgc]
+package = "wgpu-core"
+git = "https://github.com/gfx-rs/wgpu"
+rev = "1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+#Note: "replay" shouldn't ideally be needed,
+# but it allows us to serialize everything across IPC.
+features = ["replay", "trace", "serial-pass", "strict_asserts", "wgsl"]
+
+# We want the wgpu-core Metal backend on macOS and iOS.
+# (We should consider also enabling "vulkan" for Vulkan Portability.)
+[target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies.wgc]
+package = "wgpu-core"
+git = "https://github.com/gfx-rs/wgpu"
+rev = "1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+features = ["metal"]
+
+# We want the wgpu-core Direct3D backends on Windows.
+[target.'cfg(windows)'.dependencies.wgc]
+package = "wgpu-core"
+git = "https://github.com/gfx-rs/wgpu"
+rev = "1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+features = ["dx11", "dx12"]
+
+# We want the wgpu-core Vulkan backend on Linux and Windows.
+[target.'cfg(any(windows, all(unix, not(any(target_os = "macos", target_os = "ios")))))'.dependencies.wgc]
+package = "wgpu-core"
+git = "https://github.com/gfx-rs/wgpu"
+rev = "1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+features = ["vulkan"]
+
+[dependencies.wgt]
+package = "wgpu-types"
+git = "https://github.com/gfx-rs/wgpu"
+rev = "1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+
+[dependencies.wgh]
+package = "wgpu-hal"
+git = "https://github.com/gfx-rs/wgpu"
+rev = "1161a22f4fbb4fc204eb06f2ac4243f83e0e980d"
+
+[dependencies]
+bincode = "1"
+log = "0.4"
+parking_lot = "0.12"
+serde = "1"
+nsstring = { path = "../../xpcom/rust/nsstring" }
+static_prefs = { path = "../../modules/libpref/init/static_prefs" }

@@ -1,0 +1,221 @@
+# Copyright (c) 2022 The WebRTC project authors. All Rights Reserved.
+#
+# Use of this source code is governed by a BSD-style license
+# that can be found in the LICENSE file in the root of the source
+# tree. An additional intellectual property rights grant can be found
+# in the file PATENTS.  All contributing project authors may
+# be found in the AUTHORS file in the root of the source tree.
+
+{
+  'android-devices': {
+    'swarming': {
+      'dimensions': {
+        'android_devices': '1',
+      },
+    },
+  },
+  'baremetal-pool': {
+    'swarming': {
+      'dimensions': {
+        'pool': 'WebRTC-baremetal',
+      },
+    },
+  },
+  'baremetal-try-pool': {
+    'swarming': {
+      'dimensions': {
+        'pool': 'WebRTC-baremetal-try',
+      },
+    },
+  },
+  'cores-12': {
+    'swarming': {
+      'dimensions': {
+        'cores': '12',
+      }
+    }
+  },
+  # Hack to use the test-launcher-summary-output flag + emulator folders for gtest-output
+  # but it's currently the only way to get the file out of the emulator.
+  'fuchsia-gtest-output': {
+    '$mixin_append': {
+      'args': [
+        '--test-launcher-summary-output=${ISOLATED_OUTDIR}/gtest_output.json',
+        '--test-arg=--gtest_output=json:/custom_artifacts/gtest_output.json',
+        '--test-arg=--undefok=test_launcher_summary_output'
+      ],
+    },
+  },
+  'ios-device-15.7': {
+    'swarming': {
+      'dimensions': {
+        'os': 'iOS-15.7',
+        'pool': 'chrome.tests',
+      },
+    },
+  },
+  'ios-device-perf': {
+    'swarming': {
+      'idempotent': False,
+      'dimensions': {
+        'os': 'iOS-12.4.1',
+        'pool': 'WebRTC',
+        'id': 'build15-a7',
+      },
+    },
+  },
+  'limited-capacity': {
+    # Sometimes there are multiple tests that can be run only on one machine.
+    # We need to increase timeouts so the tests dont expire before the machine is freed.
+    # Using 3h expiration timeout to align with `timeout-3h` mixin used for per tests.
+    'swarming': {
+      'expiration': 10800,
+    },
+  },
+  'mac-m1-cpu': {
+    'swarming': {
+      'dimensions': {
+        'cpu': 'arm64-64-Apple_M1',
+      }
+    }
+  },
+  'mac11': {
+    'swarming': {
+      'dimensions': {
+        'os': 'Mac-11'
+      }
+    }
+  },
+  'perf-fuchsia-perf-tests': {
+    'merge': {
+      'script': '//tools_webrtc/perf/process_perf_results.py',
+      'args': ['--test-suite', 'fuchsia_perf_tests'],
+    },
+    '$mixin_append': {
+      'args': [
+        '--nologs',
+        '--isolated-script-test-perf-output=${ISOLATED_OUTDIR}/perftest-output.json',
+      ],
+    },
+  },
+  'perf-low-bandwidth-audio-perf-test': {
+    'merge': {
+      'script': '//tools_webrtc/perf/process_perf_results.py',
+      'args': ['--test-suite', 'low_bandwidth_audio_perf_test'],
+    },
+  },
+  'perf-output': {
+    '$mixin_append': {
+      'args': [
+        '--isolated-script-test-perf-output=${ISOLATED_OUTDIR}/perftest-output.pb',
+      ],
+    },
+  },
+  'perf-pool': {
+    'swarming': {
+      # Perf tests are marked as not idempotent, which means they're re-run even
+      # if they did not change this build. This will give the dashboard some
+      # more variance data to work with.
+      'idempotent': False,
+      'dimensions': {
+        'pool': 'WebRTC-perf',
+        'gce': '0',
+      },
+    },
+  },
+  'perf-pool-vm': {
+    'swarming': {
+      'idempotent': False,
+      'dimensions': {
+        'pool': 'WebRTC-perf',
+        'gce': '1',
+      },
+    },
+  },
+  'perf-webrtc-perf-tests': {
+    'merge': {
+      'script': '//tools_webrtc/perf/process_perf_results.py',
+      'args': ['--test-suite', 'webrtc_perf_tests'],
+    },
+    '$mixin_append': {
+      'args': ['--nologs']
+    }
+  },
+  'quick-perf-tests': {
+    '$mixin_append': {
+      'args': [
+        '--force_fieldtrials=WebRTC-QuickPerfTest/Enabled/',
+        '--nologs',
+      ],
+    }
+  },
+  'redfin': {
+    'swarming': {
+      'dimensions': {
+        'device_type': 'redfin',
+        'os': 'Android'
+      }
+    }
+  },
+  'resultdb-gtest-json-format': {
+    '$mixin_append': {
+      'args': [
+        '--gtest_output=json:${ISOLATED_OUTDIR}/gtest_output.json',
+      ],
+    },
+    'resultdb': {
+      'result_format': 'gtest_json',
+      'result_file': '${ISOLATED_OUTDIR}/gtest_output.json',
+    },
+  },
+  'resultdb-json-format': {
+    'resultdb': {
+      'result_format': 'json'
+    }
+  },
+  'shards-2': {
+    'swarming': {
+      'shards': 2,
+    },
+  },
+  'shards-4': {
+    'swarming': {
+      'shards': 4,
+    },
+  },
+  'shards-6': {
+    'swarming': {
+      'shards': 6,
+    },
+  },
+  'timeout-2h': {
+    'swarming': {
+      'hard_timeout': 7200,
+      'io_timeout': 7200,
+    },
+  },
+  'timeout-3h': {
+    'swarming': {
+      'hard_timeout': 10800,
+      'io_timeout': 10800,
+    },
+  },
+  'webrtc-xctest': {
+    '$mixin_append': {
+      'args': [
+        '--xctest',
+      ],
+    },
+  },
+  'xcode_13_main': {
+    '$mixin_append': {
+      'args': ['--xcode-build-version', '13c100']
+    },
+    'swarming': {
+      'named_caches': [{
+        'name': 'xcode_ios_13c100',
+        'path': 'Xcode.app'
+      }]
+    }
+  },
+}

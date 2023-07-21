@@ -1,0 +1,62 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Core", "Privacy: Anti-Tracking")
+
+JAR_MANIFESTS += ["jar.mn"]
+
+XPIDL_SOURCES += [
+    "nsIClickRule.idl",
+    "nsICookieBannerListService.idl",
+    "nsICookieBannerRule.idl",
+    "nsICookieBannerService.idl",
+    "nsICookieRule.idl",
+]
+
+XPIDL_MODULE = "toolkit_cookiebanners"
+
+EXTRA_JS_MODULES += [
+    "CookieBannerListService.sys.mjs",
+]
+
+XPCOM_MANIFESTS += [
+    "components.conf",
+]
+
+EXPORTS.mozilla += [
+    "nsClickRule.h",
+    "nsCookieBannerRule.h",
+    "nsCookieBannerService.h",
+    "nsCookieInjector.h",
+    "nsCookieRule.h",
+]
+
+UNIFIED_SOURCES += [
+    "CookieBannerDomainPrefService.cpp",
+    "nsClickRule.cpp",
+    "nsCookieBannerRule.cpp",
+    "nsCookieBannerService.cpp",
+    "nsCookieInjector.cpp",
+    "nsCookieRule.cpp",
+]
+
+FINAL_TARGET_FILES.actors += [
+    "CookieBannerChild.sys.mjs",
+    "CookieBannerParent.sys.mjs",
+]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+LOCAL_INCLUDES += ["/netwerk/base", "/netwerk/cookie"]
+
+BROWSER_CHROME_MANIFESTS += [
+    "test/browser/browser.ini",
+]
+
+XPCSHELL_TESTS_MANIFESTS += ["test/unit/xpcshell.ini"]
+
+FINAL_LIBRARY = "xul"

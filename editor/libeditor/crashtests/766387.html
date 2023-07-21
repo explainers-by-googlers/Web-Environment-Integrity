@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function onLoad() {
+  const editingHost = document.querySelectorAll("div[contenteditable]");
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // last <div contenteditable> which is the deepest last child of the <body>.
+  getSelection().collapse(editingHost[1], editingHost[1].childNodes.length);
+  getSelection().removeAllRanges();
+  const r = document.createRange();
+  r.setStart(editingHost[0], 1);
+  r.setEnd(editingHost[1], 0);
+  getSelection().addRange(r);
+  document.execCommand("insertOrderedList");
+}
+</script>
+</head>
+
+<body onload="onLoad();"><div contenteditable>a</div><div contenteditable></div></body>
+</html>

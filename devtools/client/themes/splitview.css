@@ -1,0 +1,145 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+.theme-dark {
+  --sidemenu-selected-arrow: url(images/item-arrow-dark-ltr.svg);
+  --sidemenu-selected-arrow-rtl: url(images/item-arrow-dark-rtl.svg);
+}
+.theme-light {
+  --sidemenu-selected-arrow: url(images/item-arrow-ltr.svg);
+  --sidemenu-selected-arrow-rtl: url(images/item-arrow-rtl.svg);
+}
+
+box,
+.splitview-nav {
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.splitview-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: var(--theme-sidebar-background);
+
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.splitview-nav > li {
+  padding-inline-end: 8px;
+  align-items: center;
+  outline: 0;
+  vertical-align: bottom;
+  border-bottom: 1px solid var(--theme-splitter-color);
+}
+
+.placeholder {
+  flex: 1;
+  text-align: center;
+}
+
+.splitview-nav > li.splitview-active {
+  background-color: var(--theme-selection-background);
+  color: var(--theme-selection-color);
+  background-image: var(--sidemenu-selected-arrow);
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.splitview-nav > li.splitview-active:-moz-locale-dir(rtl) {
+  background-image: var(--sidemenu-selected-arrow-rtl);
+  background-position: center left;
+}
+
+.splitview-nav > li:not(.splitview-active):where(:hover, :focus-within) {
+  background-color: var(--theme-selection-background-hover);
+}
+
+/* Toolbars */
+
+.splitview-main > .devtools-toolbar {
+  height: 29px;
+}
+
+.splitview-main > toolbar,
+.loading .splitview-nav-container {
+  border-inline-end: 1px solid var(--theme-splitter-color);
+}
+
+.splitview-nav-container {
+  justify-content: center;
+}
+
+.loading .splitview-nav-container > .placeholder {
+  display: none !important;
+}
+
+.splitview-controller,
+.splitview-main {
+  flex: none;
+}
+
+.splitview-controller {
+  min-height: 3em;
+  max-height: 14em;
+  max-width: 400px;
+  min-width: 200px;
+}
+
+.splitview-side-details > * {
+  display: none;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* only the active details pane is shown */
+.splitview-side-details > .splitview-active {
+  display: flex;
+}
+
+/* filtered items are hidden */
+ol.splitview-nav > li.splitview-filtered {
+  display: none;
+}
+
+/* "empty list" and "all filtered" placeholders are hidden */
+.splitview-nav:empty,
+.splitview-nav.splitview-all-filtered,
+.splitview-nav + .splitview-nav.placeholder {
+  display: none;
+}
+.splitview-nav.splitview-all-filtered ~ .splitview-nav.placeholder.all-filtered,
+.splitview-nav:empty ~ .splitview-nav.placeholder.empty {
+  display: flex;
+}
+
+@media (width >= 700px) {
+  .splitview-root {
+    flex-direction: row;
+  }
+  .splitview-controller {
+    max-height: none;
+    /* Override the potential splitter-set height */
+    height: auto !important;
+  }
+  .splitview-details {
+    display: none;
+  }
+  .splitview-details.splitview-active {
+    display: flex;
+  }
+}
+
+/* portrait mode */
+@media (width < 700px) {
+  .splitview-controller {
+    max-width: none;
+    /* Override the potential splitter-set width */
+    width: auto !important;
+  }
+}

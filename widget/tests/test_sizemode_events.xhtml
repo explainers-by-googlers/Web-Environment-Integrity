@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin" type="text/css"?>
+<?xml-stylesheet href="chrome://mochikit/content/tests/SimpleTest/test.css"
+                 type="text/css"?>
+<window title="Test for bug 715867"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js" />
+
+<body  xmlns="http://www.w3.org/1999/xhtml">
+<p id="display"></p>
+<div id="content" style="display: none">
+
+</div>
+<pre id="test">
+</pre>
+</body>
+
+<script class="testbody">
+<![CDATA[
+
+const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
+let gWindow = null;
+
+const kIsLinux = navigator.platform.includes("Lin");
+const kIsMacOS = navigator.platform.includes("Mac");
+// On Linux and macOS sizemode changes might be async.
+const kAsyncChanges = kIsLinux || kIsMacOS;
+
+let gSizeModeDidChange = false;
+let gSizeModeDidChangeTo = 0;
+
+function sizemodeChanged(e) {
+  gSizeModeDidChange = true;
+  gSizeModeDidChangeTo = gWindow.windowState;
+}
+
+async function expectSizeModeChange(newMode, duringActionCallback) {
+  gSizeModeDidChange = false;
+
+  let promise = null;
+  if (kAsyncChanges) {
+    if (newMode) {
+      promise = new Promise(resolve => {
+        gWindow.addEventListener("sizemodechange", function() {
+          SimpleTest.executeSoon(resolve);
+        }, { once: true })
+      });
+    } else {
+      promise = new Promise(SimpleTest.executeSoon);
+    }
+  }
+
+  duringActionCallback();
+
+  if (promise) {
+    await promise;
+  }
+
+  if (newMode == 0) {
+    // No change should have taken place, no event should have fired.
+    ok(!gSizeModeDidChange, "No sizemodechange event should have fired.");
+  } else {
+    // Size mode change event was expected to fire.
+    ok(gSizeModeDidChange, "A sizemodechanged event should have fired.");
+    is(gSizeModeDidChangeTo, newMode, "The new sizemode should have the expected value.");
+    const expectedHidden = newMode == gWindow.STATE_MINIMIZED || gWindow.isFullyOccluded;
+    if (gWindow.document.hidden != expectedHidden) {
+      await new Promise(resolve => {
+        gWindow.addEventListener("visibilitychange", resolve, { once: true });
+      });
+    }
+    is(gWindow.document.hidden, expectedHidden, "Should be inactive if minimized or occluded.");
+  }
+}
+
+function startTest() {
+  openWindow();
+}
+
+function openWindow() {
+  gWindow = window.browsingContext.topChromeWindow
+                  .open('empty_window.xhtml', '_blank', 'chrome,screenX=50,screenY=50,width=200,height=200,resizable');
+  SimpleTest.waitForFocus(runTest, gWindow);
+}
+
+async function runTest() {
+  // Install event handler.
+  gWindow.addEventListener("sizemodechange", sizemodeChanged);
+
+  // Run tests.
+  info("Testing minimize()");
+  await expectSizeModeChange(gWindow.STATE_MINIMIZED, function () {
+    gWindow.minimize();
+  });
+
+  info("Testing restore() after minimize()");
+  await expectSizeModeChange(gWindow.STATE_NORMAL, function () {
+    gWindow.restore();
+  });
+
+  info("Testing maximize()");
+  await expectSizeModeChange(gWindow.STATE_MAXIMIZED, function () {
+    gWindow.maximize();
+  });
+
+  info("Testing restore() after maximize()");
+  await expectSizeModeChange(gWindow.STATE_NORMAL, function () {
+    gWindow.restore();
+  });
+
+  // Normal window resizing shouldn't fire a sizemodechanged event, bug 715867.
+  info("Testing resizeTo() horizontal");
+  await expectSizeModeChange(0, function () {
+    gWindow.resizeTo(gWindow.outerWidth + 10, gWindow.outerHeight);
+  });
+
+  info("Testing resizeTo() vertical");
+  await expectSizeModeChange(0, function () {
+    gWindow.resizeTo(gWindow.outerWidth, gWindow.outerHeight + 10);
+  });
+
+  // Resizing a maximized window should change to normal sizemode.
+  info("maximize() in preparation for resize");
+  await expectSizeModeChange(gWindow.STATE_MAXIMIZED, function () {
+    gWindow.maximize();
+  });
+
+  info("Testing resizeTo() from maximized");
+  await expectSizeModeChange(gWindow.STATE_NORMAL, function () {
+    // MacOS treats windows close to the available screen size as maximized.
+    // Shrinking the window by only 10px isn't enough to change the sizemode.
+    gWindow.resizeTo(gWindow.outerWidth / 2, gWindow.outerHeight / 2);
+  });
+
+  gWindow.removeEventListener("sizemodechange", sizemodeChanged);
+  gWindow.close();
+  SimpleTest.finish();
+}
+
+SimpleTest.waitForExplicitFinish();
+SimpleTest.waitForFocus(startTest);
+
+]]>
+</script>
+
+</window>

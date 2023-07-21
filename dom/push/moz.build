@@ -1,0 +1,67 @@
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Core", "DOM: Notifications")
+
+EXTRA_COMPONENTS += [
+    "Push.manifest",
+]
+
+EXTRA_JS_MODULES += [
+    "Push.sys.mjs",
+    "PushBroadcastService.sys.mjs",
+    "PushComponents.sys.mjs",
+    "PushCrypto.sys.mjs",
+    "PushDB.sys.mjs",
+    "PushRecord.sys.mjs",
+    "PushService.sys.mjs",
+]
+
+if CONFIG["MOZ_BUILD_APP"] != "mobile/android":
+    # Everything but GeckoView.
+    EXTRA_JS_MODULES += [
+        "PushServiceHttp2.sys.mjs",
+        "PushServiceWebSocket.sys.mjs",
+    ]
+
+XPCOM_MANIFESTS += [
+    "components.conf",
+]
+
+MOCHITEST_MANIFESTS += [
+    "test/mochitest.ini",
+]
+
+XPCSHELL_TESTS_MANIFESTS += [
+    "test/xpcshell/xpcshell.ini",
+]
+
+EXPORTS.mozilla.dom += [
+    "PushManager.h",
+    "PushNotifier.h",
+    "PushSubscription.h",
+    "PushSubscriptionOptions.h",
+    "PushUtil.h",
+]
+
+UNIFIED_SOURCES += [
+    "PushManager.cpp",
+    "PushNotifier.cpp",
+    "PushSubscription.cpp",
+    "PushSubscriptionOptions.cpp",
+    "PushUtil.cpp",
+]
+
+TEST_DIRS += ["test/xpcshell"]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+LOCAL_INCLUDES += [
+    "../base",
+    "../ipc",
+]
+
+FINAL_LIBRARY = "xul"

@@ -1,0 +1,481 @@
+<!DOCTYPE HTML>
+<html id="root">
+<head>
+  <title>Test for MozMousePixelScroll events</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="/tests/SimpleTest/EventUtils.js"></script>
+  <script src="/tests/SimpleTest/paint_listener.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/tests/SimpleTest/test.css">
+  <style>
+    html, body { margin: 0 }
+
+    .scrollable {
+      overflow: auto;
+      line-height: 1;
+      margin: 15px;
+      box-sizing: border-box;
+    }
+    .scrollable > div {
+      width: 1000px;
+      height: 1000px;
+      font-size: 1000px;
+      line-height: 1;
+    }
+    /* Ensure viewport is scrollable */
+    .viewport-padding { height: 200vh; width: 200vh; }
+  </style>
+</head>
+<body>
+<p id="display"></p>
+<div id="Scrollable128" class="scrollable" style="font-size: 128px; width: 100px; height: 100px;">
+ <div>
+   <div id="Scrollable96" class="scrollable" style="font-size: 96px; width: 150px; height: 150px;">
+     <div>
+       <div id="Scrollable64" class="scrollable" style="font-size: 64px; width: 200px; height: 200px;">
+         <div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+<div id="Scrollable32" class="scrollable" style="font-size: 32px; width: 50px; height: 50px;">
+  <div>
+  </div>
+</div>
+<div class="viewport-padding"></div>
+<div id="content" style="display: none"></div>
+<pre id="test">
+<script>
+
+SimpleTest.waitForExplicitFinish();
+SimpleTest.waitForFocus(startTest, window);
+
+var gScrollable128 = document.getElementById("Scrollable128");
+var gScrollable96 = document.getElementById("Scrollable96");
+var gScrollable64 = document.getElementById("Scrollable64");
+var gScrollable32 = document.getElementById("Scrollable32");
+var gRoot = document.documentElement;
+
+// TODO(emilio): page scrolling seems to interact weirdly with
+// Android (probably due to the visual viewport? but I can't repro
+// on the emulator). It's probably not a big deal though since you
+// can't usually do page scrolling on Android, and chances are
+// actual behavior is correct and we just need to tweak the test.
+const kIsAndroid = navigator.userAgent.includes("Android");
+
+function* prepareScrollUnits()
+{
+  var result = -1;
+  function handler(aEvent)
+  {
+    result = aEvent.detail;
+    aEvent.preventDefault();
+    setTimeout(runTest, 0);
+  }
+  window.addEventListener("MozMousePixelScroll", handler, { capture: true, passive: false });
+
+  yield waitForAllPaints(function () { setTimeout(runTest, 0); });
+
+  yield synthesizeWheel(gScrollable128, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gScrollable128.wheelLineHeight = result;
+  ok(result > 96 && result < 200, "prepareScrollUnits: gScrollable128.wheelLineHeight may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable96, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gScrollable96.wheelLineHeight = result;
+  ok(result > 64 && result < gScrollable128.wheelLineHeight, "prepareScrollUnits: gScrollable96.wheelLineHeight may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable64, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gScrollable64.wheelLineHeight = result;
+  ok(result > 32 && result < gScrollable96.wheelLineHeight, "prepareScrollUnits: gScrollable64.wheelLineHeight may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable32, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gScrollable32.wheelLineHeight = result;
+  ok(result > 16 && result < gScrollable64.wheelLineHeight, "prepareScrollUnits: gScrollable32.wheelLineHeight may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gRoot, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gRoot.wheelLineHeight = result;
+  ok(result > 10 && result < gScrollable32.wheelLineHeight, "prepareScrollUnits: gRoot.wheelLineHeight may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable128, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gScrollable128.wheelHorizontalLine = result;
+  ok(result > 50 && result < 200, "prepareScrollUnits: gScrollable128.wheelHorizontalLine may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable96, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gScrollable96.wheelHorizontalLine = result;
+  ok(result > 30 && result < gScrollable128.wheelHorizontalLine, "prepareScrollUnits: gScrollable96.wheelHorizontalLine may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable64, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gScrollable64.wheelHorizontalLine = result;
+  ok(result > 20 && result < gScrollable96.wheelHorizontalLine, "prepareScrollUnits: gScrollable64.wheelHorizontalLine may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable32, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gScrollable32.wheelHorizontalLine = result;
+  ok(result > 12 && result < gScrollable64.wheelHorizontalLine, "prepareScrollUnits: gScrollable32.wheelHorizontalLine may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gRoot, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_LINE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gRoot.wheelHorizontalLine = result;
+  ok(result > 5 && result < gScrollable32.wheelHorizontalLine, "prepareScrollUnits: gRoot.wheelHorizontalLine may be illegal value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable128, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gScrollable128.wheelPageHeight = result;
+  ok(result >= (100 - gScrollable128.wheelLineHeight * 2) && result <= 100,
+     "prepareScrollUnits: gScrollable128.wheelPageHeight is strange value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable96, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gScrollable96.wheelPageHeight = result;
+  ok(result >= (150 - gScrollable96.wheelLineHeight * 2) && result <= 150,
+     "prepareScrollUnits: gScrollable96.wheelPageHeight is strange value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable64, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gScrollable64.wheelPageHeight = result;
+  ok(result >= (200 - gScrollable64.wheelLineHeight * 2) && result <= 200,
+     "prepareScrollUnits: gScrollable64.wheelPageHeight is strange value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable32, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gScrollable32.wheelPageHeight = result;
+  ok(result >= (50 - gScrollable32.wheelLineHeight * 2) && result <= 50,
+     "prepareScrollUnits: gScrollable32.wheelPageHeight is strange value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gRoot, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaY: 1.0, lineOrPageDeltaY: 1 });
+  gRoot.wheelPageHeight = result;
+  if (!kIsAndroid) {
+    ok(window.innerHeight - result < 100 && window.innerHeight - result > 0,
+      "prepareScrollUnits: gRoot.wheelPageHeight is strange value, got " + result);
+  }
+
+  result = -1;
+  yield synthesizeWheel(gScrollable128, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gScrollable128.wheelPageWidth = result;
+  ok(result >= (100 - gScrollable128.wheelLineHeight * 2) && result <= 100,
+     "prepareScrollUnits: gScrollable128.wheelPageWidth is strange value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable96, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gScrollable96.wheelPageWidth = result;
+  ok(result >= (150 - gScrollable96.wheelLineHeight * 2) && result <= 150,
+     "prepareScrollUnits: gScrollable96.wheelPageWidth is strange value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable64, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gScrollable64.wheelPageWidth = result;
+  ok(result >= (200 - gScrollable64.wheelLineHeight * 2) && result <= 200,
+     "prepareScrollUnits: gScrollable64.wheelPageWidth is strange value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gScrollable32, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gScrollable32.wheelPageWidth = result;
+  ok(result >= (50 - gScrollable32.wheelLineHeight * 2) && result <= 50,
+     "prepareScrollUnits: gScrollable32.wheelPageWidth is strange value, got " + result);
+
+  result = -1;
+  yield synthesizeWheel(gRoot, 10, 10,
+                  { deltaMode: WheelEvent.DOM_DELTA_PAGE,
+                    deltaX: 1.0, lineOrPageDeltaX: 1 });
+  gRoot.wheelPageWidth = result;
+  if (!kIsAndroid) {
+    ok(window.innerWidth - result < 100 && window.innerWidth - result > 0,
+      "prepareScrollUnits: gRoot.wheelPageWidth is strange value, got " + result);
+  }
+
+  window.removeEventListener("MozMousePixelScroll", handler, true);
+}
+
+function* doTests()
+{
+  let tests = [];
+
+  {
+    const kAllScrollables = [gRoot, gScrollable128, gScrollable96, gScrollable64, gScrollable32];
+    function resetAllScrollables() {
+      for (let scrollable of kAllScrollables) {
+        scrollable.style.overflow = "";
+        scrollable.scrollLeft = 0;
+        scrollable.scrollTop = 0;
+      }
+    }
+
+    function closestScrollable(s) {
+      if (s == gScrollable32 || s == gRoot) {
+        return gRoot;
+      }
+      let closest = kAllScrollables[kAllScrollables.indexOf(s) - 1];
+      ok(closest, `Should find a closest scrollable for ${s.id}`);
+      return closest;
+    }
+
+    const kAllScrollDirections = [
+      {
+        direction: "both",
+        x: 1,
+        y: 1,
+      },
+      {
+        direction: "horizontal",
+        x: 1,
+        y: 0,
+      },
+      {
+        direction: "vertical",
+        x: 0,
+        y: 1,
+      },
+    ];
+
+    for (let deltaMode of [WheelEvent.DOM_DELTA_LINE, WheelEvent.DOM_DELTA_PAGE]) {
+      if (deltaMode == WheelEvent.DOM_DELTA_PAGE && kIsAndroid) {
+        // See comment around kIsAndroid.
+        continue;
+      }
+
+      for (let scrollable of kAllScrollables) {
+        for (let { x, y, direction } of kAllScrollDirections) {
+          tests.push({
+            description: `Should be computed from nearest scrollable element (${scrollable.id}, ${deltaMode}, ${direction})`,
+            target: scrollable,
+            event: {
+              deltaMode,
+              deltaX: x,
+              deltaY: y,
+              lineOrPageDeltaX: x,
+              lineOrPageDeltaY: y,
+            },
+            prepare () {
+              resetAllScrollables();
+            },
+            cleanup () {
+            },
+            expected: {
+              x: x ? scrollable : null,
+              y: y ? scrollable : null,
+            }
+          });
+
+          tests.push({
+            description: `Should be computed from actual scroll target or root if not scrollable in the direction (${scrollable.id}, ${deltaMode}, ${direction})`,
+            target: scrollable,
+            event: {
+              deltaMode,
+              deltaX: -x,
+              deltaY: -y,
+              lineOrPageDeltaX: -x,
+              lineOrPageDeltaY: -y
+            },
+            prepare () {
+              resetAllScrollables();
+            },
+            cleanup () {
+            },
+            expected: {
+              x: x ? gRoot : null,
+              y: y ? gRoot : null,
+            }
+          });
+
+          // Root's page delta depends on whether there's an horizontal scrollbar
+          // or not, so this test on the root would be off by a few pixels.
+          if (scrollable != gRoot || deltaMode != WheelEvent.DOM_DELTA_PAGE) {
+            tests.push({
+              description: `Should be computed from actual scroll target or root if scrollable in the direction but overflow: hidden (${scrollable.id}, ${deltaMode}, ${direction})`,
+              target: scrollable,
+              event: {
+                deltaMode,
+                deltaX: x,
+                deltaY: y,
+                lineOrPageDeltaX: x,
+                lineOrPageDeltaY: y,
+              },
+              prepare () {
+                resetAllScrollables();
+                scrollable.style.overflow = "hidden";
+              },
+              cleanup () {
+                scrollable.style.overflow = "";
+              },
+              expected: {
+                x: x ? closestScrollable(scrollable) : null,
+                y: y ? closestScrollable(scrollable) : null,
+              }
+            });
+          }
+        }
+      }
+    }
+  }
+
+  var currentTest, description, firedX, firedY;
+  var expectedHandlerCalls;
+
+  function handler(aEvent)
+  {
+    aEvent.preventDefault();
+
+    if (aEvent.axis != MouseScrollEvent.HORIZONTAL_AXIS &&
+        aEvent.axis != MouseScrollEvent.VERTICAL_AXIS) {
+      ok(false,
+         description + "The event had invalid axis (" + aEvent.axis + ")");
+      if (--expectedHandlerCalls == 0) {
+        setTimeout(runTest, 0);
+      }
+      return;
+    }
+
+    var isHorizontal = (aEvent.axis == MouseScrollEvent.HORIZONTAL_AXIS);
+    if ((isHorizontal && !currentTest.expected.x) ||
+        (!isHorizontal && !currentTest.expected.y)) {
+      ok(false,
+         description + "The event fired unexpectedly (" +
+         (isHorizontal ? "Horizontal" : "Vertical") + ")");
+      if (--expectedHandlerCalls == 0) {
+        setTimeout(runTest, 0);
+      }
+      return;
+    }
+
+    if (isHorizontal) {
+      firedX = true;
+    } else {
+      firedY = true;
+    }
+
+    var expectedDetail =
+      (currentTest.event.deltaMode == WheelEvent.DOM_DELTA_LINE) ?
+        (isHorizontal ? currentTest.expected.x.wheelHorizontalLine :
+                        currentTest.expected.y.wheelLineHeight) :
+        (isHorizontal ? currentTest.expected.x.wheelPageWidth :
+                        currentTest.expected.y.wheelPageHeight);
+    is(Math.abs(aEvent.detail), expectedDetail,
+       description + ((isHorizontal) ? "horizontal" : "vertical") + " event detail is wrong");
+
+    if (--expectedHandlerCalls == 0) {
+      setTimeout(runTest, 0);
+    }
+  }
+
+  window.addEventListener("MozMousePixelScroll", handler, { capture: true, passive: false });
+
+  for (var i = 0; i < tests.length; i++) {
+    currentTest = tests[i];
+    description = "doTests, " + currentTest.description + " (deltaMode: " +
+      (currentTest.event.deltaMode == WheelEvent.DOM_DELTA_LINE ?
+        "DOM_DELTA_LINE" : "DOM_DELTA_PAGE") +
+        ", deltaX: " + currentTest.event.deltaX +
+        ", deltaY: " + currentTest.event.deltaY + "): ";
+    currentTest.prepare();
+    firedX = firedY = false;
+    expectedHandlerCalls = (currentTest.expected.x ? 1 : 0)
+                         + (currentTest.expected.y ? 1 : 0);
+    yield synthesizeWheel(currentTest.target, 10, 10, currentTest.event);
+    if (currentTest.expected.x) {
+      ok(firedX, description + "Horizontal MozMousePixelScroll event wasn't fired");
+    }
+    if (currentTest.expected.y) {
+      ok(firedY, description + "Vertical MozMousePixelScroll event wasn't fired");
+    }
+    currentTest.cleanup();
+  }
+
+  window.removeEventListener("MozMousePixelScroll", handler, true);
+}
+
+function* testBody()
+{
+  yield* prepareScrollUnits();
+  yield* doTests();
+}
+
+var gTestContinuation = null;
+
+function runTest()
+{
+  if (!gTestContinuation) {
+    gTestContinuation = testBody();
+  }
+  var ret = gTestContinuation.next();
+  if (ret.done) {
+    SimpleTest.finish();
+  }
+}
+
+function startTest() {
+  SpecialPowers.pushPrefEnv({"set": [["mousewheel.default.delta_multiplier_x", 100],
+                                     ["mousewheel.default.delta_multiplier_y", 100],
+                                     ["mousewheel.default.delta_multiplier_z", 100],
+                                     ["mousewheel.with_alt.delta_multiplier_x", 100],
+                                     ["mousewheel.with_alt.delta_multiplier_y", 100],
+                                     ["mousewheel.with_alt.delta_multiplier_z", 100],
+                                     ["mousewheel.with_control.delta_multiplier_x", 100],
+                                     ["mousewheel.with_control.delta_multiplier_y", 100],
+                                     ["mousewheel.with_control.delta_multiplier_z", 100],
+                                     ["mousewheel.with_meta.delta_multiplier_x", 100],
+                                     ["mousewheel.with_meta.delta_multiplier_y", 100],
+                                     ["mousewheel.with_meta.delta_multiplier_z", 100],
+                                     ["mousewheel.with_shift.delta_multiplier_x", 100],
+                                     ["mousewheel.with_shift.delta_multiplier_y", 100],
+                                     ["mousewheel.with_shift.delta_multiplier_z", 100],
+                                     ["mousewheel.with_win.delta_multiplier_x", 100],
+                                     ["mousewheel.with_win.delta_multiplier_y", 100],
+                                     ["mousewheel.with_win.delta_multiplier_z", 100],
+  // If APZ is enabled we should ensure the preventDefault calls work even
+  // if the test is running slowly.
+                                     ["apz.content_response_timeout", 2000],
+                                    ]}, runTest);
+}
+
+</script>
+</pre>
+</body>
+</html>

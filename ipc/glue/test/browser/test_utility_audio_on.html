@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Audio decoder in Utility process</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <script src="head.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body>
+<pre id="test">
+<script type="text/javascript">
+SimpleTest.waitForExplicitFinish();
+
+(async function() {
+  const platform = SpecialPowers.Services.appinfo.OS;
+  for (let {src, expectations} of audioTestData()) {
+    if (!(platform in expectations)) {
+      info(`Skipping ${src} for ${platform}`);
+      continue;
+    }
+
+    try {
+      await runMochitestUtilityAudio(src, { expectUtility: expectations[platform].process, expectDecoder: expectations[platform].decoder, expectContent: false, expectJava: false });
+    } catch (ex) {
+      ok(false, "Failure");
+    }
+  }
+
+  // Remove all after Bug 1771196
+  for (let src of [
+    "small-shot.m4a",
+  ]) {
+    try {
+      await runMochitestUtilityAudio(src, { expectUtility: "", expectDecoder: "android decoder", expectContent: false, expectJava: true });
+    } catch (ex) {
+      ok(false, `Failure ${ex}`);
+    }
+  }
+
+  SimpleTest.finish();
+})();
+</script>
+</pre>
+</body>
+</html>

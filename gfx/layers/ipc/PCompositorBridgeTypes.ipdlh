@@ -1,0 +1,23 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+using mozilla::TimeStamp from "mozilla/TimeStamp.h";
+[MoveOnly] using class mozilla::ipc::BigBuffer from "mozilla/ipc/BigBuffer.h";
+
+namespace mozilla {
+namespace layers {
+
+struct RecordedFrameData {
+  TimeStamp timeOffset;
+  uint32_t length;
+};
+
+struct FrameRecording {
+  TimeStamp startTime;
+  RecordedFrameData[] frames;
+  BigBuffer bytes;
+};
+
+}  // namespace layers
+}  // namespace mozilla

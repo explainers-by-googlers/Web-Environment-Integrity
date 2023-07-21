@@ -1,0 +1,13 @@
+{
+  "fx_account": {
+    "username": "__FX_ACCOUNT_USERNAME__",
+    "password": "__FX_ACCOUNT_PASSWORD__"
+  },
+  "auth_type": "fx_account",
+  "es": "localhost:9200",
+  "os": "Ubuntu",
+  "platform": "linux64",
+  "serverURL": null,
+  "extensiondir": "__EXTENSIONDIR__",
+  "testdir": "__TESTDIR__"
+}

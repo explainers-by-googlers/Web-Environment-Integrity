@@ -1,0 +1,224 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# Adding a new metric? We have docs for that!
+# https://firefox-source-docs.mozilla.org/toolkit/components/glean/user/new_definitions_file.html
+
+---
+$schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
+$tags:
+  - "Firefox :: Nimbus Desktop Client"
+
+nimbus_events:
+  enrollment:
+    type: event
+    description: >
+      Recorded when a user has met the conditions and is first bucketed into an
+      experiment (i.e. targeting matched and they were randomized into a bucket
+      and branch of the experiment). Expected a maximum of once per experiment
+      per user.
+    extra_keys:
+      experiment:
+        type: string
+        description: The slug/unique identifier of the experiment
+      branch:
+        type: string
+        description: The branch slug/identifier that was randomly chosen
+      enrollment_id:
+        type: string
+        description: A unique identifier generated at enrollment time
+      experiment_type:
+        type: string
+        description: Indicates whether this is an experiemnt or rollout
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - tlong@mozilla.com
+      - nimbus-team@mozilla.com
+    expires: never
+    send_in_pings:
+      - background-update
+      - events
+  enroll_failed:
+    type: event
+    description: >
+      Recorded when an enrollment fails, including the reason for the failure.
+    extra_keys:
+      experiment:
+        type: string
+        description: The slug/unique identifier of the experiment
+      reason:
+        type: string
+        description: The reason for the enrollment failure
+      branch:
+        type: string
+        description: If reason == "invalid-branch", this is the invalid branch.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - tlong@mozilla.com
+      - nimbus-team@mozilla.com
+    expires: never
+    send_in_pings:
+      - background-update
+      - events
+  unenrollment:
+    type: event
+    description: >
+      Recorded when either telemetry is disabled, or the experiment has run
+      for its designed duration (i.e. it is no longer present in the Nimbus
+      Remote Settings collection)
+    extra_keys:
+      experiment:
+        type: string
+        description: The slug/unique identifier of the experiment
+      branch:
+        type: string
+        description: The branch slug/identifier that was randomly chosen
+      enrollment_id:
+        type: string
+        description: A unique identifier generated at enrollment time
+      reason:
+        type: string
+        description: The reason for the unenrollment
+      changed_pref:
+        type: string
+        description: >
+          If reason == "changed-pref", then this contains the name of the pref
+          that changed that caused the unenrollment.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1843126
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1843126
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - tlong@mozilla.com
+      - nimbus-team@mozilla.com
+    expires: never
+    send_in_pings:
+      - background-update
+      - events
+  unenroll_failed:
+    type: event
+    description: >
+      Recorded when an unenrollment fails, including the reason for the failure.
+    extra_keys:
+      experiment:
+        type: string
+        description: The slug/unique identifier of the experiment
+      reason:
+        type: string
+        description: The reason for the unenrollment failure
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - tlong@mozilla.com
+      - nimbus-team@mozilla.com
+    expires: never
+    send_in_pings:
+      - background-update
+      - events
+  exposure:
+    type: event
+    description: >
+      Recorded when a user actually observes an experimental treatment, or
+      would have observed an experimental treatment if they had been in a
+      branch that would have shown one.
+    extra_keys:
+      experiment:
+        type: string
+        description: The slug/unique identifier of the experiment
+      branch:
+        type: string
+        description: The branch slug/identifier that was randomly chosen
+      feature_id:
+        type: string
+        description: A unique identifier for the feature that was exposed
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1773563
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - tlong@mozilla.com
+      - nimbus-team@mozilla.com
+    expires: never
+    send_in_pings:
+      - background-update
+      - events
+  validation_failed:
+    type: event
+    description: >
+      This records when validation of a recipe fails.
+    extra_keys:
+      experiment:
+        type: string
+        description: The slug/unique identifier of the experiment
+      reason:
+        type: string
+        description: >
+          Why validation failed (one of "invalid-recipe", "invalid-branch",
+          "invalid-reason", "missing-locale", or "missing-l10n-entry").
+      branch:
+        type: string
+        description: >
+          If reason == invalid-branch, the branch that failed validation.
+      feature:
+        type: string
+        description: If reason == invalid-feature, the invalid feature ID.
+      locale:
+        type: string
+        description: >
+          If reason == missing-locale, the locale that was missing from the
+          localization table.
+          If reason == missing-l10n-entry, the locale that was missing the
+          localization entries.
+      l10n_ids:
+        type: string
+        description: >
+          If reason == missing-l10n-entry, a comma-sparated list of missing
+          localization entries.
+
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1762652
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1821092
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1762652
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1781953
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1821092
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - barret@mozilla.com
+    expires: never
+    send_in_pings:
+      - background-update
+      - events

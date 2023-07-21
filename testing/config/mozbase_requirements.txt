@@ -1,0 +1,31 @@
+../tools/mozterm
+../tools/geckoprocesstypes_generator
+
+../mozbase/manifestparser
+../mozbase/mozcrash
+../mozbase/mozdebug
+../mozbase/mozdevice
+../mozbase/mozfile
+../mozbase/mozgeckoprofiler
+../mozbase/mozhttpd
+../mozbase/mozinfo
+../mozbase/mozinstall
+../mozbase/mozleak
+../mozbase/mozlog
+../mozbase/moznetwork
+../mozbase/mozpower
+../mozbase/mozprocess
+../mozbase/mozprofile
+../mozbase/mozproxy
+../mozbase/mozrunner
+../mozbase/mozserve
+../mozbase/mozscreenshot
+../mozbase/moztest
+../mozbase/mozversion
+
+../condprofile; sys_platform != 'darwin'
+aiohttp==3.7.4.post0; sys_platform != 'darwin'
+https://pypi.pub.build.mozilla.org/pub/arsenic-19.1-py3-none-any.whl; sys_platform != 'darwin'
+requests==2.22.0; sys_platform != 'darwin'
+pyyaml==5.1.2; sys_platform != 'darwin'
+structlog==15.2.0; sys_platform != 'darwin'

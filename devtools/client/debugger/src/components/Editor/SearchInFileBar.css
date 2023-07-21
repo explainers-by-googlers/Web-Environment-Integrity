@@ -1,0 +1,39 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
+
+.search-bar {
+  position: relative;
+  display: flex;
+  border-top: 1px solid var(--theme-splitter-color);
+  height: var(--editor-searchbar-height);
+}
+
+/* display a fake outline above the search bar's top border, and above
+   the source footer's top border */
+.search-bar::before {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  top: -1px;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  border: solid 1px var(--blue-50);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.search-bar:focus-within::before {
+  opacity: 1;
+}
+
+.search-bar .search-outline {
+  flex-grow: 1;
+  border-width: 0;
+}
+
+.search-bar .result-list {
+  max-height: 230px;
+}

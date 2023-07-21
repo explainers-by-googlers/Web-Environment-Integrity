@@ -1,0 +1,23 @@
+[package]
+name = "profiler_helper"
+version = "0.1.0"
+authors = ["Markus Stange <mstange@themasta.com>"]
+license = "MPL-2.0"
+
+[dependencies]
+memmap2 = "0.5"
+rustc-demangle = "0.1"
+uuid = "1.0"
+
+[dependencies.object]
+version = "0.30"
+optional = true
+default-features = false
+features = ["std", "read_core", "elf"]
+
+[dependencies.thin-vec]
+version = "0.2.1"
+features = ["gecko-ffi"]
+
+[features]
+parse_elf = ["object"]

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Storage inspector IndexedDBs with duplicate names</title>
+
+  <script type="application/javascript">
+    "use strict";
+
+    /* exported setup */
+    function setup() {
+      createIndexedDB("idb1");
+      createIndexedDB("idb2");
+    }
+
+    function createIndexedDB(name) {
+      const open = indexedDB.open(name);
+
+      open.onsuccess = function () {
+        const db = open.result;
+        db.close();
+      };
+    }
+
+    function deleteDB(dbName) {
+      return new Promise(resolve => {
+        dump(`removing database ${dbName} from ${document.location}\n`);
+        indexedDB.deleteDatabase(dbName).onsuccess = resolve;
+      });
+    }
+
+    window.clear = async function () {
+      await deleteDB("idb1");
+      await deleteDB("idb2");
+
+      dump(`removed indexedDB data from ${document.location}\n`);
+    };
+  </script>
+</head>
+<body>
+  <h1>storage-indexeddb-duplicate-names.html</h1>
+</body>
+</html>

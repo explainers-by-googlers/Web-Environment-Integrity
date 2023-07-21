@@ -1,0 +1,32 @@
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/*
+  This CSS stylesheet defines the rules to be applied to VideoDocuments that
+  are top level (e.g. not iframes).
+*/
+
+:root {
+  background-color: black;
+  /* Fill the viewport height, so that our '-moz-user-focus' styling will
+     disregard clicks in the whole background area (so the video element
+     doesn't inadvertently lose focus from a stray click on the background). */
+  height: 100%;
+  -moz-user-focus: ignore;
+}
+
+video {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  user-select: none;
+  -moz-user-focus: normal;
+}
+
+video:focus {
+  outline-style: none;
+}

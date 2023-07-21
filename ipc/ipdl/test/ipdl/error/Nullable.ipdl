@@ -1,0 +1,6 @@
+//error: `nullable' qualifier for type `int' is unsupported
+
+protocol PNullable {
+child:
+    async Msg(nullable int i);
+};

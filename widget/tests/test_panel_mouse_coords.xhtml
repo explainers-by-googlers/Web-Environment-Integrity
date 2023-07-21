@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="chrome://global/skin"?>
+<?xml-stylesheet type="text/css" href="chrome://mochikit/content/tests/SimpleTest/test.css"?>
+<!--
+https://bugzilla.mozilla.org/show_bug.cgi?id=835044
+-->
+<window title="Mozilla Bug 835044"
+        onload="startTest()"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"/>
+  <script src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"/>
+
+<panel id="thepanel" level="parent"
+       onpopupshown="sendMouseEvent();"
+       onmousemove="checkCoords(event);"
+       style="width: 80px; height: 80px">
+</panel>
+
+  <!-- test results are displayed in the html:body -->
+  <body xmlns="http://www.w3.org/1999/xhtml">
+  <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=835044"
+     id="anchor"
+     target="_blank">Mozilla Bug 835044</a>
+  </body>
+
+  <!-- test code goes here -->
+  <script type="application/javascript">
+  <![CDATA[
+SimpleTest.waitForExplicitFinish();
+
+let panel = document.getElementById('thepanel');
+let rect = null;
+
+
+function startTest() {
+  // This first event is to ensure that the next event will have different
+  // coordinates to the previous mouse position, and so actually generates
+  // mouse events.  The mouse is not moved off the window, as that might
+  // move focus to another application.
+  synthesizeNativeMouseEvent({
+    type: "mousemove",
+    screenX: window.mozInnerScreenX,
+    screenY: window.mozInnerScreenY,
+    elementOnWidget: window.documentElement,
+  });
+
+  panel.openPopup(document.getElementById("anchor"), "after_start");
+}
+
+function sendMouseEvent() {
+  rect = panel.getBoundingClientRect();
+  synthesizeNativeMouseEvent({
+    type: "mousemove",
+    target: panel,
+    offsetX: 10,
+    offsetY: 20,
+  });
+}
+
+function checkCoords(event) {
+  if (!rect) {
+    return;
+  }
+  isfuzzy(event.clientX, rect.left + 10, window.devicePixelRatio, "Motion x coordinate");
+  isfuzzy(event.clientY, rect.top + 20, window.devicePixelRatio, "Motion y coordinate");
+  info(`Event client: ${event.clientX}, ${event.clientY}, panel client: ${rect.left}, ${rect.top}`);
+  info(`Event screen: ${event.screenX}, ${event.screenY}, panel screen: ${panel.screenX}, ${panel.screenY}`);
+  info(`offset client: ${event.clientX - rect.left}, ${event.clientY - rect.top}`);
+  info(`offset screen: ${event.screenX - panel.screenX}, ${event.screenY - panel.screenY}`);
+  done();
+}
+
+function done() {
+  SimpleTest.finish();
+}
+  ]]>
+  </script>
+</window>

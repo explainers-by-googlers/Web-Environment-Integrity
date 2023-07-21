@@ -1,0 +1,13 @@
+[
+  [
+    "warning",
+    "statement should be inside braces",
+    "readability-braces-around-statements"
+  ],
+  [
+    "warning",
+    "statement should be inside braces",
+    "readability-braces-around-statements"
+  ],
+  { "reliability": "high" }
+]

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<!--
+https://bugzilla.mozilla.org/show_bug.cgi?id=1022869
+-->
+<head>
+  <meta charset="utf-8">
+  <title>Test for Bug 1022869</title>
+  <script src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css"/>
+  <script type="text/javascript">
+
+  SimpleTest.waitForExplicitFinish();
+
+  /** Test for Bug 1022869 **/
+  async function startTest() {
+    // Bug 1746646: Make mochitests work with TCP enabled (cookieBehavior = 5)
+    // Acquire storage access permission here so that the storage used to
+    // hold cookies with the opened windows works in xorigin tests. Otherwise,
+    // the iframe containing this page is isolated from first-party storage
+    // access, which denies access to the same cookie store
+    if (isXOrigin) {
+      SpecialPowers.wrap(document).notifyUserGestureActivation();
+      await SpecialPowers.addPermission(
+        "storageAccessAPI",
+        true,
+        window.location.href
+       );
+      await SpecialPowers.wrap(document).requestStorageAccess();
+    }
+    // Initialize our cookie.
+    document.cookie = "a=b";
+
+    let w = window.open("window_bug1171215.html");
+    onmessage = e => {
+      if (e.data.type == "finish") {
+        w.close();
+        SpecialPowers.clearUserPref("network.cookie.sameSite.laxByDefault");
+        SimpleTest.finish();
+        return;
+      }
+
+      if (e.data.type == "info") {
+        info(e.data.msg);
+        return;
+      }
+
+      if (e.data.type == "test") {
+        ok(e.data.test, e.data.msg);
+        return;
+      }
+
+      ok(false, "Unknown message");
+    };
+  }
+
+  // Bug 1617611: Fix all the tests broken by "cookies SameSite=lax by default"
+  SpecialPowers.pushPrefEnv({ set: [["network.cookie.cookieBehavior", 1], ["network.cookie.sameSite.laxByDefault", false]] })
+    .then(startTest);
+
+  </script>
+</head>
+<body>
+<a target="_blank" href="https://bugzilla.mozilla.org/show_bug.cgi?id=1022869">Mozilla Bug 1022869</a>
+</body>
+</html>

@@ -1,0 +1,138 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    test-manifest-loader: null  # don't load tests in the taskgraph
+    run-without-variant: false
+    variants:
+        - 1proc
+    virtualization: virtual
+    mozharness:
+        script:
+            by-test-platform:
+                android-em.*: android_emulator_unittest.py
+                android-hw.*: android_hardware_unittest.py
+                default: desktop_unittest.py
+        config:
+            by-test-platform:
+                android-em-7.*:
+                    - android/android_common.py
+                    - android/android-x86_64.py
+                android-hw.*:
+                    - android/android_common.py
+                    - android/android_hw.py
+                linux.*:
+                    - unittests/linux_unittest.py
+                    - remove_executables.py
+                macosx.*:
+                    - unittests/mac_unittest.py
+                windows.*:
+                    - unittests/win_unittest.py
+    supports-artifact-builds: false
+
+cppunit:
+    description: "CPP Unit Tests"
+    suite: cppunittest
+    treeherder-symbol: cppunit
+    target:
+        by-test-platform:
+            android-em-7.*: geckoview-test_runner.apk
+            default: null
+    tier: default
+    run-on-projects:
+        by-variant:
+            1proc:
+                by-test-platform:
+                    .*wayland.*: []
+                    default: built-projects
+            default: []
+
+gtest:
+    description: "GTests run"
+    suite: gtest
+    treeherder-symbol: GTest
+    instance-size: xlarge
+    run-on-projects:
+        by-variant:
+            1proc:
+                by-test-platform:
+                    .*android.*: built-projects
+                    .*(devedition|tsan|wayland).*: []
+                    linux1804-32-qr/opt: []  # try only, shippable on m-c
+                    linux1804-32-qr/debug: ['mozilla-central']  # try and m-c
+                    linux1804-32-shippable-qr/opt: ['mozilla-central']  # try and m-c
+                    default: built-projects
+            default: []
+    target:
+        by-test-platform:
+            android-em-7.*: geckoview-test_runner.apk
+            default: null
+    tier: default
+
+jittest:
+    description: "JIT Test run"
+    suite: jittest
+    treeherder-symbol: Jit
+    run-on-projects:
+        by-variant:
+            1proc:
+                by-test-platform:
+                    android-hw-.*-aarch64-qr/debug: ['mozilla-central', 'release']
+                    android-hw-.*-arm7-qr/debug: ['mozilla-central', 'release']
+                    default: built-projects
+            default: []
+    chunks:
+        by-test-platform:
+            windows.*-ccov-qr/opt: 8
+            windows.*: 1
+            macosx.*/opt: 1
+            macosx.*/debug: 3
+            android.*: 10
+            default: 6
+    max-run-time:
+        by-test-platform:
+            windows.*-ccov.*/.*: 7200
+            macosx.*-ccov.*/.*: 7200
+            android-hw.*: 5400
+            default: 3600
+    mozharness:
+        chunked:
+            by-test-platform:
+                windows.*: false
+                macosx.*: false
+                default: true
+    target:
+        by-test-platform:
+            android-.*: geckoview-test_runner.apk
+            default: null
+    tier:
+        by-test-platform:
+            android-hw.*: 2
+            default: default
+
+jittest-all:
+    description: "JIT Test run with all flags for android arm7 opt"
+    suite: jittest
+    treeherder-symbol: Jit
+    run-on-projects:
+        by-test-platform:
+            android-hw-.*-arm7(?:-shippable)?-qr/.*: ['mozilla-central', 'release']
+            default: []
+    chunks: 10
+    max-run-time: 3600
+    mozharness:
+        chunked: true
+        extra-options:
+            by-test-platform:
+                android.*:
+                    - --jittest-flags=all
+                default: None
+    target:
+        by-test-platform:
+            android-.*: geckoview-test_runner.apk
+            default: null
+    tier:
+        by-test-platform:
+            android-hw.*: 2
+            default: default

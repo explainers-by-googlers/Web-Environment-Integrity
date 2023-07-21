@@ -1,0 +1,72 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Core", "DOM: Streams")
+
+EXPORTS.mozilla.dom += [
+    "BaseQueuingStrategy.h",
+    "ByteLengthQueuingStrategy.h",
+    "ByteStreamHelpers.h",
+    "CountQueuingStrategy.h",
+    "QueueWithSizes.h",
+    "ReadableByteStreamController.h",
+    "ReadableStream.h",
+    "ReadableStreamBYOBReader.h",
+    "ReadableStreamBYOBRequest.h",
+    "ReadableStreamController.h",
+    "ReadableStreamDefaultController.h",
+    "ReadableStreamDefaultReader.h",
+    "ReadableStreamGenericReader.h",
+    "ReadRequest.h",
+    "TransformerCallbackHelpers.h",
+    "TransformStream.h",
+    "TransformStreamDefaultController.h",
+    "UnderlyingSinkCallbackHelpers.h",
+    "UnderlyingSourceCallbackHelpers.h",
+    "WritableStream.h",
+    "WritableStreamDefaultController.h",
+    "WritableStreamDefaultWriter.h",
+]
+
+UNIFIED_SOURCES += [
+    "ByteLengthQueuingStrategy.cpp",
+    "ByteStreamHelpers.cpp",
+    "CountQueuingStrategy.cpp",
+    "ReadableByteStreamController.cpp",
+    "ReadableStream.cpp",
+    "ReadableStreamBYOBReader.cpp",
+    "ReadableStreamBYOBRequest.cpp",
+    "ReadableStreamDefaultController.cpp",
+    "ReadableStreamDefaultReader.cpp",
+    "ReadableStreamPipeTo.cpp",
+    "ReadableStreamTee.cpp",
+    "StreamUtils.cpp",
+    "TeeState.cpp",
+    "Transferable.cpp",
+    "TransformerCallbackHelpers.cpp",
+    "TransformStream.cpp",
+    "TransformStreamDefaultController.cpp",
+    "UnderlyingSinkCallbackHelpers.cpp",
+    "UnderlyingSourceCallbackHelpers.cpp",
+    "WritableStream.cpp",
+    "WritableStreamDefaultController.cpp",
+    "WritableStreamDefaultWriter.cpp",
+]
+
+include("/ipc/chromium/chromium-config.mozbuild")  # to import MessagePort.h
+
+FINAL_LIBRARY = "xul"
+
+LOCAL_INCLUDES += [
+    "/dom/base",
+    "/dom/ipc",
+]
+
+# MOCHITEST_MANIFESTS += ["tests/mochitest.ini"]
+# ROWSER_CHROME_MANIFESTS += ["tests/browser/browser.ini"]
+
+XPCSHELL_TESTS_MANIFESTS += ["test/xpcshell/xpcshell.ini"]

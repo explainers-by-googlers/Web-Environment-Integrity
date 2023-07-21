@@ -1,0 +1,55 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+EXPORTS.mozilla.dom += [
+    "BrowserSessionStore.h",
+    "SessionStoreChangeListener.h",
+    "SessionStoreChild.h",
+    "SessionStoreData.h",
+    "SessionStoreFormData.h",
+    "SessionStoreListener.h",
+    "SessionStoreMessageUtils.h",
+    "SessionStoreParent.h",
+    "SessionStoreRestoreData.h",
+    "SessionStoreScrollData.h",
+    "SessionStoreUtils.h",
+]
+
+UNIFIED_SOURCES += [
+    "BrowserSessionStore.cpp",
+    "RestoreTabContentObserver.cpp",
+    "SessionStoreChangeListener.cpp",
+    "SessionStoreChild.cpp",
+    "SessionStoreFormData.cpp",
+    "SessionStoreListener.cpp",
+    "SessionStoreParent.cpp",
+    "SessionStoreRestoreData.cpp",
+    "SessionStoreScrollData.cpp",
+    "SessionStoreUtils.cpp",
+]
+
+EXTRA_JS_MODULES += [
+    "SessionStoreFunctions.sys.mjs",
+]
+
+XPIDL_MODULE = "sessionstore"
+
+XPIDL_SOURCES += [
+    "nsISessionStoreRestoreData.idl",
+    "SessionStoreFunctions.idl",
+]
+
+IPDL_SOURCES += [
+    "PSessionStore.ipdl",
+    "SessionStoreTypes.ipdlh",
+]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+FINAL_LIBRARY = "xul"
+
+with Files("**"):
+    BUG_COMPONENT = ("Firefox", "Session Restore")

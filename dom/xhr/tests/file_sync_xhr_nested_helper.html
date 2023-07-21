@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+  <body>
+    <input />
+    <script>
+      const input = document.querySelector("input");
+      input.addEventListener("keydown", function() {
+        window.opener.receivedInput();
+        window.close();
+      });
+
+      function startSlowXHR() {
+        setTimeout(function() {
+          input.focus();
+          SpecialPowers.loadChromeScript(() => {
+            /* eslint-env mozilla/chrome-script */
+            var win = Services.wm.getMostRecentBrowserWindow();
+            EventUtils.synthesizeKey("a", {}, win);
+          });
+
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "slow.sjs", false);
+          xhr.send(null);
+          window.opener.childXHRFinished = true;
+        }, 0);
+      }
+
+    </script>
+  </body>
+</html>

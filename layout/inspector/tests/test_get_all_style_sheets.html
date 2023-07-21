@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<!--
+https://bugzilla.mozilla.org/show_bug.cgi?id=734861
+-->
+<meta charset="utf-8">
+<title>Test for Bug 734861</title>
+<script src="/tests/SimpleTest/SimpleTest.js"></script>
+<link rel="stylesheet" href="/tests/SimpleTest/test.css"/>
+<a target="_blank" href="https://bugzilla.mozilla.org/show_bug.cgi?id=734861">Mozilla Bug 734861</a>
+<div id="host"></div>
+<script>
+/** Test for Bug 734861 **/
+const InspectorUtils = SpecialPowers.InspectorUtils;
+
+add_task(async function() {
+  let sheet = new CSSStyleSheet();
+  await sheet.replace(`* { color: blue }`);
+
+  let host = document.querySelector("#host");
+  host.adoptedStyleSheets = [sheet, sheet];
+  document.adoptedStyleSheets.push(sheet);
+
+  let res = InspectorUtils.getAllStyleSheets(document);
+
+  let foundUA = false;
+  let adoptedCount = 0;
+  for (let s of InspectorUtils.getAllStyleSheets(document)) {
+    if (SpecialPowers.unwrap(s) == sheet) {
+      adoptedCount++;
+    }
+    if (s.href === "resource://gre-resources/ua.css") {
+      foundUA = true;
+    }
+  }
+
+  ok(foundUA, "UA sheet should be returned with all the other sheets.");
+  is(adoptedCount, 1, "Adopted stylesheet should show up once");
+});
+</script>

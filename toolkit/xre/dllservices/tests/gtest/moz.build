@@ -1,0 +1,42 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+Library("dllservicestest")
+
+UNIFIED_SOURCES += [
+    "TestDLLBlocklist.cpp",
+    "TestDLLServices.cpp",
+    "TestUntrustedModules.cpp",
+]
+
+LOCAL_INCLUDES += [
+    "/toolkit/components/telemetry/other",
+    "/toolkit/components/telemetry/tests/gtest",
+]
+
+TEST_DIRS += [
+    "rust",
+    "TestDllBlocklist_AllowByVersion",
+    "TestDllBlocklist_GMPluginProcessOnly",
+    "TestDllBlocklist_GPUProcessOnly",
+    "TestDllBlocklist_MatchByName",
+    "TestDllBlocklist_MatchByVersion",
+    "TestDllBlocklist_MultipleEntries_DifferentProcesses",
+    "TestDllBlocklist_MultipleEntries_SameProcessBackward",
+    "TestDllBlocklist_MultipleEntries_SameProcessForward",
+    "TestDllBlocklist_NoOpEntryPoint",
+    "TestDllBlocklist_SingleNotification1",
+    "TestDllBlocklist_SingleNotification2",
+    "TestDllBlocklist_SocketProcessOnly",
+    "TestDllBlocklist_UserBlocked",
+    "TestDllBlocklist_UtilityProcessOnly",
+    "TestUntrustedModules_Dll1",
+    "TestUntrustedModules_Dll2",
+]
+
+TEST_HARNESS_FILES.gtest += ["msvcp140.dll"]
+
+include("/ipc/chromium/chromium-config.mozbuild")
+
+FINAL_LIBRARY = "xul-gtest"

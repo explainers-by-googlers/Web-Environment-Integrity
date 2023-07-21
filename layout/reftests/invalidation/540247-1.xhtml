@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<window id="Test for bug 540247" title="Testcase" class="reftest-wait"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<script><![CDATA[
+document.addEventListener("MozReftestInvalidate", runtest, false);
+
+function runtest() {
+  // Make sure that the effects of the scroll are painted to the screen before
+  // shrinking the size of the scrolled frame.
+  window.addEventListener("MozAfterPaint", finish, false);
+  var scrollbox = document.getElementById('s');
+  scrollbox.scrollTo(0, 1000);
+}
+
+function finish() {
+  document.getElementById('b').style.minHeight = '100px';
+  document.documentElement.className = "";
+}
+]]>
+</script>
+
+  <scrollbox id="s" style="height: 200px; overflow: scroll;">
+    <vbox>
+      <vbox style="min-height: 150px; min-width: 200px; background: red;" id="b"/>
+      <vbox style="min-height: 150px; min-width: 200px; background: green;"/>
+      <vbox style="min-height: 150px; min-width: 200px; background: blue;"/>
+      <label value="a"/>
+    </vbox>
+  </scrollbox>
+
+</window>

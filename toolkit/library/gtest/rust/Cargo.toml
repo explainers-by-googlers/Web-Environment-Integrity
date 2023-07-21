@@ -1,0 +1,35 @@
+[package]
+name = "gkrust-gtest"
+version = "0.1.0"
+authors = ["The Mozilla Project Developers"]
+license = "MPL-2.0"
+description = "Testing code for libgkrust"
+
+[dependencies]
+mozilla-central-workspace-hack = { version = "0.1", features = ["gkrust-gtest"], optional = true }
+bench-collections-gtest = { path = "../../../../xpcom/rust/gtest/bench-collections" }
+l10nregistry-ffi-gtest = { path = "../../../../intl/l10n/rust/gtest" }
+moz_task-gtest = { path = "../../../../xpcom/rust/gtest/moz_task" }
+mp4parse-gtest = { path = "../../../../dom/media/gtest" }
+nsstring-gtest = { path = "../../../../xpcom/rust/gtest/nsstring" }
+xpcom-gtest = { path = "../../../../xpcom/rust/gtest/xpcom" }
+gkrust-shared = { path = "../../rust/shared" }
+gecko-fuzz-targets = { path = "../../../../tools/fuzzing/rust", optional = true }
+fog-gtest = { path = "../../../components/glean/tests/gtest" }
+dap_ffi-gtest = { path = "../../../components/telemetry/dap/ffi-gtest" }
+dllservices-gtest = { path = "../../../xre/dllservices/tests/gtest/rust" }
+
+# Workarounds for https://github.com/rust-lang/rust/issues/58393
+mozglue-static = { path = "../../../../mozglue/static/rust" }
+swgl = { path = "../../../../gfx/wr/swgl" }
+lmdb-rkv-sys = "0.11"
+
+[lib]
+path = "lib.rs"
+crate-type = ["staticlib"]
+test = false
+doctest = false
+bench = false
+doc = false
+plugin = false
+harness = false

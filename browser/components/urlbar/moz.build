@@ -1,0 +1,87 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+with Files("**"):
+    BUG_COMPONENT = ("Firefox", "Address Bar")
+
+JAR_MANIFESTS += ["jar.mn"]
+
+DIRS += [
+    "unitconverters",
+]
+
+EXTRA_JS_MODULES += [
+    "MerinoClient.sys.mjs",
+    "QuickActionsLoaderDefault.sys.mjs",
+    "QuickSuggest.sys.mjs",
+    "UrlbarController.sys.mjs",
+    "UrlbarEventBufferer.sys.mjs",
+    "UrlbarInput.sys.mjs",
+    "UrlbarMuxerUnifiedComplete.sys.mjs",
+    "UrlbarPrefs.sys.mjs",
+    "UrlbarProviderAboutPages.sys.mjs",
+    "UrlbarProviderAliasEngines.sys.mjs",
+    "UrlbarProviderAutofill.sys.mjs",
+    "UrlbarProviderBookmarkKeywords.sys.mjs",
+    "UrlbarProviderCalculator.sys.mjs",
+    "UrlbarProviderContextualSearch.sys.mjs",
+    "UrlbarProviderExtension.sys.mjs",
+    "UrlbarProviderHeuristicFallback.sys.mjs",
+    "UrlbarProviderHistoryUrlHeuristic.sys.mjs",
+    "UrlbarProviderInputHistory.sys.mjs",
+    "UrlbarProviderInterventions.sys.mjs",
+    "UrlbarProviderOmnibox.sys.mjs",
+    "UrlbarProviderOpenTabs.sys.mjs",
+    "UrlbarProviderPlaces.sys.mjs",
+    "UrlbarProviderPrivateSearch.sys.mjs",
+    "UrlbarProviderQuickActions.sys.mjs",
+    "UrlbarProviderQuickSuggest.sys.mjs",
+    "UrlbarProviderRemoteTabs.sys.mjs",
+    "UrlbarProviderSearchSuggestions.sys.mjs",
+    "UrlbarProviderSearchTips.sys.mjs",
+    "UrlbarProvidersManager.sys.mjs",
+    "UrlbarProviderTabToSearch.sys.mjs",
+    "UrlbarProviderTokenAliasEngines.sys.mjs",
+    "UrlbarProviderTopSites.sys.mjs",
+    "UrlbarProviderUnitConversion.sys.mjs",
+    "UrlbarProviderWeather.sys.mjs",
+    "UrlbarResult.sys.mjs",
+    "UrlbarSearchOneOffs.sys.mjs",
+    "UrlbarSearchUtils.sys.mjs",
+    "UrlbarTokenizer.sys.mjs",
+    "UrlbarUtils.sys.mjs",
+    "UrlbarValueFormatter.sys.mjs",
+    "UrlbarView.sys.mjs",
+]
+
+EXTRA_JS_MODULES["urlbar/private"] += [
+    "private/AddonSuggestions.sys.mjs",
+    "private/AdmWikipedia.sys.mjs",
+    "private/BaseFeature.sys.mjs",
+    "private/BlockedSuggestions.sys.mjs",
+    "private/ImpressionCaps.sys.mjs",
+    "private/PocketSuggestions.sys.mjs",
+    "private/QuickSuggestRemoteSettings.sys.mjs",
+    "private/Weather.sys.mjs",
+]
+
+TESTING_JS_MODULES += [
+    "tests/quicksuggest/MerinoTestUtils.sys.mjs",
+    "tests/quicksuggest/QuickSuggestTestUtils.sys.mjs",
+    "tests/UrlbarTestUtils.sys.mjs",
+]
+BROWSER_CHROME_MANIFESTS += [
+    "tests/browser-tips/browser.ini",
+    "tests/browser-updateResults/browser.ini",
+    "tests/browser/browser.ini",
+    "tests/engagementTelemetry/browser/browser.ini",
+    "tests/ext/browser/browser.ini",
+    "tests/quicksuggest/browser/browser.ini",
+]
+XPCSHELL_TESTS_MANIFESTS += [
+    "tests/quicksuggest/unit/xpcshell.ini",
+    "tests/unit/xpcshell.ini",
+]
+
+SPHINX_TREES["/browser/urlbar"] = "docs"

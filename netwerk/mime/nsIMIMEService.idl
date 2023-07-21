@@ -1,0 +1,258 @@
+/* -*- Mode: IDL; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+interface nsIFile;
+interface nsIMIMEInfo;
+interface nsIURI;
+interface nsIChannel;
+
+%{C++
+#define NS_MIMESERVICE_CID                           \
+{ /* 03af31da-3109-11d3-8cd0-0060b0fc14a3 */         \
+    0x03af31da,                                      \
+    0x3109,                                          \
+    0x11d3,                                          \
+    {0x8c, 0xd0, 0x00, 0x60, 0xb0, 0xfc, 0x14, 0xa3} \
+}
+%}
+
+/**
+ * The MIME service is responsible for mapping file extensions to MIME-types
+ * (see RFC 2045). It also provides access to nsIMIMEInfo interfaces and
+ * acts as a general convenience wrapper of nsIMIMEInfo interfaces.
+ *
+ * The MIME service maintains a database with a <b>one</b> MIME type <b>to many</b>
+ * file extensions rule. Adding the same file extension to multiple MIME types
+ * is illegal and behavior is undefined.
+ *
+ * @see nsIMIMEInfo
+ */
+[scriptable, main_process_scriptable_only, uuid(5b3675a1-02db-4f8f-a560-b34736635f47)]
+interface nsIMIMEService : nsISupports {
+    /**
+     * Retrieves an nsIMIMEInfo using both the extension
+     * and the type of a file. The type is given preference
+     * during the lookup. One of aMIMEType and aFileExt
+     * can be an empty string. At least one of aMIMEType and aFileExt
+     * must be nonempty.
+     */
+    nsIMIMEInfo getFromTypeAndExtension(in ACString aMIMEType, in AUTF8String aFileExt);
+
+    /**
+     * Retrieves a ACString representation of the MIME type
+     * associated with this file extension.
+     *
+     * @param  A file extension (excluding the dot ('.')).
+     * @return The MIME type, if any.
+     */
+    ACString getTypeFromExtension(in AUTF8String aFileExt);
+
+    /**
+     * Retrieves a ACString representation of the MIME type
+     * associated with this URI. The association is purely
+     * file extension to MIME type based. No attempt to determine
+     * the type via server headers or byte scanning is made.
+     *
+     * @param  The URI the user wants MIME info on.
+     * @return The MIME type, if any.
+     */
+    ACString getTypeFromURI(in nsIURI aURI);
+
+    /**
+     * Retrieves a ACString representation of the MIME type
+     * associated with this file extension.  Only the default
+     * builtin list is examined.  Unless you need a restricted
+     * set use getTypeFromURI.
+     *
+     * @param  The URI the user wants MIME info on.
+     * @return The MIME type, if any.
+     */
+    ACString getDefaultTypeFromURI(in nsIURI aURI);
+
+    //
+    ACString getTypeFromFile(in nsIFile aFile);
+
+    /**
+     * Given a Type/Extension combination, returns the default extension
+     * for this type. This may be identical to the passed-in extension.
+     *
+     * @param aMIMEType The Type to get information on. Must not be empty.
+     * @param aFileExt  File Extension. Can be empty.
+     */
+    AUTF8String getPrimaryExtension(in ACString aMIMEType, in AUTF8String aFileExt);
+
+    /*
+     * Returns an nsIMIMEInfo for the provided MIME type and extension
+     * obtained from an OS lookup. If no handler is found for the type and
+     * extension, returns a generic nsIMIMEInfo object. The MIME type and
+     * extension can be the empty string. When the type and extension don't
+     * map to the same handler, the semantics/resolution are platform
+     * specific. See the platform implementations for details.
+     *
+     * @param aType           The MIME type to get handler information for.
+     * @param aFileExtension  The filename extension to use either alone
+     *                        or with the MIME type to get handler information
+     *                        for. UTF-8 encoded.
+     * @param [out] aFound    Out param indicating whether a MIMEInfo could
+     *                        be found for the provided type and/or extension.
+     *                        Set to false when neither extension nor the MIME
+     *                        type are mapped to a handler.
+     * @return                A nsIMIMEInfo object. This function must return
+     *                        a MIMEInfo object if it can allocate one. The
+     *                        only justifiable reason for not returning one is
+     *                        an out-of-memory error.
+     */
+    nsIMIMEInfo getMIMEInfoFromOS(in ACString aType,
+                                  in ACString aFileExtension,
+                                  out boolean aFound);
+
+    /**
+     * Update the mime info's default app information based on OS
+     * lookups.
+     * Note: normally called automatically by nsIMIMEInfo. If you find
+     * yourself needing to call this from elsewhere, file a bug instead.
+     */
+    void updateDefaultAppInfo(in nsIMIMEInfo aMIMEInfo);
+
+    /**
+     * Default filename validation for getValidFileName and
+     * validateFileNameForSaving where other flags are not true.
+     * That is, the extension is modified to fit the content type,
+     * duplicate whitespace is collapsed, and long filenames are
+     * truncated. A valid content type must be supplied. See the
+     * description of getValidFileName for more details about how
+     * the flags are used.
+     */
+    const long VALIDATE_DEFAULT = 0;
+
+    /**
+     * If true, then the filename is only validated to ensure that it is
+     * acceptable for the file system. If false, then the extension is also
+     * checked to ensure that it is valid for the content type. If the
+     * extension is not valid, the filename is modified to have the proper
+     * extension.
+     */
+    const long VALIDATE_SANITIZE_ONLY = 1;
+
+    /**
+     * Don't collapse strings of duplicate whitespace into a single string.
+     */
+    const long VALIDATE_DONT_COLLAPSE_WHITESPACE = 2;
+
+    /**
+     * Don't truncate long filenames.
+     */
+    const long VALIDATE_DONT_TRUNCATE = 4;
+
+    /**
+     * True to ignore the content type and guess the type from any existing
+     * extension instead. "application/octet-stream" is used as the default
+     * if there is no extension or there is no information available for
+     * the extension.
+     */
+    const long VALIDATE_GUESS_FROM_EXTENSION = 8;
+
+    /**
+     * If the filename is empty, return the empty filename
+     * without modification.
+     */
+    const long VALIDATE_ALLOW_EMPTY = 16;
+
+    /**
+     * Don't apply a default filename if the non-extension portion of the
+     * filename is empty.
+     */
+    const long VALIDATE_NO_DEFAULT_FILENAME = 32;
+
+    /**
+     * When the filename has an invalid extension, force the the filename to
+     * have a valid extension appended to the end of the filename when that
+     * extension would normally be ignored for the given content type. This
+     * primarily is used when saving pages to ensure that the html extension
+     * is applied over any extension that might have been generated from a
+     * page title.
+     */
+    const long VALIDATE_FORCE_APPEND_EXTENSION = 64;
+
+    /**
+     * Don't modify filenames or extensions that might be invalid or dangerous
+     * on some platforms. If this flag is not used, these filenames will be
+     * modified so that the operating system does not treat them specially.
+     */
+    const long VALIDATE_ALLOW_INVALID_FILENAMES = 128;
+
+    /**
+     * Generate a valid filename from the channel that can be used to save
+     * the content of the channel to the local disk.
+     *
+     * The filename is determined from the content disposition, the filename
+     * of the uri, or a default filename. The following modifications are
+     * applied:
+     *  - If the VALIDATE_SANITIZE_ONLY flag is not specified, then the
+     *    extension of the filename is modified to suit the supplied content type.
+     *  - Path separators (typically / and \) are replaced by underscores (_)
+     *  - Characters that are not valid or would be confusing in filenames are
+     *    replaced by spaces (*, :, etc)
+     *  - Bidi related marks are replaced by underscores (_)
+     *  - Whitespace and periods are removed from the beginning and end.
+     *  - Unless VALIDATE_DONT_COLLAPSE_WHITESPACE is specified, multiple
+     *    consecutive whitespace characters are collapsed to a single space
+     *    character, either ' ' or an ideographic space 0x3000 if present.
+     *  - Unless VALIDATE_DONT_TRUNCATE is specified, the filename is truncated
+     *    to a maximum length, preserving the extension if possible.
+     *  - Some filenames and extensions are invalid on certain platforms.
+     *    These are replaced if possible unless VALIDATE_ALLOW_INVALID_FILENAMES
+     *    is specified.
+     *
+     * If the VALIDATE_NO_DEFAULT_FILENAME flag is not specified, and after the
+     * rules above are applied, the resulting filename is empty, a default
+     * filename is used.
+     *
+     * If the VALIDATE_ALLOW_EMPTY flag is specified, an empty string may be
+     * returned only if the filename could not be determined or was blank.
+     *
+     * If either the VALIDATE_SANITIZE_ONLY or VALIDATE_GUESS_FROM_EXTENSION flags
+     * are specified, then the content type may be empty. Otherwise, the type must
+     * not be empty.
+     *
+     * The aOriginalURI would be specified if the channel is for a local file but
+     * it was originally sourced from a different uri.
+     *
+     * When saving an image, use validateFileNameForSaving instead and
+     * pass the result of imgIRequest::GetFileName() as the filename to
+     * check.
+     *
+     * @param aChannel The channel of the content to save.
+     * @param aType The MIME type to use, which would usually be the
+     *              same as the content type of the channel.
+     * @param aOriginalURL the source url of the file, but may be null.
+     * @param aFlags one or more of the flags above.
+     * @returns The resulting filename.
+     */
+    AString getValidFileName(in nsIChannel aChannel,
+                             in ACString aType,
+                             in nsIURI aOriginalURI,
+                             in unsigned long aFlags);
+
+    /**
+     * Similar to getValidFileName, but used when a specific filename needs
+     * to be validated. The filename is modified as needed based on the
+     * content type in the same manner as getValidFileName.
+     *
+     * If the filename came from a uri, it should not be escaped, that is,
+     * any needed unescaping of the filename should happen before calling
+     * this method.
+     *
+     * @param aType The MIME type to use.
+     * @param aFlags one or more of the flags above.
+     * @param aFileName The filename to validate.
+     * @returns The validated filename.
+     */
+    AString validateFileNameForSaving(in AString aFileName,
+                                      in ACString aType,
+                                      in unsigned long aFlags);
+};

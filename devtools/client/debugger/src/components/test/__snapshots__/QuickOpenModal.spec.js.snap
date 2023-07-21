@@ -1,0 +1,1639 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuickOpenModal Basic render with mount & searchType = functions 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={true}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query="@"
+    searchType="functions"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+        "variables": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  >
+    <Slide
+      handleClose={[Function]}
+      in={true}
+    >
+      <Transition
+        appear={true}
+        enter={true}
+        exit={true}
+        in={true}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={50}
+        unmountOnExit={false}
+      >
+        <Modal
+          handleClose={[Function]}
+          status="entering"
+        >
+          <div
+            className="modal-wrapper"
+            onClick={[Function]}
+          >
+            <div
+              className="modal entering"
+              onClick={[Function]}
+            >
+              <Connect(SearchInput)
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query="@"
+                searchKey="quickopen-search"
+                selectedItemId=""
+                showClose={false}
+                showErrorEmoji={true}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                summaryMsg=""
+              >
+                <SearchInput
+                  count={0}
+                  expanded={false}
+                  handleClose={[Function]}
+                  hasPrefix={true}
+                  isLoading={false}
+                  onChange={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Go to file…"
+                  query="@"
+                  searchKey="quickopen-search"
+                  searchOptions={
+                    Object {
+                      "caseSensitive": false,
+                      "excludePatterns": "",
+                      "regexMatch": false,
+                      "wholeWord": false,
+                    }
+                  }
+                  selectedItemId=""
+                  setSearchOptions={[Function]}
+                  showClose={false}
+                  showErrorEmoji={true}
+                  showExcludePatterns={false}
+                  showSearchModifiers={false}
+                  size=""
+                  summaryMsg=""
+                >
+                  <div
+                    className="search-outline"
+                  >
+                    <div
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      aria-owns="result-list"
+                      className="search-field"
+                      role="combobox"
+                    >
+                      <AccessibleImage
+                        className="search"
+                      >
+                        <span
+                          className="img search"
+                        />
+                      </AccessibleImage>
+                      <input
+                        aria-activedescendant=""
+                        aria-autocomplete="list"
+                        aria-controls="result-list"
+                        className="empty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="Go to file…"
+                        spellCheck={false}
+                        value="@"
+                      />
+                      <div
+                        className="search-buttons-bar"
+                      />
+                    </div>
+                  </div>
+                </SearchInput>
+              </Connect(SearchInput)>
+              <ResultList
+                expanded={false}
+                items={Array []}
+                key="results"
+                role="listbox"
+                selectItem={[Function]}
+                selected={0}
+                size="small"
+              >
+                <ul
+                  aria-live="polite"
+                  className="result-list small"
+                  id="result-list"
+                  role="listbox"
+                />
+              </ResultList>
+            </div>
+          </div>
+        </Modal>
+      </Transition>
+    </Slide>
+  </QuickOpenModal>
+</Provider>
+`;
+
+exports[`QuickOpenModal Basic render with mount & searchType = variables 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={true}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query="#"
+    searchType="variables"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+        "variables": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  >
+    <Slide
+      handleClose={[Function]}
+      in={true}
+    >
+      <Transition
+        appear={true}
+        enter={true}
+        exit={true}
+        in={true}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={50}
+        unmountOnExit={false}
+      >
+        <Modal
+          handleClose={[Function]}
+          status="entering"
+        >
+          <div
+            className="modal-wrapper"
+            onClick={[Function]}
+          >
+            <div
+              className="modal entering"
+              onClick={[Function]}
+            >
+              <Connect(SearchInput)
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query="#"
+                searchKey="quickopen-search"
+                selectedItemId=""
+                showClose={false}
+                showErrorEmoji={true}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                summaryMsg=""
+              >
+                <SearchInput
+                  count={0}
+                  expanded={false}
+                  handleClose={[Function]}
+                  hasPrefix={true}
+                  isLoading={false}
+                  onChange={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Go to file…"
+                  query="#"
+                  searchKey="quickopen-search"
+                  searchOptions={
+                    Object {
+                      "caseSensitive": false,
+                      "excludePatterns": "",
+                      "regexMatch": false,
+                      "wholeWord": false,
+                    }
+                  }
+                  selectedItemId=""
+                  setSearchOptions={[Function]}
+                  showClose={false}
+                  showErrorEmoji={true}
+                  showExcludePatterns={false}
+                  showSearchModifiers={false}
+                  size=""
+                  summaryMsg=""
+                >
+                  <div
+                    className="search-outline"
+                  >
+                    <div
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      aria-owns="result-list"
+                      className="search-field"
+                      role="combobox"
+                    >
+                      <AccessibleImage
+                        className="search"
+                      >
+                        <span
+                          className="img search"
+                        />
+                      </AccessibleImage>
+                      <input
+                        aria-activedescendant=""
+                        aria-autocomplete="list"
+                        aria-controls="result-list"
+                        className="empty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="Go to file…"
+                        spellCheck={false}
+                        value="#"
+                      />
+                      <div
+                        className="search-buttons-bar"
+                      />
+                    </div>
+                  </div>
+                </SearchInput>
+              </Connect(SearchInput)>
+            </div>
+          </div>
+        </Modal>
+      </Transition>
+    </Slide>
+  </QuickOpenModal>
+</Provider>
+`;
+
+exports[`QuickOpenModal Basic render with mount 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={true}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query=""
+    searchType="sources"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  >
+    <Slide
+      handleClose={[Function]}
+      in={true}
+    >
+      <Transition
+        appear={true}
+        enter={true}
+        exit={true}
+        in={true}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={50}
+        unmountOnExit={false}
+      >
+        <Modal
+          handleClose={[Function]}
+          status="entering"
+        >
+          <div
+            className="modal-wrapper"
+            onClick={[Function]}
+          >
+            <div
+              className="modal entering"
+              onClick={[Function]}
+            >
+              <Connect(SearchInput)
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query=""
+                searchKey="quickopen-search"
+                selectedItemId=""
+                showClose={false}
+                showErrorEmoji={false}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                size="big"
+                summaryMsg=""
+              >
+                <SearchInput
+                  count={0}
+                  expanded={false}
+                  handleClose={[Function]}
+                  hasPrefix={true}
+                  isLoading={false}
+                  onChange={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Go to file…"
+                  query=""
+                  searchKey="quickopen-search"
+                  searchOptions={
+                    Object {
+                      "caseSensitive": false,
+                      "excludePatterns": "",
+                      "regexMatch": false,
+                      "wholeWord": false,
+                    }
+                  }
+                  selectedItemId=""
+                  setSearchOptions={[Function]}
+                  showClose={false}
+                  showErrorEmoji={false}
+                  showExcludePatterns={false}
+                  showSearchModifiers={false}
+                  size="big"
+                  summaryMsg=""
+                >
+                  <div
+                    className="search-outline"
+                  >
+                    <div
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      aria-owns="result-list"
+                      className="search-field big"
+                      role="combobox"
+                    >
+                      <AccessibleImage
+                        className="search"
+                      >
+                        <span
+                          className="img search"
+                        />
+                      </AccessibleImage>
+                      <input
+                        aria-activedescendant=""
+                        aria-autocomplete="list"
+                        aria-controls="result-list"
+                        className=""
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="Go to file…"
+                        spellCheck={false}
+                        value=""
+                      />
+                      <div
+                        className="search-buttons-bar"
+                      />
+                    </div>
+                  </div>
+                </SearchInput>
+              </Connect(SearchInput)>
+              <ResultList
+                expanded={false}
+                items={Array []}
+                key="results"
+                role="listbox"
+                selectItem={[Function]}
+                selected={0}
+                size="big"
+              >
+                <ul
+                  aria-live="polite"
+                  className="result-list big"
+                  id="result-list"
+                  role="listbox"
+                />
+              </ResultList>
+            </div>
+          </div>
+        </Modal>
+      </Transition>
+    </Slide>
+  </QuickOpenModal>
+</Provider>
+`;
+
+exports[`QuickOpenModal Doesn't render when disabled 1`] = `""`;
+
+exports[`QuickOpenModal Renders when enabled 1`] = `
+<Slide
+  handleClose={[Function]}
+  in={true}
+>
+  <Connect(SearchInput)
+    count={0}
+    expanded={false}
+    handleClose={[Function]}
+    hasPrefix={true}
+    isLoading={false}
+    onChange={[Function]}
+    onKeyDown={[Function]}
+    placeholder="Go to file…"
+    query=""
+    searchKey="quickopen-search"
+    selectedItemId=""
+    showClose={false}
+    showErrorEmoji={false}
+    showExcludePatterns={false}
+    showSearchModifiers={false}
+    size="big"
+    summaryMsg=""
+  />
+  <ResultList
+    expanded={false}
+    items={Array []}
+    key="results"
+    role="listbox"
+    selectItem={[Function]}
+    selected={0}
+    size="big"
+  />
+</Slide>
+`;
+
+exports[`QuickOpenModal Simple goto search query = :abc & searchType = goto 1`] = `
+<QuickOpenModal
+  blackBoxRanges={Object {}}
+  clearHighlightLineRange={[MockFunction]}
+  closeQuickOpen={[MockFunction]}
+  displayedSources={Array []}
+  enabled={true}
+  highlightLineRange={[MockFunction]}
+  isOriginal={false}
+  query=":abc"
+  searchType="goto"
+  selectSpecificLocation={[MockFunction]}
+  setQuickOpenQuery={[MockFunction]}
+  shortcutsModalEnabled={false}
+  symbols={
+    Object {
+      "functions": Array [],
+      "variables": Array [],
+    }
+  }
+  symbolsLoading={false}
+  tabUrls={Array []}
+  thread="FakeThread"
+  toggleShortcutsModal={[MockFunction]}
+>
+  <Slide
+    handleClose={[Function]}
+    in={true}
+  >
+    <Transition
+      appear={true}
+      enter={true}
+      exit={true}
+      in={true}
+      mountOnEnter={false}
+      onEnter={[Function]}
+      onEntered={[Function]}
+      onEntering={[Function]}
+      onExit={[Function]}
+      onExited={[Function]}
+      onExiting={[Function]}
+      timeout={50}
+      unmountOnExit={false}
+    >
+      <Modal
+        handleClose={[Function]}
+        status="entering"
+      >
+        <div
+          className="modal-wrapper"
+          onClick={[Function]}
+        >
+          <div
+            className="modal entering"
+            onClick={[Function]}
+          >
+            <Connect(SearchInput)
+              count={0}
+              expanded={false}
+              handleClose={[Function]}
+              hasPrefix={true}
+              isLoading={false}
+              onChange={[Function]}
+              onKeyDown={[Function]}
+              placeholder="Go to file…"
+              query=":abc"
+              searchKey="quickopen-search"
+              selectedItemId=""
+              showClose={false}
+              showErrorEmoji={true}
+              showExcludePatterns={false}
+              showSearchModifiers={false}
+              summaryMsg="Go to line"
+            >
+              <SearchInput
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query=":abc"
+                searchKey="quickopen-search"
+                searchOptions={
+                  Object {
+                    "caseSensitive": false,
+                    "excludePatterns": "",
+                    "regexMatch": false,
+                    "wholeWord": false,
+                  }
+                }
+                selectedItemId=""
+                setSearchOptions={[Function]}
+                showClose={false}
+                showErrorEmoji={true}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                size=""
+                summaryMsg="Go to line"
+              >
+                <div
+                  className="search-outline"
+                >
+                  <div
+                    aria-expanded={false}
+                    aria-haspopup="listbox"
+                    aria-owns="result-list"
+                    className="search-field"
+                    role="combobox"
+                  >
+                    <AccessibleImage
+                      className="search"
+                    >
+                      <span
+                        className="img search"
+                      />
+                    </AccessibleImage>
+                    <input
+                      aria-activedescendant=""
+                      aria-autocomplete="list"
+                      aria-controls="result-list"
+                      className="empty"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      placeholder="Go to file…"
+                      spellCheck={false}
+                      value=":abc"
+                    />
+                    <div
+                      className="search-field-summary"
+                    >
+                      Go to line
+                    </div>
+                    <div
+                      className="search-buttons-bar"
+                    />
+                  </div>
+                </div>
+              </SearchInput>
+            </Connect(SearchInput)>
+          </div>
+        </div>
+      </Modal>
+    </Transition>
+  </Slide>
+</QuickOpenModal>
+`;
+
+exports[`QuickOpenModal showErrorEmoji false when count + query 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={true}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query="dasdasdas"
+    searchType="sources"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  >
+    <Slide
+      handleClose={[Function]}
+      in={true}
+    >
+      <Transition
+        appear={true}
+        enter={true}
+        exit={true}
+        in={true}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={50}
+        unmountOnExit={false}
+      >
+        <Modal
+          handleClose={[Function]}
+          status="entering"
+        >
+          <div
+            className="modal-wrapper"
+            onClick={[Function]}
+          >
+            <div
+              className="modal entering"
+              onClick={[Function]}
+            >
+              <Connect(SearchInput)
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query="dasdasdas"
+                searchKey="quickopen-search"
+                selectedItemId=""
+                showClose={false}
+                showErrorEmoji={true}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                size="big"
+                summaryMsg=""
+              >
+                <SearchInput
+                  count={0}
+                  expanded={false}
+                  handleClose={[Function]}
+                  hasPrefix={true}
+                  isLoading={false}
+                  onChange={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Go to file…"
+                  query="dasdasdas"
+                  searchKey="quickopen-search"
+                  searchOptions={
+                    Object {
+                      "caseSensitive": false,
+                      "excludePatterns": "",
+                      "regexMatch": false,
+                      "wholeWord": false,
+                    }
+                  }
+                  selectedItemId=""
+                  setSearchOptions={[Function]}
+                  showClose={false}
+                  showErrorEmoji={true}
+                  showExcludePatterns={false}
+                  showSearchModifiers={false}
+                  size="big"
+                  summaryMsg=""
+                >
+                  <div
+                    className="search-outline"
+                  >
+                    <div
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      aria-owns="result-list"
+                      className="search-field big"
+                      role="combobox"
+                    >
+                      <AccessibleImage
+                        className="search"
+                      >
+                        <span
+                          className="img search"
+                        />
+                      </AccessibleImage>
+                      <input
+                        aria-activedescendant=""
+                        aria-autocomplete="list"
+                        aria-controls="result-list"
+                        className="empty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="Go to file…"
+                        spellCheck={false}
+                        value="dasdasdas"
+                      />
+                      <div
+                        className="search-buttons-bar"
+                      />
+                    </div>
+                  </div>
+                </SearchInput>
+              </Connect(SearchInput)>
+            </div>
+          </div>
+        </Modal>
+      </Transition>
+    </Slide>
+  </QuickOpenModal>
+</Provider>
+`;
+
+exports[`QuickOpenModal showErrorEmoji false when goto numeric ':2222' 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={true}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query=":2222"
+    searchType="goto"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  >
+    <Slide
+      handleClose={[Function]}
+      in={true}
+    >
+      <Transition
+        appear={true}
+        enter={true}
+        exit={true}
+        in={true}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={50}
+        unmountOnExit={false}
+      >
+        <Modal
+          handleClose={[Function]}
+          status="entering"
+        >
+          <div
+            className="modal-wrapper"
+            onClick={[Function]}
+          >
+            <div
+              className="modal entering"
+              onClick={[Function]}
+            >
+              <Connect(SearchInput)
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query=":2222"
+                searchKey="quickopen-search"
+                selectedItemId=""
+                showClose={false}
+                showErrorEmoji={false}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                summaryMsg="Go to line"
+              >
+                <SearchInput
+                  count={0}
+                  expanded={false}
+                  handleClose={[Function]}
+                  hasPrefix={true}
+                  isLoading={false}
+                  onChange={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Go to file…"
+                  query=":2222"
+                  searchKey="quickopen-search"
+                  searchOptions={
+                    Object {
+                      "caseSensitive": false,
+                      "excludePatterns": "",
+                      "regexMatch": false,
+                      "wholeWord": false,
+                    }
+                  }
+                  selectedItemId=""
+                  setSearchOptions={[Function]}
+                  showClose={false}
+                  showErrorEmoji={false}
+                  showExcludePatterns={false}
+                  showSearchModifiers={false}
+                  size=""
+                  summaryMsg="Go to line"
+                >
+                  <div
+                    className="search-outline"
+                  >
+                    <div
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      aria-owns="result-list"
+                      className="search-field"
+                      role="combobox"
+                    >
+                      <AccessibleImage
+                        className="search"
+                      >
+                        <span
+                          className="img search"
+                        />
+                      </AccessibleImage>
+                      <input
+                        aria-activedescendant=""
+                        aria-autocomplete="list"
+                        aria-controls="result-list"
+                        className=""
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="Go to file…"
+                        spellCheck={false}
+                        value=":2222"
+                      />
+                      <div
+                        className="search-field-summary"
+                      >
+                        Go to line
+                      </div>
+                      <div
+                        className="search-buttons-bar"
+                      />
+                    </div>
+                  </div>
+                </SearchInput>
+              </Connect(SearchInput)>
+            </div>
+          </div>
+        </Modal>
+      </Transition>
+    </Slide>
+  </QuickOpenModal>
+</Provider>
+`;
+
+exports[`QuickOpenModal showErrorEmoji false when no query 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={true}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query=""
+    searchType="other"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  >
+    <Slide
+      handleClose={[Function]}
+      in={true}
+    >
+      <Transition
+        appear={true}
+        enter={true}
+        exit={true}
+        in={true}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={50}
+        unmountOnExit={false}
+      >
+        <Modal
+          handleClose={[Function]}
+          status="entering"
+        >
+          <div
+            className="modal-wrapper"
+            onClick={[Function]}
+          >
+            <div
+              className="modal entering"
+              onClick={[Function]}
+            >
+              <Connect(SearchInput)
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query=""
+                searchKey="quickopen-search"
+                selectedItemId=""
+                showClose={false}
+                showErrorEmoji={false}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                summaryMsg=""
+              >
+                <SearchInput
+                  count={0}
+                  expanded={false}
+                  handleClose={[Function]}
+                  hasPrefix={true}
+                  isLoading={false}
+                  onChange={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Go to file…"
+                  query=""
+                  searchKey="quickopen-search"
+                  searchOptions={
+                    Object {
+                      "caseSensitive": false,
+                      "excludePatterns": "",
+                      "regexMatch": false,
+                      "wholeWord": false,
+                    }
+                  }
+                  selectedItemId=""
+                  setSearchOptions={[Function]}
+                  showClose={false}
+                  showErrorEmoji={false}
+                  showExcludePatterns={false}
+                  showSearchModifiers={false}
+                  size=""
+                  summaryMsg=""
+                >
+                  <div
+                    className="search-outline"
+                  >
+                    <div
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      aria-owns="result-list"
+                      className="search-field"
+                      role="combobox"
+                    >
+                      <AccessibleImage
+                        className="search"
+                      >
+                        <span
+                          className="img search"
+                        />
+                      </AccessibleImage>
+                      <input
+                        aria-activedescendant=""
+                        aria-autocomplete="list"
+                        aria-controls="result-list"
+                        className=""
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="Go to file…"
+                        spellCheck={false}
+                        value=""
+                      />
+                      <div
+                        className="search-buttons-bar"
+                      />
+                    </div>
+                  </div>
+                </SearchInput>
+              </Connect(SearchInput)>
+              <ResultList
+                expanded={false}
+                items={Array []}
+                key="results"
+                role="listbox"
+                selectItem={[Function]}
+                selected={0}
+                size="small"
+              >
+                <ul
+                  aria-live="polite"
+                  className="result-list small"
+                  id="result-list"
+                  role="listbox"
+                />
+              </ResultList>
+            </div>
+          </div>
+        </Modal>
+      </Transition>
+    </Slide>
+  </QuickOpenModal>
+</Provider>
+`;
+
+exports[`QuickOpenModal showErrorEmoji true when goto not numeric ':22k22' 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={true}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query=":22k22"
+    searchType="goto"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  >
+    <Slide
+      handleClose={[Function]}
+      in={true}
+    >
+      <Transition
+        appear={true}
+        enter={true}
+        exit={true}
+        in={true}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={50}
+        unmountOnExit={false}
+      >
+        <Modal
+          handleClose={[Function]}
+          status="entering"
+        >
+          <div
+            className="modal-wrapper"
+            onClick={[Function]}
+          >
+            <div
+              className="modal entering"
+              onClick={[Function]}
+            >
+              <Connect(SearchInput)
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query=":22k22"
+                searchKey="quickopen-search"
+                selectedItemId=""
+                showClose={false}
+                showErrorEmoji={true}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                summaryMsg="Go to line"
+              >
+                <SearchInput
+                  count={0}
+                  expanded={false}
+                  handleClose={[Function]}
+                  hasPrefix={true}
+                  isLoading={false}
+                  onChange={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Go to file…"
+                  query=":22k22"
+                  searchKey="quickopen-search"
+                  searchOptions={
+                    Object {
+                      "caseSensitive": false,
+                      "excludePatterns": "",
+                      "regexMatch": false,
+                      "wholeWord": false,
+                    }
+                  }
+                  selectedItemId=""
+                  setSearchOptions={[Function]}
+                  showClose={false}
+                  showErrorEmoji={true}
+                  showExcludePatterns={false}
+                  showSearchModifiers={false}
+                  size=""
+                  summaryMsg="Go to line"
+                >
+                  <div
+                    className="search-outline"
+                  >
+                    <div
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      aria-owns="result-list"
+                      className="search-field"
+                      role="combobox"
+                    >
+                      <AccessibleImage
+                        className="search"
+                      >
+                        <span
+                          className="img search"
+                        />
+                      </AccessibleImage>
+                      <input
+                        aria-activedescendant=""
+                        aria-autocomplete="list"
+                        aria-controls="result-list"
+                        className="empty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="Go to file…"
+                        spellCheck={false}
+                        value=":22k22"
+                      />
+                      <div
+                        className="search-field-summary"
+                      >
+                        Go to line
+                      </div>
+                      <div
+                        className="search-buttons-bar"
+                      />
+                    </div>
+                  </div>
+                </SearchInput>
+              </Connect(SearchInput)>
+            </div>
+          </div>
+        </Modal>
+      </Transition>
+    </Slide>
+  </QuickOpenModal>
+</Provider>
+`;
+
+exports[`QuickOpenModal showErrorEmoji true when no count + query 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={true}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query="test"
+    searchType="other"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  >
+    <Slide
+      handleClose={[Function]}
+      in={true}
+    >
+      <Transition
+        appear={true}
+        enter={true}
+        exit={true}
+        in={true}
+        mountOnEnter={false}
+        onEnter={[Function]}
+        onEntered={[Function]}
+        onEntering={[Function]}
+        onExit={[Function]}
+        onExited={[Function]}
+        onExiting={[Function]}
+        timeout={50}
+        unmountOnExit={false}
+      >
+        <Modal
+          handleClose={[Function]}
+          status="entering"
+        >
+          <div
+            className="modal-wrapper"
+            onClick={[Function]}
+          >
+            <div
+              className="modal entering"
+              onClick={[Function]}
+            >
+              <Connect(SearchInput)
+                count={0}
+                expanded={false}
+                handleClose={[Function]}
+                hasPrefix={true}
+                isLoading={false}
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Go to file…"
+                query="test"
+                searchKey="quickopen-search"
+                selectedItemId=""
+                showClose={false}
+                showErrorEmoji={true}
+                showExcludePatterns={false}
+                showSearchModifiers={false}
+                summaryMsg=""
+              >
+                <SearchInput
+                  count={0}
+                  expanded={false}
+                  handleClose={[Function]}
+                  hasPrefix={true}
+                  isLoading={false}
+                  onChange={[Function]}
+                  onKeyDown={[Function]}
+                  placeholder="Go to file…"
+                  query="test"
+                  searchKey="quickopen-search"
+                  searchOptions={
+                    Object {
+                      "caseSensitive": false,
+                      "excludePatterns": "",
+                      "regexMatch": false,
+                      "wholeWord": false,
+                    }
+                  }
+                  selectedItemId=""
+                  setSearchOptions={[Function]}
+                  showClose={false}
+                  showErrorEmoji={true}
+                  showExcludePatterns={false}
+                  showSearchModifiers={false}
+                  size=""
+                  summaryMsg=""
+                >
+                  <div
+                    className="search-outline"
+                  >
+                    <div
+                      aria-expanded={false}
+                      aria-haspopup="listbox"
+                      aria-owns="result-list"
+                      className="search-field"
+                      role="combobox"
+                    >
+                      <AccessibleImage
+                        className="search"
+                      >
+                        <span
+                          className="img search"
+                        />
+                      </AccessibleImage>
+                      <input
+                        aria-activedescendant=""
+                        aria-autocomplete="list"
+                        aria-controls="result-list"
+                        className="empty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        placeholder="Go to file…"
+                        spellCheck={false}
+                        value="test"
+                      />
+                      <div
+                        className="search-buttons-bar"
+                      />
+                    </div>
+                  </div>
+                </SearchInput>
+              </Connect(SearchInput)>
+            </div>
+          </div>
+        </Modal>
+      </Transition>
+    </Slide>
+  </QuickOpenModal>
+</Provider>
+`;
+
+exports[`QuickOpenModal shows loading loads with function type search 1`] = `
+<Slide
+  handleClose={[Function]}
+  in={true}
+>
+  <Connect(SearchInput)
+    count={0}
+    expanded={false}
+    handleClose={[Function]}
+    hasPrefix={true}
+    isLoading={false}
+    onChange={[Function]}
+    onKeyDown={[Function]}
+    placeholder="Go to file…"
+    query=""
+    searchKey="quickopen-search"
+    selectedItemId=""
+    showClose={false}
+    showErrorEmoji={false}
+    showExcludePatterns={false}
+    showSearchModifiers={false}
+    summaryMsg="Loading…"
+  />
+  <ResultList
+    expanded={false}
+    items={Array []}
+    key="results"
+    role="listbox"
+    selectItem={[Function]}
+    selected={0}
+    size="small"
+  />
+</Slide>
+`;
+
+exports[`QuickOpenModal updateResults on enable 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={false}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query=""
+    searchType="sources"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  />
+</Provider>
+`;
+
+exports[`QuickOpenModal updateResults on enable 2`] = `
+<Provider
+  enabled={true}
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <QuickOpenModal
+    blackBoxRanges={Object {}}
+    clearHighlightLineRange={[MockFunction]}
+    closeQuickOpen={[MockFunction]}
+    displayedSources={Array []}
+    enabled={false}
+    highlightLineRange={[MockFunction]}
+    isOriginal={false}
+    query=""
+    searchType="sources"
+    selectSpecificLocation={[MockFunction]}
+    setQuickOpenQuery={[MockFunction]}
+    shortcutsModalEnabled={false}
+    symbols={
+      Object {
+        "functions": Array [],
+      }
+    }
+    symbolsLoading={false}
+    tabUrls={Array []}
+    thread="FakeThread"
+    toggleShortcutsModal={[MockFunction]}
+  />
+</Provider>
+`;

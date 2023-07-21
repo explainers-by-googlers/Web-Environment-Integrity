@@ -1,0 +1,16 @@
+[
+  {
+    "namespace": "manifest",
+    "types": [
+      {
+        "$extend": "PermissionPrivileged",
+        "choices": [
+          {
+            "type": "string",
+            "enum": ["geckoViewAddons", "nativeMessagingFromContent"]
+          }
+        ]
+      }
+    ]
+  }
+]

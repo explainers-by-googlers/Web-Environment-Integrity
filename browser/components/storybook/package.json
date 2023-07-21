@@ -1,0 +1,28 @@
+{
+  "name": "browser-storybook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "analyze": "cem analyze",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-storybook": "npm run analyze && build-storybook",
+    "storybook": "npm run analyze && start-storybook -p 5703 --no-open"
+  },
+  "author": "",
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@custom-elements-manifest/analyzer": "^0.6.6",
+    "@fluent/bundle": "^0.17.1",
+    "@fluent/dom": "^0.8.1",
+    "@storybook/addon-a11y": "^6.5.15",
+    "@storybook/addon-actions": "^6.4.8",
+    "@storybook/addon-essentials": "^6.4.8",
+    "@storybook/addon-links": "^6.4.8",
+    "@storybook/builder-webpack5": "^6.4.8",
+    "@storybook/manager-webpack5": "^6.4.8",
+    "@storybook/web-components": "^6.4.8",
+    "babel-loader": "^8.2.3"
+  }
+}

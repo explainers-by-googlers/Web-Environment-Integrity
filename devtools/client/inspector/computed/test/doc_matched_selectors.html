@@ -1,0 +1,54 @@
+<!-- Any copyright is dedicated to the Public Domain.
+     http://creativecommons.org/publicdomain/zero/1.0/ -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8">
+    <style>
+      @import url(./doc_matched_selectors_imported_1.css) layer(importedFirst);
+      @import url(./doc_matched_selectors_imported_2.css) layer(importedSecond);
+      @import url(./doc_matched_selectors_imported_3.css) layer(importedFirst);
+      @import url(./doc_matched_selectors_imported_4.css) layer;
+      @import url(./doc_matched_selectors_imported_5.css) layer;
+
+      @layer first, second;
+
+      .matched1, .matched2, .matched3, .matched4, .matched5 {
+        color: #000;
+      }
+
+      div {
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        border: 1px solid #000;
+        color: #111;
+        width: 100px;
+        height: 50px;
+      }
+
+      main {
+        /*
+         * Set "winning" custom properties values to "blue" so we can check in the
+         * test that the best matching rule/property is actually what is applied by
+         * the engine.
+         */
+        --winning-color: blue;
+      }
+
+      section {
+        min-width: 10px;
+        min-height: 10px;
+        display: inline-block;
+      }
+      </style>
+  </head>
+  <body>
+    inspectstyle($("test"));
+    <div id="test" class="matched1 matched2 matched3 matched4 matched5">Test div</div>
+    <div id="dummy">
+      <div></div>
+    </div>
+    <main></main>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+<!-- Any copyright is dedicated to the Public Domain.
+     http://creativecommons.org/publicdomain/zero/1.0/ -->
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Network Monitor test page</title>
+  </head>
+
+  <body>
+    <p>POST raw with headers test</p>
+
+    <script type="text/javascript">
+      /* exported performRequests */
+      "use strict";
+
+      function post(address, message) {
+        return new Promise(resolve => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", address, true);
+
+          xhr.onreadystatechange = function() {
+            if (this.readyState == this.DONE) {
+              resolve();
+            }
+          };
+          xhr.send(message);
+        });
+      }
+
+      async function performRequests() {
+        const rawData = [
+          // Only one header
+          [
+            "content-type: application/x-www-form-urlencoded\r",
+            "\r",
+            "\r",
+            "foo=bar&baz=123",
+          ],
+          // No form body content
+          [
+            "content-type: application/x-www-form-urlencoded\r",
+            "\r",
+            "\r",
+          ],
+          // Multiple headers
+          [
+            "content-type: application/x-www-form-urlencoded\r",
+            "custom-header: hello world!\r",
+            "\r",
+            "\r",
+            "foo=bar&baz=123",
+          ],
+        ];
+
+        for (const data of rawData) {
+          await post("sjs_simple-test-server.sjs", data.join("\n"));
+        }
+      }
+    </script>
+  </body>
+
+</html>

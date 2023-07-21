@@ -1,0 +1,149 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# Adding a new metric? We have docs for that!
+# https://firefox-source-docs.mozilla.org/toolkit/components/glean/user/new_definitions_file.html
+
+---
+$schema: moz://mozilla.org/schemas/glean/metrics/2-0-0
+$tags:
+  - 'Core :: Networking: HTTP'
+
+
+netwerk:
+  early_hints:
+    type: labeled_counter
+    labels:
+      - stylesheet
+      - fonts
+      - scripts
+      - fetch
+      - image
+      - other
+    description: >
+      Counts the different type of resources that are sent for early hints.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1772124
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1772124
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1797695
+    notification_emails:
+      - necko@mozilla.com
+      - ddamjanovic@mozilla.com
+    expires: never
+  eh_link_type:
+    type: labeled_counter
+    labels:
+      - dns-prefetch
+      - icon
+      - modulepreload
+      - preconnect
+      - prefetch
+      - preload
+      - prerender
+      - stylesheet
+      - other
+    description: >
+      Counts different type of link headers that are sent in early hint
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1797936
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1797936
+    notification_emails:
+      - necko@mozilla.com
+      - manuel@mozilla.com
+    expires: never
+
+network:
+  data_size_per_type:
+    type: labeled_counter
+    labels:
+      - text_html
+      - text_css
+      - text_json
+      - text_plain
+      - text_javascript
+      - text_other
+      - audio
+      - video
+      - multipart
+      - icon
+      - image
+      - ocsp
+      - xpinstall
+      - wasm
+      - pdf
+      - octet_stream
+      - proxy
+      - compressed
+      - x509
+      - application_other
+    description: >
+      Number of KB we transferred keyed by "contentType"
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1808695
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1808695
+    notification_emails:
+      - necko@mozilla.com
+      - rtestard@mozilla.com
+    expires: 130
+    telemetry_mirror: NETWORKING_DATA_TRANSFERRED_PER_CONTENT_TYPE
+    no_lint:
+      - COMMON_PREFIX
+
+  data_size_pb_per_type:
+    type: labeled_counter
+    labels:
+      - text_html
+      - text_css
+      - text_json
+      - text_plain
+      - text_javascript
+      - text_other
+      - audio
+      - video
+      - multipart
+      - icon
+      - image
+      - ocsp
+      - xpinstall
+      - wasm
+      - pdf
+      - octet_stream
+      - proxy
+      - compressed
+      - x509
+      - application_other
+    description: >
+      Number of KB we transferred keyed by "contentType"
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1808695
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1808695
+    notification_emails:
+      - necko@mozilla.com
+      - rtestard@mozilla.com
+    expires: 130
+    telemetry_mirror: NETWORKING_DATA_TRANSFERRED_PB_PER_CONTENT_TYPE
+    no_lint:
+      - COMMON_PREFIX
+
+  cors_authorization_header:
+    type: labeled_counter
+    labels:
+      - allowed
+      - disallowed
+      - covered_by_wildcard
+    description: >
+      Count how many times we see `Authorization` header in
+      `Access-Control-Request-Headers` header and the possible outcomes.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1687364
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1687364
+    notification_emails:
+      - necko@mozilla.com
+      - kershaw@mozilla.com
+    expires: 130

@@ -1,0 +1,35 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+:root {
+  max-width: 40em;
+  min-width: 35em;
+}
+
+#warningSupplemental,
+.description {
+  font-weight: bold;
+}
+
+.longDescription {
+  padding-bottom: 1em;
+}
+
+#warningText,
+#warningSupplemental,
+#headerDescription,
+.longDescription {
+  /* Don't let these affect the min horizontal size of the dialog */
+  contain: inline-size;
+  white-space: pre-wrap;
+}
+
+.description:empty,
+.longDescription:empty {
+  display: none;
+}
+
+#locationTextBox {
+  flex: 1;
+}

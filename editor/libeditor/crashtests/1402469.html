@@ -1,0 +1,22 @@
+<html>
+<head>
+<script>
+function onLoad() {
+  // For emulating the traditional behavior, collapse Selection to end of the
+  // text node at end of the <body>.
+  getSelection().collapse(
+    document.body.lastChild,
+    document.body.lastChild.length
+  );
+  document.execCommand("insertUnorderedList");
+}
+</script>
+</head>
+<body onload="onLoad()">
+<table>
+  <th contenteditable>
+    <ol contenteditable>
+  </th>
+</table>
+</body>
+</html>

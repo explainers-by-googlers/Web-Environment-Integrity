@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<!--
+https://bugzilla.mozilla.org/show_bug.cgi?id=1020244
+-->
+<meta charset="utf-8">
+<title>Test for Bug 1020244 - Test the chrome-only AnonymousContent API</title>
+<script src="/tests/SimpleTest/SimpleTest.js"></script>
+<link rel="stylesheet" href="/tests/SimpleTest/test.css"/>
+<a target="_blank" href="https://bugzilla.mozilla.org/show_bug.cgi?id=1020244">Mozilla Bug 1020244</a>
+<script>
+  // Testing the presence of the chrome-only API
+  ok(!document.insertAnonymousContent,
+    "Content document shouldn't have access to insertAnonymousContent");
+  ok(!document.removeAnonymousContent,
+    "Content document shouldn't have access to removeAnonymousContent");
+
+  let chromeDocument = SpecialPowers.wrap(document);
+  ok(chromeDocument.insertAnonymousContent,
+    "Chrome document should have access to insertAnonymousContent");
+  ok(chromeDocument.removeAnonymousContent,
+    "Chrome document should have access to removeAnonymousContent");
+
+  // Testing the API of the returned object
+  let anonymousContent = chromeDocument.insertAnonymousContent();
+  ok(anonymousContent, "AnonymousContent object returned");
+  let div = document.createElement("div");
+  div.textContent = "this is a test element";
+  anonymousContent.root.appendChild(div);
+  chromeDocument.removeAnonymousContent(anonymousContent);
+</script>

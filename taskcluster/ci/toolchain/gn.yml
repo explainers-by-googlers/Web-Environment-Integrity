@@ -1,0 +1,49 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+job-defaults:
+    description: "gn toolchain build"
+    attributes:
+        local-toolchain: true
+    worker-type: b-linux-gcp
+    worker:
+        max-run-time: 1800
+    run:
+        resources:
+            - 'taskcluster/scripts/misc/build-gn-common.sh'
+        toolchain-artifact: public/build/gn.tar.zst
+    fetches:
+        fetch:
+            - gn
+
+linux64-gn:
+    treeherder:
+        symbol: TL(gn)
+    run:
+        script: build-gn-linux.sh
+
+macosx64-gn:
+    treeherder:
+        symbol: TM(gn)
+    run:
+        script: build-gn-macosx.sh
+        toolchain-alias: macosx64-aarch64-gn
+    fetches:
+        toolchain:
+            - linux64-clang-toolchain
+            - macosx64-sdk-toolchain
+
+win64-gn:
+    treeherder:
+        symbol: TW64(gn)
+    worker-type: b-win2022
+    worker:
+        max-run-time: 3600
+    run:
+        script: build-gn-win64.sh
+    fetches:
+        fetch:
+            - ninja
+        toolchain:
+            - vs-toolchain
