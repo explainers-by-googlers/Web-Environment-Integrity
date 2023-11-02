@@ -1,3 +1,7 @@
+> ⚠️ **NOTE: This proposal is no longer pursued.**
+>
+> Thank you for all the constructive feedback and engagement on the topic. An Android-specific API that does not target the open web is being considered [here](https://android-developers.googleblog.com/2023/11/increasing-trust-for-embedded-media.html).
+
 # Web Environment Integrity API
 
 This repository details the proposal to add a new API for determining the integrity
